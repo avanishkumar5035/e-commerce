@@ -38,7 +38,7 @@ const Header = () => {
 
                 {/* Search Bar */}
                 <div className="flex-1 flex max-w-3xl">
-                    <form onSubmit={handleSearch} className="flex w-full rounded-md overflow-hidden group focus-within:ring-2 focus-within:ring-accent_gold">
+                    <form onSubmit={handleSearch} className="flex w-full rounded-md overflow-hidden group focus-within:ring-2 focus-within:ring-accent_gold/80 border-[#FF9900]">
                         <select className="bg-gray-100 text-gray-700 text-sm px-4 py-2 border-r border-gray-300 outline-none hover:bg-gray-200 cursor-pointer">
                             <option>All</option>
                         </select>
@@ -49,8 +49,8 @@ const Header = () => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <button type="submit" className="bg-accent_gold px-4 py-2 hover:bg-[#f3a847] transition-all">
-                            <Search className="w-6 h-6 text-primary_navy" />
+                        <button type="submit" className="bg-accent_gold px-4 py-2 hover:bg-[#E68A00] transition-all">
+                            <Search className="w-6 h-6 text-[#111111]" />
                         </button>
                     </form>
                 </div>

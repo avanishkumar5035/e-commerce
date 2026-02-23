@@ -47,14 +47,14 @@ const Home = () => {
     ];
 
     return (
-        <div className="bg-bg_light min-h-screen pb-10">
+        <div className="bg-bg_light min-h-screen pb-10 font-sans">
             {/* Hero Section */}
-            <div className="relative h-[600px] overflow-hidden">
+            <div className="relative h-[600px] overflow-hidden bg-gradient-to-r from-[#f8f9fa] to-[#eaeDED]">
                 <div className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out">
                     <img
                         src={heroImages[currentHero]}
                         alt="Hero"
-                        className="w-full h-full object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,1)_60%,rgba(0,0,0,0)_100%)]"
+                        className="w-full h-full object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,1)_70%,rgba(0,0,0,0)_100%)]"
                     />
                 </div>
 
@@ -78,12 +78,12 @@ const Home = () => {
                 {/* Category Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     {categories.map((cat, i) => (
-                        <div key={i} className="bg-white p-5 flex flex-col justify-between shadow-sm">
+                        <div key={i} className="bg-white p-5 flex flex-col justify-between shadow-md rounded-lg hover:scale-[1.02] transition-transform duration-300">
                             <h2 className="text-xl font-bold mb-3">{cat.title}</h2>
                             <div className="flex-1 overflow-hidden">
                                 <img src={cat.image} alt={cat.title} className="w-full h-full object-contain mb-4" />
                             </div>
-                            <Link to={cat.link} className="text-sm text-blue-600 hover:text-accent_teal hover:underline mt-4 font-medium">
+                            <Link to={cat.link} className="text-sm text-[#007185] hover:text-[#C7511F] hover:underline mt-4 font-medium">
                                 See all offers
                             </Link>
                         </div>
@@ -91,19 +91,19 @@ const Home = () => {
                 </div>
 
                 {/* Featured Products Scroller */}
-                <div className="bg-white p-5 shadow-sm mb-6 overflow-hidden">
+                <div className="bg-white p-5 shadow-md mb-6 overflow-hidden rounded-lg">
                     <h2 className="text-xl font-bold mb-4">Today's Deals</h2>
                     <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
                         {products.map((product) => (
-                            <Link key={product._id} to={`/products/${product._id}`} className="min-w-[200px] group">
-                                <div className="h-48 flex items-center justify-center p-4 bg-gray-50 mb-2">
+                            <Link key={product._id} to={`/products/${product._id}`} className="min-w-[200px] group transition-transform duration-300 hover:scale-[1.03]">
+                                <div className="h-48 flex items-center justify-center p-4 bg-gray-50 mb-2 rounded-md">
                                     <img src={product.image} alt={product.name} className="h-full object-contain transition-transform group-hover:scale-105" />
                                 </div>
                                 <div className="text-sm">
-                                    <span className="bg-accent_gold text-primary_navy px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
+                                    <span className="bg-btn_add_to_cart text-text_main px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
                                     <p className="text-accent_teal font-bold inline-block">Deal of the Day</p>
                                     <p className="font-bold text-lg">₹{product.price.toLocaleString('en-IN')}</p>
-                                    <p className="text-gray-600 truncate">{product.name}</p>
+                                    <p className="text-text_secondary truncate">{product.name}</p>
                                 </div>
                             </Link>
                         ))}
@@ -112,22 +112,22 @@ const Home = () => {
 
                 {/* Second Row of Categories */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white p-5 shadow-sm h-[420px] flex flex-col">
+                    <div className="bg-white p-5 shadow-md h-[420px] flex flex-col rounded-lg">
                         <h2 className="text-xl font-bold mb-3">Sign in for your best experience</h2>
-                        <button className="w-full bg-accent_gold py-2 rounded-md shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold mb-4">
+                        <button className="w-full bg-btn_add_to_cart py-2 rounded-md shadow-sm border border-[#D5B921] hover:bg-[#F7CA00] text-sm font-bold mb-4 transition-colors">
                             Sign in securely
                         </button>
-                        <div className="bg-[#f3f3f3] -mx-5 -mb-5 mt-auto p-5 overflow-hidden">
+                        <div className="bg-[#f3f3f3] -mx-5 -mb-5 mt-auto p-5 overflow-hidden rounded-b-lg">
                             <img src="https://m.media-amazon.com/images/G/31/img19/AMS/Houseads/Laptops-Sept2019._CB436595915_.jpg" alt="Ads" className="w-full h-full object-cover" />
                         </div>
                     </div>
                     {products.slice(0, 3).map((p, i) => (
-                        <div key={i} className="bg-white p-5 shadow-sm">
+                        <div key={i} className="bg-white p-5 shadow-md rounded-lg hover:scale-[1.02] transition-transform duration-300">
                             <h2 className="text-xl font-bold mb-3">Inspired by your browsing</h2>
                             <Link to={`/products/${p._id}`} className="block h-64 mb-4">
                                 <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
                             </Link>
-                            <Link to={`/products/${p._id}`} className="text-sm text-blue-600 hover:text-accent_teal hover:underline font-medium">
+                            <Link to={`/products/${p._id}`} className="text-sm text-[#007185] hover:text-[#C7511F] hover:underline font-medium">
                                 Check more
                             </Link>
                         </div>
