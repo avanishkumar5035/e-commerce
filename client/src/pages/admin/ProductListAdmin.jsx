@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AuthContext from '../../context/AuthContext';
+import AuthContext from '../../context/AuthContext.jsx';
 import { Package, Plus, Edit, Trash2 } from 'lucide-react';
 
 const ProductListAdmin = () => {
@@ -63,7 +63,7 @@ const ProductListAdmin = () => {
 
     if (loading) return (
         <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary_navy"></div>
         </div>
     );
 
@@ -71,17 +71,17 @@ const ProductListAdmin = () => {
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div className="flex items-center gap-3">
-                    <div className="p-3 bg-indigo-100 rounded-xl text-indigo-600">
+                    <div className="p-3 bg-bg_light rounded-xl text-primary_navy border border-gray-100 shadow-sm">
                         <Package className="w-6 h-6" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Products Catalog</h1>
-                        <p className="text-gray-500 text-sm mt-1">Manage all products in your store</p>
+                        <h1 className="text-3xl font-extrabold text-primary_navy tracking-tight">Products Catalog</h1>
+                        <p className="text-gray-500 text-sm mt-1">Manage all products in your <span className="text-accent_teal font-bold">ShopSphere</span> store</p>
                     </div>
                 </div>
                 <button
                     onClick={createProductHandler}
-                    className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 hover:-translate-y-1 hover:shadow-lg transition transform"
+                    className="flex items-center gap-2 bg-accent_gold text-primary_navy px-6 py-3 rounded-xl font-bold hover:bg-[#f3a847] hover:-translate-y-1 hover:shadow-lg transition transform border border-[#a88734]"
                 >
                     <Plus className="w-5 h-5" /> Add New Product
                 </button>
@@ -105,17 +105,17 @@ const ProductListAdmin = () => {
                                 <tr key={product._id} className="hover:bg-gray-50 transition-colors group">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{product._id.substring(0, 8)}...</td>
                                     <td className="px-6 py-4 text-sm text-gray-900 font-semibold">{product.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 font-bold">₹{product.price.toLocaleString('en-IN')}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-accent_teal font-bold">₹{product.price.toLocaleString('en-IN')}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span className="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium">{product.category}</span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.brand}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Link to={`/admin/product/${product._id}/edit`} className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-lg hover:bg-indigo-100">
+                                            <Link to={`/admin/product/${product._id}/edit`} className="text-primary_navy hover:text-white bg-accent_gold p-2 rounded-lg hover:bg-[#f3a847] transition shadow-sm">
                                                 <Edit className="w-4 h-4" />
                                             </Link>
-                                            <button onClick={() => deleteHandler(product._id)} className="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-lg hover:bg-red-100">
+                                            <button onClick={() => deleteHandler(product._id)} className="text-red-700 hover:text-white bg-red-50 p-2 rounded-lg hover:bg-red-700 transition shadow-sm border border-red-100">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>

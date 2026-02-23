@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { ShoppingCart, Star, ChevronRight, Zap, Shield, Truck } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Star } from 'lucide-react';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentHero, setCurrentHero] = useState(0);
+
+    const heroImages = [
+        "https://images-eu.ssl-images-amazon.com/images/G/31/img21/MA2024/GW/Aug/Unrec/BAU/PC/1-1._CB566141315_.jpg",
+        "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Softlines/Hobby/Gaming/GW/PC_Hero_3000x1200_1._CB565866162_.jpg",
+        "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/devicenext/Feb24/GW/PC_Hero_3000x1200_1._CB581894452_.jpg"
+    ];
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -19,99 +26,111 @@ const Home = () => {
             }
         };
         fetchProducts();
+
+        const timer = setInterval(() => {
+            setCurrentHero((prev) => (prev + 1) % heroImages.length);
+        }, 5000);
+        return () => clearInterval(timer);
     }, []);
 
-    const features = [
-        { icon: <Truck className="w-8 h-8 text-indigo-500" />, title: 'Free Delivery', desc: 'On orders above ₹5000' },
-        { icon: <Shield className="w-8 h-8 text-indigo-500" />, title: 'Secure Payment', desc: '100% secure payment' },
-        { icon: <Zap className="w-8 h-8 text-indigo-500" />, title: 'Fast Support', desc: 'Dedicated 24/7 support' },
-    ];
-
     if (loading) return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary_navy"></div>
         </div>
     );
 
-    const featuredProducts = products.slice(0, 4);
+    const categories = [
+        { title: "Up to 70% off | Styles for men", image: "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-1-186-116._SY116_CB636110853_.jpg", link: "/products?category=Men" },
+        { title: "Appliances for your home", image: "https://images-eu.ssl-images-amazon.com/images/G/31/IMG15/IFA/PC_Dash_Default_1x._SY304_CB636110853_.jpg", link: "/products" },
+        { title: "Revamp your home in style", image: "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2024/Gateway/Home_decor_379x304._SY304_CB580970634_.jpg", link: "/products" },
+        { title: "Latest Smartwatches", image: "https://images-eu.ssl-images-amazon.com/images/G/31/img21/Smartwatches/CE/Nov24/GW/BTW/Unrec/379x304._SY304_CB541819777_.jpg", link: "/products" }
+    ];
 
     return (
-        <div className="min-h-screen">
+        <div className="bg-bg_light min-h-screen pb-10">
             {/* Hero Section */}
-            <div className="relative overflow-hidden rounded-3xl bg-indigo-900 text-white mb-16 shadow-2xl">
-                <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center"></div>
-                <div className="relative z-10 px-8 py-20 lg:py-32 max-w-4xl mx-auto text-center">
-                    <span className="inline-block py-1 px-3 rounded-full bg-indigo-800/50 backdrop-blur-sm border border-indigo-500/30 text-indigo-200 text-sm font-semibold tracking-wider mb-6">STUDENT PROJECT 2026</span>
-                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
-                        The Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Commerce.</span>
-                    </h1>
-                    <p className="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto opacity-90">
-                        Discover premium products with lightning-fast delivery and top-notch quality. Handpicked electronics, gaming, and lifestyle essentials.
-                    </p>
-                    <div className="flex justify-center gap-4">
-                        <Link to="/products" className="bg-white text-indigo-900 px-8 py-4 rounded-xl font-bold hover:bg-indigo-50 transition transform hover:-translate-y-1 shadow-lg flex items-center gap-2">
-                            Shop Now <ChevronRight className="w-5 h-5" />
-                        </Link>
-                    </div>
+            <div className="relative h-[600px] overflow-hidden">
+                <div className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out">
+                    <img
+                        src={heroImages[currentHero]}
+                        alt="Hero"
+                        className="w-full h-full object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,1)_60%,rgba(0,0,0,0)_100%)]"
+                    />
                 </div>
+
+                {/* Hero Navigation */}
+                <button
+                    onClick={() => setCurrentHero((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
+                    className="absolute left-0 top-0 bottom-0 px-4 hover:border-2 hover:border-white transition-all group z-20"
+                >
+                    <ChevronLeft className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+                <button
+                    onClick={() => setCurrentHero((prev) => (prev + 1) % heroImages.length)}
+                    className="absolute right-0 top-0 bottom-0 px-4 hover:border-2 hover:border-white transition-all group z-20"
+                >
+                    <ChevronRight className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
             </div>
 
-            {/* Features Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 px-4">
-                {features.map((f, i) => (
-                    <div key={i} className="flex items-center gap-4 p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                        <div className="bg-indigo-50 p-4 rounded-xl">{f.icon}</div>
-                        <div>
-                            <h3 className="font-bold text-gray-900">{f.title}</h3>
-                            <p className="text-gray-500 text-sm">{f.desc}</p>
+            {/* Content Container (Overlapping Hero) */}
+            <div className="relative -mt-80 z-30 px-4 max-w-[1500px] mx-auto">
+                {/* Category Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    {categories.map((cat, i) => (
+                        <div key={i} className="bg-white p-5 flex flex-col justify-between shadow-sm">
+                            <h2 className="text-xl font-bold mb-3">{cat.title}</h2>
+                            <div className="flex-1 overflow-hidden">
+                                <img src={cat.image} alt={cat.title} className="w-full h-full object-contain mb-4" />
+                            </div>
+                            <Link to={cat.link} className="text-sm text-blue-600 hover:text-accent_teal hover:underline mt-4 font-medium">
+                                See all offers
+                            </Link>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Featured Products Scroller */}
+                <div className="bg-white p-5 shadow-sm mb-6 overflow-hidden">
+                    <h2 className="text-xl font-bold mb-4">Today's Deals</h2>
+                    <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+                        {products.map((product) => (
+                            <Link key={product._id} to={`/products/${product._id}`} className="min-w-[200px] group">
+                                <div className="h-48 flex items-center justify-center p-4 bg-gray-50 mb-2">
+                                    <img src={product.image} alt={product.name} className="h-full object-contain transition-transform group-hover:scale-105" />
+                                </div>
+                                <div className="text-sm">
+                                    <span className="bg-accent_gold text-primary_navy px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
+                                    <p className="text-accent_teal font-bold inline-block">Deal of the Day</p>
+                                    <p className="font-bold text-lg">₹{product.price.toLocaleString('en-IN')}</p>
+                                    <p className="text-gray-600 truncate">{product.name}</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Second Row of Categories */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-white p-5 shadow-sm h-[420px] flex flex-col">
+                        <h2 className="text-xl font-bold mb-3">Sign in for your best experience</h2>
+                        <button className="w-full bg-accent_gold py-2 rounded-md shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold mb-4">
+                            Sign in securely
+                        </button>
+                        <div className="bg-[#f3f3f3] -mx-5 -mb-5 mt-auto p-5 overflow-hidden">
+                            <img src="https://m.media-amazon.com/images/G/31/img19/AMS/Houseads/Laptops-Sept2019._CB436595915_.jpg" alt="Ads" className="w-full h-full object-cover" />
                         </div>
                     </div>
-                ))}
-            </div>
-
-            {/* Featured Products */}
-            <div className="mb-20">
-                <div className="flex justify-between items-end mb-10 px-2">
-                    <div>
-                        <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
-                        <p className="text-gray-500 mt-2">Latest additions to our premium collection</p>
-                    </div>
-                    <Link to="/products" className="text-indigo-600 font-semibold hover:text-indigo-800 flex items-center">
-                        View All <ChevronRight className="w-4 h-4 ml-1" />
-                    </Link>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {featuredProducts.map((product) => (
-                        <Link key={product._id} to={`/products/${product._id}`} className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
-                            <div className="relative aspect-square p-6 bg-gray-50 flex items-center justify-center overflow-hidden">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="object-contain h-full w-full group-hover:scale-110 transition-transform duration-500 ease-in-out"
-                                />
-                                <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-gray-900 shadow-sm border border-gray-200">
-                                    {product.category}
-                                </div>
-                            </div>
-                            <div className="p-6 flex flex-col flex-grow">
-                                <div className="flex items-center gap-1 mb-2">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star key={i} className={`w-4 h-4 ${i < Math.round(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`} />
-                                    ))}
-                                    <span className="text-xs text-gray-500 ml-1">({product.numReviews})</span>
-                                </div>
-                                <h3 className="font-bold text-gray-900 text-lg leading-tight mb-4 group-hover:text-indigo-600 transition-colors">
-                                    {product.name}
-                                </h3>
-                                <div className="mt-auto flex justify-between items-center">
-                                    <span className="text-xl font-extrabold text-indigo-700">₹{product.price.toLocaleString('en-IN')}</span>
-                                    <button className="bg-gray-900 text-white p-3 rounded-full hover:bg-indigo-600 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-200 transition-all">
-                                        <ShoppingCart className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        </Link>
+                    {products.slice(0, 3).map((p, i) => (
+                        <div key={i} className="bg-white p-5 shadow-sm">
+                            <h2 className="text-xl font-bold mb-3">Inspired by your browsing</h2>
+                            <Link to={`/products/${p._id}`} className="block h-64 mb-4">
+                                <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
+                            </Link>
+                            <Link to={`/products/${p._id}`} className="text-sm text-blue-600 hover:text-accent_teal hover:underline font-medium">
+                                Check more
+                            </Link>
+                        </div>
                     ))}
                 </div>
             </div>

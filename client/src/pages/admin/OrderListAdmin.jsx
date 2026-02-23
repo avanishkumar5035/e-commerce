@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AuthContext from '../../context/AuthContext';
+import AuthContext from '../../context/AuthContext.jsx';
 import { ClipboardList, ExternalLink, CheckCircle, Clock } from 'lucide-react';
 
 const OrderListAdmin = () => {
@@ -35,19 +35,19 @@ const OrderListAdmin = () => {
 
     if (loading) return (
         <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary_navy"></div>
         </div>
     );
 
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
             <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-indigo-100 rounded-xl text-indigo-600">
+                <div className="p-3 bg-bg_light rounded-xl text-primary_navy border border-gray-100 shadow-sm">
                     <ClipboardList className="w-6 h-6" />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Order Management</h1>
-                    <p className="text-gray-500 text-sm mt-1">Review and process customer orders</p>
+                    <h1 className="text-3xl font-extrabold text-primary_navy tracking-tight">Order Management</h1>
+                    <p className="text-gray-500 text-sm mt-1">Review and process customer orders on <span className="text-accent_teal font-bold">ShopSphere</span></p>
                 </div>
             </div>
 
@@ -85,17 +85,17 @@ const OrderListAdmin = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         {order.isDelivered ? (
-                                            <div className="flex items-center text-green-600 font-medium">
+                                            <div className="flex items-center text-green-700 font-bold">
                                                 <CheckCircle className="w-4 h-4 mr-1.5" /> Delivered
                                             </div>
                                         ) : (
-                                            <div className="flex items-center text-amber-600 font-medium">
+                                            <div className="flex items-center text-accent_gold font-bold">
                                                 <Clock className="w-4 h-4 mr-1.5" /> Pending
                                             </div>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link to={`/order/${order._id}`} className="inline-flex items-center text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition">
+                                        <Link to={`/order/${order._id}`} className="inline-flex items-center text-primary_navy hover:text-white bg-accent_gold px-3 py-1.5 rounded-lg hover:bg-[#f3a847] transition font-bold shadow-sm">
                                             View <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
                                         </Link>
                                     </td>
