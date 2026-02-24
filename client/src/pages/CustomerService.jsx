@@ -3,25 +3,25 @@ import { Link } from 'react-router-dom';
 
 const CustomerService = () => {
     const categories = [
-        { icon: <Package className="w-8 h-8 text-accent_teal" />, title: "Your Orders", desc: "Track, return, or buy things again" },
-        { icon: <RotateCcw className="w-8 h-8 text-accent_teal" />, title: "Returns & Refunds", desc: "Return or exchange items" },
-        { icon: <ShieldCheck className="w-8 h-8 text-accent_teal" />, title: "Manage Prime", desc: "View benefits or cancel membership" },
-        { icon: <CreditCard className="w-8 h-8 text-accent_teal" />, title: "Payment Settings", desc: "Add or edit payment methods" },
-        { icon: <User className="w-8 h-8 text-accent_teal" />, title: "Account Settings", desc: "Change your email or password" },
-        { icon: <MessageSquare className="w-8 h-8 text-accent_gold" />, title: "Digital Services", desc: "Troubleshoot device issues" },
+        { icon: <Package className="w-8 h-8 text-sky_blue" />, title: "Your Orders", desc: "Track, return, or buy things again" },
+        { icon: <RotateCcw className="w-8 h-8 text-sky_blue" />, title: "Returns & Refunds", desc: "Return or exchange items" },
+        { icon: <ShieldCheck className="w-8 h-8 text-sky_blue" />, title: "Manage Prime", desc: "View benefits or cancel membership" },
+        { icon: <CreditCard className="w-8 h-8 text-sky_blue" />, title: "Payment Settings", desc: "Add or edit payment methods" },
+        { icon: <User className="w-8 h-8 text-sky_blue" />, title: "Account Settings", desc: "Change your email or password" },
+        { icon: <MessageSquare className="w-8 h-8 text-sky_blue" />, title: "Digital Services", desc: "Troubleshoot device issues" },
     ];
 
     return (
-        <div className="bg-bg_light min-h-screen">
+        <div className="bg-bg_soft_gray min-h-screen">
             {/* Hero Section */}
-            <div className="bg-bg_light py-10 px-4">
+            <div className="bg-bg_soft_gray py-10 px-4">
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-3xl font-bold text-gray-800 mb-6">Hello. What can we help you with?</h1>
                     <div className="relative max-w-2xl mx-auto">
                         <input
                             type="text"
                             placeholder="Search our help topics"
-                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none shadow-sm"
+                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none shadow-sm"
                         />
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                     </div>
@@ -60,7 +60,7 @@ const CustomerService = () => {
                         ].map((q, idx) => (
                             <div key={idx} className="p-5 flex justify-between items-center hover:bg-gray-50 cursor-pointer transition">
                                 <span className="text-gray-700 font-medium">{q}</span>
-                                <span className="text-accent_teal text-sm font-bold">Details</span>
+                                <span className="text-sky_blue text-sm font-bold">Details</span>
                             </div>
                         ))}
                     </div>
@@ -69,11 +69,11 @@ const CustomerService = () => {
 
             {/* Contact Section */}
             <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-                <div className="bg-primary_navy text-white p-10 rounded-3xl shadow-xl">
+                <div className="bg-deep_blue text-white p-10 rounded-3xl shadow-xl">
                     <h2 className="text-2xl font-bold mb-4">Still need help?</h2>
                     <p className="text-gray-300 mb-8 max-w-md mx-auto">Our support team is available 24/7 to assist you with any inquiries about your orders or account.</p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <button className="bg-accent_gold text-primary_navy px-8 py-3 rounded-full font-bold hover:bg-[#f3a847] transition shadow-lg">
+                        <button className="bg-sky_blue text-deep_blue px-8 py-3 rounded-full font-bold hover:bg-[#f3a847] transition shadow-lg">
                             Chat Now
                         </button>
                         <button className="border border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition">
@@ -85,7 +85,7 @@ const CustomerService = () => {
 
             {/* Back Link */}
             <div className="text-center pb-12">
-                <Link to="/" className="text-accent_teal font-bold hover:underline">
+                <Link to="/" className="text-sky_blue font-bold hover:underline">
                     ← Back to ShopSphere Home
                 </Link>
             </div>

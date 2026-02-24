@@ -10,8 +10,8 @@
   font-weight: 400;
 
   color-scheme: light;
-  color: #0F1111;
-  background-color: #EAEDED;
+  color: #1A1A1B;
+  background-color: #F4F7F9;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -31,6 +31,6 @@ body {
 
 @layer base {
   body {
-    @apply text-text_main bg-bg_light font-sans;
+    @apply text-dark_charcoal bg-bg_soft_gray font-sans;
   }
 }

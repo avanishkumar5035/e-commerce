@@ -35,19 +35,19 @@ const OrderListAdmin = () => {
 
     if (loading) return (
         <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary_navy"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-deep_blue"></div>
         </div>
     );
 
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
-            <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-bg_light rounded-xl text-primary_navy border border-gray-100 shadow-sm">
-                    <ClipboardList className="w-6 h-6" />
+            <div className="flex items-center gap-4 mb-10 text-dark_charcoal">
+                <div className="p-4 bg-deep_blue rounded-2xl text-white shadow-xl shadow-deep_blue/20">
+                    <ClipboardList className="w-8 h-8" />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-extrabold text-primary_navy tracking-tight">Order Management</h1>
-                    <p className="text-gray-500 text-sm mt-1">Review and process customer orders on <span className="text-accent_teal font-bold">ShopSphere</span></p>
+                    <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">Order Management</h1>
+                    <p className="text-text_secondary font-medium">Review and process customer orders on <span className="text-sky_blue font-black underline">ShopSphere</span></p>
                 </div>
             </div>
 
@@ -89,14 +89,14 @@ const OrderListAdmin = () => {
                                                 <CheckCircle className="w-4 h-4 mr-1.5" /> Delivered
                                             </div>
                                         ) : (
-                                            <div className="flex items-center text-accent_gold font-bold">
+                                            <div className="flex items-center text-sky_blue font-bold">
                                                 <Clock className="w-4 h-4 mr-1.5" /> Pending
                                             </div>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link to={`/order/${order._id}`} className="inline-flex items-center text-primary_navy hover:text-white bg-accent_gold px-3 py-1.5 rounded-lg hover:bg-[#f3a847] transition font-bold shadow-sm">
-                                            View <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                                        <Link to={`/order/${order._id}`} className="inline-flex items-center text-white bg-deep_blue px-4 py-2 rounded-xl hover:bg-deep_blue_dark transition-all font-black shadow-lg shadow-deep_blue/20 active:scale-95 text-xs uppercase tracking-tighter">
+                                            View Details <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
                                         </Link>
                                     </td>
                                 </tr>

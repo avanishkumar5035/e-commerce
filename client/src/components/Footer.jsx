@@ -6,15 +6,15 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-primary_navy-light text-white pt-10">
+        <footer className="bg-dark_charcoal text-white pt-10">
             <div
                 onClick={scrollToTop}
-                className="bg-primary_navy hover:bg-[#37475a] text-center py-4 cursor-pointer text-sm font-bold transition-all"
+                className="bg-deep_blue hover:bg-deep_blue_dark text-center py-4 cursor-pointer text-sm font-black transition-all uppercase tracking-widest opacity-90 hover:opacity-100"
             >
                 Back to top
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 border-b border-gray-700">
+            <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 border-b border-white/10">
                 <div>
                     <h3 className="font-bold text-base mb-4">Get to Know Us</h3>
                     <ul className="text-sm space-y-2 text-gray-300">
@@ -55,8 +55,8 @@ const Footer = () => {
             </div>
 
             <div className="py-8 flex flex-col items-center gap-6">
-                <Link to="/" className="text-2xl font-bold tracking-tighter">
-                    Shop<span className="text-accent_gold">Sphere</span>
+                <Link to="/" className="flex items-center">
+                    <span className="text-3xl font-extrabold tracking-tighter text-white">Shop<span className="text-sky_blue">Sphere</span></span>
                 </Link>
                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-300 px-4">
                     {['Australia', 'Brazil', 'Canada', 'China', 'France', 'Germany', 'Italy', 'Japan', 'Mexico', 'Netherlands', 'Poland', 'Singapore', 'Spain', 'Turkey', 'United Arab Emirates', 'United Kingdom', 'United States'].map(country => (
@@ -65,7 +65,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="bg-primary_navy py-8 text-center px-4">
+            <div className="bg-black/20 py-10 text-center px-4">
                 <div className="flex justify-center gap-6 text-xs mb-4">
                     <span className="hover:underline cursor-pointer">Conditions of Use</span>
                     <span className="hover:underline cursor-pointer">Privacy Notice</span>

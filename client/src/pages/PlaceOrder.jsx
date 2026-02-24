@@ -58,12 +58,12 @@ const PlaceOrder = () => {
     };
 
     return (
-        <div className="bg-bg_light min-h-screen">
+        <div className="bg-bg_soft_gray min-h-screen">
             {/* Simple Checkout Header */}
-            <div className="bg-bg_light border-b border-[#d5d9d9] py-4 px-6 mb-6">
+            <div className="bg-bg_soft_gray border-b border-[#d5d9d9] py-4 px-6 mb-6">
                 <div className="max-w-5xl mx-auto flex justify-between items-center">
-                    <Link to="/" className="text-2xl font-bold tracking-tighter text-primary_navy">
-                        Shop<span className="text-accent_gold">Sphere</span>
+                    <Link to="/" className="text-2xl font-bold tracking-tighter text-deep_blue">
+                        Shop<span className="text-sky_blue">Sphere</span>
                     </Link>
                     <h1 className="text-2xl font-normal text-gray-800">Checkout</h1>
                     <div className="w-8"></div> {/* Spacer */}
@@ -86,7 +86,7 @@ const PlaceOrder = () => {
                                     {shippingAddress.country}
                                 </p>
                             </div>
-                            <Link to="/shipping" className="text-xs text-accent_teal hover:underline h-fit font-bold">Change</Link>
+                            <Link to="/shipping" className="text-xs text-sky_blue hover:underline h-fit font-bold">Change</Link>
                         </div>
                     </div>
 
@@ -98,7 +98,7 @@ const PlaceOrder = () => {
                                 <h3 className="font-bold text-lg">Payment method</h3>
                                 <p className="text-sm mt-1">{paymentMethod}</p>
                             </div>
-                            <Link to="/payment" className="text-xs text-accent_teal hover:underline h-fit font-bold">Change</Link>
+                            <Link to="/payment" className="text-xs text-sky_blue hover:underline h-fit font-bold">Change</Link>
                         </div>
                     </div>
 
@@ -119,7 +119,7 @@ const PlaceOrder = () => {
                                                 <h4 className="text-sm font-bold text-gray-800">{item.name}</h4>
                                                 <p className="text-xs text-gray-600 mt-1">Sold by: Cloudtail India</p>
                                                 <div className="flex items-center gap-2 mt-2">
-                                                    <span className="text-sm font-bold text-accent_teal">₹{item.price.toLocaleString('en-IN')}</span>
+                                                    <span className="text-sm font-bold text-sky_blue">₹{item.price.toLocaleString('en-IN')}</span>
                                                     <span className="text-xs text-gray-500">Qty: {item.qty}</span>
                                                 </div>
                                             </div>
@@ -136,13 +136,13 @@ const PlaceOrder = () => {
                     <div className="border border-gray-300 rounded-lg p-4 sticky top-6 bg-white shadow-sm">
                         <button
                             onClick={placeOrderHandler}
-                            className="w-full bg-accent_gold py-2 px-4 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition mb-4"
+                            className="w-full bg-sky_blue py-2 px-4 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition mb-4"
                             disabled={cartItems.length === 0}
                         >
                             Place your order
                         </button>
                         <p className="text-[10px] text-gray-600 text-center mb-4 leading-tight">
-                            By placing your order, you agree to ShopSphere's <span className="text-accent_teal hover:underline cursor-pointer font-bold">privacy notice</span> and <span className="text-accent_teal hover:underline cursor-pointer font-bold">conditions of use</span>.
+                            By placing your order, you agree to ShopSphere's <span className="text-sky_blue hover:underline cursor-pointer font-bold">privacy notice</span> and <span className="text-sky_blue hover:underline cursor-pointer font-bold">conditions of use</span>.
                         </p>
 
                         <hr className="mb-4" />
@@ -165,13 +165,13 @@ const PlaceOrder = () => {
 
                         <hr className="mb-4" />
 
-                        <div className="flex justify-between text-lg font-bold text-accent_teal mb-4">
+                        <div className="flex justify-between text-lg font-bold text-sky_blue mb-4">
                             <span>Order Total:</span>
                             <span>₹{Number(totalPrice).toLocaleString('en-IN')}</span>
                         </div>
 
-                        <div className="bg-bg_light -mx-4 -mb-4 p-4 rounded-b-lg border-t border-gray-300">
-                            <Link to="/how-to-pay" className="text-xs text-accent_teal hover:underline font-bold">How are delivery costs calculated?</Link>
+                        <div className="bg-bg_soft_gray -mx-4 -mb-4 p-4 rounded-b-lg border-t border-gray-300">
+                            <Link to="/how-to-pay" className="text-xs text-sky_blue hover:underline font-bold">How are delivery costs calculated?</Link>
                         </div>
                     </div>
                 </div>

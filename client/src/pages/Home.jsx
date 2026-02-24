@@ -33,11 +33,9 @@ const Home = () => {
         return () => clearInterval(timer);
     }, []);
 
-    if (loading) return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary_navy"></div>
-        </div>
-    );
+    <div className="flex justify-center items-center h-screen bg-bg_soft_gray">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-deep_blue"></div>
+    </div>
 
     const categories = [
         { title: "Up to 70% off | Styles for men", image: "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-1-186-116._SY116_CB636110853_.jpg", link: "/products?category=Men" },
@@ -47,7 +45,7 @@ const Home = () => {
     ];
 
     return (
-        <div className="bg-bg_light min-h-screen pb-10 font-sans">
+        <div className="bg-bg_soft_gray min-h-screen pb-10 font-sans text-dark_charcoal">
             {/* Hero Section */}
             <div className="relative h-[600px] overflow-hidden bg-gradient-to-r from-[#f8f9fa] to-[#eaeDED]">
                 <div className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out">
@@ -83,8 +81,8 @@ const Home = () => {
                             <div className="flex-1 overflow-hidden">
                                 <img src={cat.image} alt={cat.title} className="w-full h-full object-contain mb-4" />
                             </div>
-                            <Link to={cat.link} className="text-sm text-[#007185] hover:text-[#C7511F] hover:underline mt-4 font-medium">
-                                See all offers
+                            <Link to={cat.link} className="text-sm text-deep_blue hover:text-sky_blue hover:underline mt-4 font-bold transition-all flex items-center gap-1">
+                                See all offers <ChevronRight className="w-3 h-3" />
                             </Link>
                         </div>
                     ))}
@@ -100,8 +98,8 @@ const Home = () => {
                                     <img src={product.image} alt={product.name} className="h-full object-contain transition-transform group-hover:scale-105" />
                                 </div>
                                 <div className="text-sm">
-                                    <span className="bg-btn_add_to_cart text-text_main px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
-                                    <p className="text-accent_teal font-bold inline-block">Deal of the Day</p>
+                                    <span className="bg-sky_blue/10 text-sky_blue px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
+                                    <p className="text-deep_blue font-black inline-block uppercase tracking-tighter text-[10px]">Deal of the Day</p>
                                     <p className="font-bold text-lg">₹{product.price.toLocaleString('en-IN')}</p>
                                     <p className="text-text_secondary truncate">{product.name}</p>
                                 </div>
@@ -114,7 +112,7 @@ const Home = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div className="bg-white p-5 shadow-md h-[420px] flex flex-col rounded-lg">
                         <h2 className="text-xl font-bold mb-3">Sign in for your best experience</h2>
-                        <button className="w-full bg-btn_add_to_cart py-2 rounded-md shadow-sm border border-[#D5B921] hover:bg-[#F7CA00] text-sm font-bold mb-4 transition-colors">
+                        <button className="w-full bg-deep_blue text-white py-3 rounded-xl shadow-xl shadow-deep_blue/20 hover:bg-deep_blue_dark text-sm font-bold mb-4 transition-all active:scale-95">
                             Sign in securely
                         </button>
                         <div className="bg-[#f3f3f3] -mx-5 -mb-5 mt-auto p-5 overflow-hidden rounded-b-lg">
@@ -127,7 +125,7 @@ const Home = () => {
                             <Link to={`/products/${p._id}`} className="block h-64 mb-4">
                                 <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
                             </Link>
-                            <Link to={`/products/${p._id}`} className="text-sm text-[#007185] hover:text-[#C7511F] hover:underline font-medium">
+                            <Link to={`/products/${p._id}`} className="text-sm text-deep_blue hover:text-sky_blue hover:underline font-bold transition-all">
                                 Check more
                             </Link>
                         </div>

@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Activity = require('../models/Activity');
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -32,6 +33,14 @@ const addOrderItems = async (req, res) => {
 
             const createdOrder = await order.save();
 
+            await Activity.create({
+                user: req.user._id,
+                userName: req.user.name,
+                action: 'PURCHASE',
+                details: `Order created: ${createdOrder._id}`,
+                payload: { orderId: createdOrder._id, amount: createdOrder.totalPrice },
+            });
+
             res.status(201).json(createdOrder);
         }
     } catch (error) {
@@ -48,6 +57,42 @@ const getOrderById = async (req, res) => {
 
         if (order) {
             res.json(order);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update order to paid
+// @route   PUT /api/orders/:id/pay
+// @access  Private
+const updateOrderToPaid = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (order) {
+            order.isPaid = true;
+            order.paidAt = Date.now();
+            order.paymentResult = {
+                id: req.body.id || 'SIMULATED_ID',
+                status: req.body.status || 'COMPLETED',
+                update_time: req.body.update_time || new Date().toISOString(),
+                email_address: req.body.email_address || req.user.email,
+            };
+
+            const updatedOrder = await order.save();
+
+            await Activity.create({
+                user: req.user._id,
+                userName: req.user.name,
+                action: 'PAYMENT',
+                details: `Order paid: ${updatedOrder._id}`,
+                payload: { orderId: updatedOrder._id, amount: updatedOrder.totalPrice },
+            });
+
+            res.json(updatedOrder);
         } else {
             res.status(404).json({ message: 'Order not found' });
         }
@@ -104,6 +149,7 @@ const getMyOrders = async (req, res) => {
 module.exports = {
     addOrderItems,
     getOrderById,
+    updateOrderToPaid,
     updateOrderToDelivered,
     getOrders,
     getMyOrders,

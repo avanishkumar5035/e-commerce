@@ -13,14 +13,14 @@ const Cart = () => {
 
     if (cartItems.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-24 text-center bg-bg_light min-h-screen">
+            <div className="flex flex-col items-center justify-center py-24 text-center bg-bg_soft_gray min-h-screen">
                 <div className="p-6 mb-6">
                     <ShoppingBag className="w-24 h-24 text-gray-200" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Your ShopSphere Cart is empty</h2>
                 <p className="text-sm text-gray-600 mb-8">Your shopping cart lives to serve. Give it purpose — fill it with electronics, clothes, and more.</p>
                 <div className="flex gap-4">
-                    <Link to="/products" className="bg-accent_gold px-8 py-2 rounded-lg font-bold shadow-sm border border-[#a88734] hover:bg-[#f3a847] transition">
+                    <Link to="/products" className="bg-deep_blue text-white px-8 py-2 rounded-lg font-black shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark transition">
                         Shop latest offers
                     </Link>
                 </div>
@@ -36,7 +36,7 @@ const Cart = () => {
     const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
     return (
-        <div className="bg-bg_light min-h-screen py-6 px-4">
+        <div className="bg-bg_soft_gray min-h-screen py-6 px-4">
             <div className="max-w-[1500px] mx-auto flex flex-col lg:flex-row gap-6">
 
                 {/* Left Section: Cart Items */}
@@ -57,7 +57,7 @@ const Cart = () => {
                                 {/* Details */}
                                 <div className="flex-1 flex flex-col">
                                     <div className="flex justify-between">
-                                        <Link to={`/products/${item.product}`} className="text-lg font-medium text-gray-900 hover:text-accent_teal hover:underline line-clamp-2">
+                                        <Link to={`/products/${item.product}`} className="text-lg font-medium text-gray-900 hover:text-sky_blue hover:underline line-clamp-2">
                                             {item.name}
                                         </Link>
                                         <div className="text-lg font-bold text-gray-900">
@@ -85,14 +85,14 @@ const Cart = () => {
                                         <span className="text-gray-300">|</span>
                                         <button
                                             onClick={() => removeFromCart(item.product)}
-                                            className="text-xs text-accent_teal hover:underline font-bold"
+                                            className="text-xs text-deep_blue hover:underline font-black"
                                         >
                                             Delete
                                         </button>
                                         <span className="text-gray-300">|</span>
-                                        <button className="text-xs text-accent_teal hover:underline font-bold">Save for later</button>
+                                        <button className="text-xs text-sky_blue hover:underline font-bold">Save for later</button>
                                         <span className="text-gray-300">|</span>
-                                        <button className="text-xs text-accent_teal hover:underline font-bold">See more like this</button>
+                                        <button className="text-xs text-sky_blue hover:underline font-bold">See more like this</button>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +122,7 @@ const Cart = () => {
                         </p>
                         <button
                             onClick={checkoutHandler}
-                            className="w-full bg-accent_gold py-2 px-4 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition"
+                            className="w-full bg-deep_blue text-white py-2 px-4 rounded-lg shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark text-sm font-black transition"
                         >
                             Proceed to Buy
                         </button>

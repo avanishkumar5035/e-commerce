@@ -14,11 +14,15 @@ import CustomerService from './pages/CustomerService';
 import Order from './pages/Order';
 import ProductListAdmin from './pages/admin/ProductListAdmin';
 import OrderListAdmin from './pages/admin/OrderListAdmin';
+import ActivityLogAdmin from './pages/admin/ActivityLogAdmin';
+import DashboardAdmin from './pages/admin/DashboardAdmin';
+import UserListAdmin from './pages/admin/UserListAdmin';
+import MonitorAdmin from './pages/admin/MonitorAdmin';
 
 function App() {
     return (
         <Router>
-            <div className="min-h-screen bg-bg_light font-sans flex flex-col">
+            <div className="min-h-screen bg-bg_cool_gray font-sans flex flex-col transition-colors duration-300">
                 <Header />
                 <main className="flex-1">
                     <Routes>
@@ -35,6 +39,10 @@ function App() {
                         <Route path="/order/:id" element={<Order />} />
                         <Route path="/admin/products" element={<ProductListAdmin />} />
                         <Route path="/admin/orders" element={<OrderListAdmin />} />
+                        <Route path="/admin/activities" element={<ActivityLogAdmin />} />
+                        <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+                        <Route path="/admin/users" element={<UserListAdmin />} />
+                        <Route path="/admin/monitor" element={<MonitorAdmin />} />
                     </Routes>
                 </main>
                 <Footer />

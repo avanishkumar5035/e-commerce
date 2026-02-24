@@ -6,7 +6,7 @@ const User = require('./models/User');
 const Product = require('./models/Product');
 const Order = require('./models/Order');
 
-dotenv.config();
+dotenv.config({ path: 'server/.env' });
 
 mongoose.connect(process.env.MONGO_URI);
 
@@ -20,7 +20,14 @@ const importData = async () => {
         const adminUser = createdUsers[0]._id;
 
         const sampleProducts = products.map((product) => {
-            return { ...product, user: adminUser };
+            const productWithUser = { ...product, user: adminUser };
+            if (product.reviews) {
+                productWithUser.reviews = product.reviews.map(review => ({
+                    ...review,
+                    user: adminUser
+                }));
+            }
+            return productWithUser;
         });
 
         await Product.insertMany(sampleProducts);

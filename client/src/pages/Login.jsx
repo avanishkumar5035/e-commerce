@@ -11,7 +11,8 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const redirect = location.search ? location.search.split('=')[1] : '/';
+    const queryRedirect = location.search ? location.search.split('=')[1] : '/';
+    const redirect = queryRedirect.startsWith('/') ? queryRedirect : `/${queryRedirect}`;
 
     useEffect(() => {
         if (user) {
@@ -28,44 +29,46 @@ const Login = () => {
     };
 
     return (
-        <div className="flex flex-col items-center pt-6 bg-white min-h-screen">
-            <Link to="/" className="text-3xl font-bold tracking-tighter text-primary_navy mb-4">
-                Shop<span className="text-accent_gold">Sphere</span>
+        <div className="flex flex-col items-center pt-10 bg-bg_cool_gray min-h-screen">
+            <Link to="/" className="flex items-center mb-8">
+                <span className="text-4xl font-extrabold tracking-tighter text-deep_blue">Shop<span className="text-deep_blue_dark">Sphere</span></span>
             </Link>
 
-            <div className="w-full max-w-[350px] border border-gray-300 rounded-lg p-6 mb-4">
-                <h1 className="text-3xl font-normal mb-4">Sign in</h1>
+            <div className="w-full max-w-[400px] bg-white shadow-xl rounded-xl p-8 mb-6 border border-gray-100">
+                <h1 className="text-2xl font-bold mb-6 text-dark_charcoal text-center">Sign in</h1>
 
                 {error && (
-                    <div className="bg-red-50 border border-red-700 text-red-700 p-2 text-xs mb-4 rounded flex items-center gap-2">
-                        <span className="font-bold text-lg">!</span>
+                    <div className="bg-red-50 border border-red-200 text-red-700 p-3 text-sm mb-6 rounded-lg flex items-center gap-3">
+                        <div className="bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs italic">!</div>
                         <div>
-                            <p className="font-bold">There was a problem</p>
-                            <p>{error}</p>
+                            <p className="font-bold">Login failed</p>
+                            <p className="text-xs opacity-90">{error}</p>
                         </div>
                     </div>
                 )}
 
-                <form onSubmit={submitHandler} className="space-y-3">
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-bold">Email or mobile phone number</label>
+                <form onSubmit={submitHandler} className="space-y-5">
+                    <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                        <label className="text-sm font-semibold ml-1">Email Address</label>
                         <input
                             type="email"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                            placeholder="Enter your email"
+                            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                        <div className="flex justify-between items-center">
-                            <label className="text-sm font-bold">Password</label>
-                            <Link className="text-xs text-blue-600 hover:text-red-700 hover:underline">Forgot Password?</Link>
+                    <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                        <div className="flex justify-between items-center ml-1">
+                            <label className="text-sm font-semibold">Password</label>
+                            <Link className="text-xs text-deep_blue hover:underline font-medium">Forgot Password?</Link>
                         </div>
                         <input
                             type="password"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                            placeholder="Enter your password"
+                            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -74,36 +77,33 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-accent_gold py-1.5 rounded shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm transition"
+                        className="w-full bg-deep_blue text-white py-3 rounded-lg shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark text-sm font-bold transition-all active:scale-95"
                     >
                         Sign in
                     </button>
                 </form>
 
-                <p className="text-xs text-gray-800 mt-4 leading-relaxed">
-                    By continuing, you agree to ShopSphere's <span className="text-blue-600 hover:underline">Conditions of Use</span> and <span className="text-blue-600 hover:underline">Privacy Notice</span>.
-                </p>
-
-                <div className="mt-6">
-                    <p className="text-xs text-gray-600 flex items-center gap-2 before:content-[''] before:flex-1 before:border-b before:border-gray-200 after:content-[''] after:flex-1 after:border-b after:border-gray-200">
-                        New to ShopSphere?
-                    </p>
+                <div className="mt-8">
+                    <div className="relative flex items-center justify-center mb-6">
+                        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100"></div></div>
+                        <span className="relative bg-white px-4 text-xs text-text_secondary font-medium uppercase tracking-wider">New to ShopSphere?</span>
+                    </div>
                     <Link
                         to={`/register?redirect=${redirect}`}
-                        className="w-full block text-center mt-3 py-1.5 rounded shadow-sm border border-gray-300 hover:bg-gray-100 text-sm transition"
+                        className="w-full block text-center py-3 rounded-lg border border-gray-200 hover:bg-gray-50 text-sm font-semibold text-dark_charcoal transition-all"
                     >
-                        Create your ShopSphere account
+                        Create your account
                     </Link>
                 </div>
             </div>
 
-            <div className="w-full max-w-5xl border-t border-gray-200 mt-8 pt-8 pb-10 px-4">
-                <div className="flex justify-center gap-10 text-xs text-blue-600 mb-2">
-                    <span className="hover:underline hover:text-red-700 cursor-pointer">Conditions of Use</span>
-                    <span className="hover:underline hover:text-red-700 cursor-pointer">Privacy Notice</span>
-                    <span className="hover:underline hover:text-red-700 cursor-pointer">Help</span>
+            <div className="flex flex-col items-center gap-4 text-xs pb-10">
+                <div className="flex gap-6 text-gray-500 font-medium">
+                    <span className="hover:text-deep_blue cursor-pointer transition-colors">Terms of Service</span>
+                    <span className="hover:text-deep_blue cursor-pointer transition-colors">Privacy Policy</span>
+                    <span className="hover:text-deep_blue cursor-pointer transition-colors">Help Center</span>
                 </div>
-                <p className="text-center text-[10px] text-gray-500">© 1996-2026, Amazon.com, Inc. or its affiliates</p>
+                <p className="text-gray-400">© 2026 ShopSphere E-Commerce. Premium Collection.</p>
             </div>
         </div>
     );

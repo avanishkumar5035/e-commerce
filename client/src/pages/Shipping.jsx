@@ -19,8 +19,8 @@ const Shipping = () => {
     };
 
     return (
-        <div className="bg-bg_light min-h-screen">
-            <div className="bg-bg_light border-b border-[#d5d9d9] py-4 px-6 mb-6">
+        <div className="bg-bg_soft_gray min-h-screen">
+            <div className="bg-bg_soft_gray border-b border-[#d5d9d9] py-4 px-6 mb-6">
                 <div className="max-w-3xl mx-auto flex justify-between items-center">
                     <h1 className="text-2xl font-normal text-gray-800">Select a delivery address</h1>
                 </div>
@@ -34,7 +34,7 @@ const Shipping = () => {
                         <div className="flex flex-col gap-1">
                             <label className="text-sm font-bold">Country/Region</label>
                             <select
-                                className="w-full border border-gray-400 rounded bg-bg_light px-2 py-2 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                                className="w-full border border-gray-400 rounded bg-bg_soft_gray px-2 py-2 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
                                 value={country}
                                 onChange={(e) => setCountry(e.target.value)}
                                 required
@@ -50,7 +50,7 @@ const Shipping = () => {
                             <label className="text-sm font-bold">Full name (First and Last name)</label>
                             <input
                                 type="text"
-                                className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                                className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none"
                                 required
                             />
                         </div>
@@ -60,7 +60,7 @@ const Shipping = () => {
                             <input
                                 type="text"
                                 placeholder="Street address, P.O. box, company name, c/o"
-                                className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none mb-2"
+                                className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none mb-2"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 required
@@ -72,7 +72,7 @@ const Shipping = () => {
                                 <label className="text-sm font-bold">City</label>
                                 <input
                                     type="text"
-                                    className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                                    className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none"
                                     value={city}
                                     onChange={(e) => setCity(e.target.value)}
                                     required
@@ -83,7 +83,7 @@ const Shipping = () => {
                                 <input
                                     type="text"
                                     placeholder="6 digits [0-9] PIN Code"
-                                    className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                                    className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none"
                                     value={postalCode}
                                     onChange={(e) => setPostalCode(e.target.value)}
                                     required
@@ -94,7 +94,7 @@ const Shipping = () => {
                         <div className="pt-4">
                             <button
                                 type="submit"
-                                className="bg-accent_gold py-2 px-6 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition"
+                                className="bg-deep_blue text-white py-2 px-6 rounded-lg shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark text-sm font-black transition"
                             >
                                 Use this address
                             </button>

@@ -21,8 +21,8 @@ const Payment = () => {
     };
 
     return (
-        <div className="bg-bg_light min-h-screen">
-            <div className="bg-bg_light border-b border-[#d5d9d9] py-4 px-6 mb-6">
+        <div className="bg-bg_soft_gray min-h-screen">
+            <div className="bg-bg_soft_gray border-b border-[#d5d9d9] py-4 px-6 mb-6">
                 <div className="max-w-3xl mx-auto flex justify-between items-center">
                     <h1 className="text-2xl font-normal text-gray-800">Select a payment method</h1>
                 </div>
@@ -30,16 +30,16 @@ const Payment = () => {
 
             <div className="max-w-3xl mx-auto px-4 pb-12">
                 <div className="border border-gray-300 rounded-lg p-8">
-                    <h2 className="text-xl font-bold mb-6 italic text-primary_navy underline decoration-accent_gold underline-offset-4">ShopSphere <span className="text-accent_gold not-italic">Pay</span></h2>
+                    <h2 className="text-xl font-black mb-6 italic text-deep_blue underline decoration-sky_blue underline-offset-4">ShopSphere <span className="text-sky_blue not-italic">Pay</span></h2>
 
                     <form onSubmit={submitHandler} className="space-y-6">
                         <div className="space-y-4">
-                            <div className={`p-4 border rounded-lg flex items-center gap-4 cursor-pointer transition ${method === 'PayPal' ? 'border-accent_gold bg-yellow-50 ring-1 ring-accent_gold' : 'border-gray-200'}`}
+                            <div className={`p-4 border rounded-lg flex items-center gap-4 cursor-pointer transition ${method === 'PayPal' ? 'border-sky_blue bg-sky_blue/5 ring-1 ring-sky_blue' : 'border-gray-200'}`}
                                 onClick={() => setMethod('PayPal')}>
                                 <input
                                     type="radio"
                                     name="paymentMethod"
-                                    className="w-4 h-4 accent-primary_navy"
+                                    className="w-4 h-4 accent-deep_blue"
                                     checked={method === 'PayPal'}
                                     readOnly
                                 />
@@ -49,12 +49,12 @@ const Payment = () => {
                                 </div>
                             </div>
 
-                            <div className={`p-4 border rounded-lg flex items-center gap-4 cursor-pointer transition ${method === 'Stripe' ? 'border-accent_gold bg-yellow-50 ring-1 ring-accent_gold' : 'border-gray-200'}`}
+                            <div className={`p-4 border rounded-lg flex items-center gap-4 cursor-pointer transition ${method === 'Stripe' ? 'border-sky_blue bg-yellow-50 ring-1 ring-sky_blue' : 'border-gray-200'}`}
                                 onClick={() => setMethod('Stripe')}>
                                 <input
                                     type="radio"
                                     name="paymentMethod"
-                                    className="w-4 h-4 accent-primary_navy"
+                                    className="w-4 h-4 accent-deep_blue"
                                     checked={method === 'Stripe'}
                                     readOnly
                                 />
@@ -64,12 +64,12 @@ const Payment = () => {
                                 </div>
                             </div>
 
-                            <div className={`p-4 border rounded-lg flex items-center gap-4 cursor-pointer transition ${method === 'COD' ? 'border-accent_gold bg-yellow-50 ring-1 ring-accent_gold' : 'border-gray-200'}`}
+                            <div className={`p-4 border rounded-lg flex items-center gap-4 cursor-pointer transition ${method === 'COD' ? 'border-sky_blue bg-yellow-50 ring-1 ring-sky_blue' : 'border-gray-200'}`}
                                 onClick={() => setMethod('COD')}>
                                 <input
                                     type="radio"
                                     name="paymentMethod"
-                                    className="w-4 h-4 accent-primary_navy"
+                                    className="w-4 h-4 accent-deep_blue"
                                     checked={method === 'COD'}
                                     readOnly
                                 />
@@ -83,7 +83,7 @@ const Payment = () => {
                         <div className="pt-6 border-t border-gray-200">
                             <button
                                 type="submit"
-                                className="bg-accent_gold py-2 px-8 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition text-primary_navy"
+                                className="bg-deep_blue text-white py-2 px-8 rounded-lg shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark text-sm font-black transition"
                             >
                                 Continue
                             </button>
@@ -91,8 +91,8 @@ const Payment = () => {
                     </form>
                 </div>
 
-                <div className="mt-8 bg-bg_light border border-gray-200 rounded p-4 text-[10px] text-gray-600">
-                    <p>When you subscribe to an auto-delivery, you choose the frequency. You can cancel at any time. <span className="text-accent_teal hover:underline font-bold">Learn more</span></p>
+                <div className="mt-8 bg-bg_soft_gray border border-gray-200 rounded p-4 text-[10px] text-gray-600">
+                    <p>When you subscribe to an auto-delivery, you choose the frequency. You can cancel at any time. <span className="text-sky_blue hover:underline font-black">Learn more</span></p>
                 </div>
             </div>
         </div>

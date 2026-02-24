@@ -35,8 +35,8 @@ const Register = () => {
 
     return (
         <div className="flex flex-col items-center pt-6 bg-white min-h-screen">
-            <Link to="/" className="text-3xl font-bold tracking-tighter text-primary_navy mb-4">
-                Shop<span className="text-accent_gold">Sphere</span>
+            <Link to="/" className="text-3xl font-black tracking-tighter text-deep_blue mb-4">
+                Shop<span className="text-sky_blue">Sphere</span>
             </Link>
 
             <div className="w-full max-w-[350px] border border-gray-300 rounded-lg p-6 mb-4">
@@ -58,7 +58,7 @@ const Register = () => {
                         <input
                             type="text"
                             placeholder="First and last name"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -69,7 +69,7 @@ const Register = () => {
                         <label className="text-sm font-bold">Mobile number or email</label>
                         <input
                             type="email"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -81,7 +81,7 @@ const Register = () => {
                         <input
                             type="password"
                             placeholder="At least 6 characters"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -92,7 +92,7 @@ const Register = () => {
                         <label className="text-sm font-bold">Confirm password</label>
                         <input
                             type="password"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-accent_gold focus:ring-1 focus:ring-accent_gold outline-none"
+                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
@@ -101,7 +101,7 @@ const Register = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-accent_gold py-1.5 rounded shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm transition mt-4"
+                        className="w-full bg-deep_blue text-white py-1.5 rounded shadow-sm hover:bg-deep_blue_dark text-sm transition mt-4 font-black"
                     >
                         Continue
                     </button>

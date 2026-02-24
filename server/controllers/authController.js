@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Activity = require('../models/Activity');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -73,6 +74,13 @@ const loginUser = async (req, res) => {
                 await user.save();
             }
 
+            await Activity.create({
+                user: user._id,
+                userName: user.name,
+                action: 'LOGIN',
+                details: 'Admin logged in',
+            });
+
             return res.json({
                 _id: user._id,
                 name: user.name,
@@ -85,6 +93,13 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await user.matchPassword(password))) {
+            await Activity.create({
+                user: user._id,
+                userName: user.name,
+                action: 'LOGIN',
+                details: `User ${user.email} logged in`,
+            });
+
             res.json({
                 _id: user._id,
                 name: user.name,

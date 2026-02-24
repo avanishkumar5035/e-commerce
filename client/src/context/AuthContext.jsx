@@ -43,7 +43,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
+        try {
+            await axios.post('/api/activity', {
+                action: 'LOGOUT',
+                details: `User ${user?.name || 'Unknown'} logged out`,
+                payload: { userId: user?._id }
+            });
+        } catch (error) {
+            console.error('Failed to log logout activity');
+        }
         setUser(null);
         localStorage.removeItem('user');
     };

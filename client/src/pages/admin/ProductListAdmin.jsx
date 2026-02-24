@@ -63,25 +63,25 @@ const ProductListAdmin = () => {
 
     if (loading) return (
         <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary_navy"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-deep_blue"></div>
         </div>
     );
 
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                <div className="flex items-center gap-3">
-                    <div className="p-3 bg-bg_light rounded-xl text-primary_navy border border-gray-100 shadow-sm">
-                        <Package className="w-6 h-6" />
+                <div className="flex items-center gap-4">
+                    <div className="p-4 bg-deep_blue rounded-2xl text-white shadow-xl shadow-deep_blue/20">
+                        <Package className="w-8 h-8" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-extrabold text-primary_navy tracking-tight">Products Catalog</h1>
-                        <p className="text-gray-500 text-sm mt-1">Manage all products in your <span className="text-accent_teal font-bold">ShopSphere</span> store</p>
+                        <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">Products Catalog</h1>
+                        <p className="text-text_secondary font-medium">Manage all products in your <span className="text-sky_blue font-black underline">ShopSphere</span> store</p>
                     </div>
                 </div>
                 <button
                     onClick={createProductHandler}
-                    className="flex items-center gap-2 bg-accent_gold text-primary_navy px-6 py-3 rounded-xl font-bold hover:bg-[#f3a847] hover:-translate-y-1 hover:shadow-lg transition transform border border-[#a88734]"
+                    className="flex items-center gap-2 bg-deep_blue text-white px-8 py-3.5 rounded-2xl font-black hover:bg-deep_blue_dark hover:-translate-y-1 hover:shadow-2xl shadow-xl shadow-deep_blue/30 transition transform active:scale-95"
                 >
                     <Plus className="w-5 h-5" /> Add New Product
                 </button>
@@ -105,14 +105,14 @@ const ProductListAdmin = () => {
                                 <tr key={product._id} className="hover:bg-gray-50 transition-colors group">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{product._id.substring(0, 8)}...</td>
                                     <td className="px-6 py-4 text-sm text-gray-900 font-semibold">{product.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-accent_teal font-bold">₹{product.price.toLocaleString('en-IN')}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-sky_blue font-black">₹{product.price.toLocaleString('en-IN')}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span className="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium">{product.category}</span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.brand}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Link to={`/admin/product/${product._id}/edit`} className="text-primary_navy hover:text-white bg-accent_gold p-2 rounded-lg hover:bg-[#f3a847] transition shadow-sm">
+                                            <Link to={`/admin/product/${product._id}/edit`} className="text-white bg-deep_blue p-2.5 rounded-xl hover:bg-deep_blue_dark transition shadow-lg shadow-deep_blue/10">
                                                 <Edit className="w-4 h-4" />
                                             </Link>
                                             <button onClick={() => deleteHandler(product._id)} className="text-red-700 hover:text-white bg-red-50 p-2 rounded-lg hover:bg-red-700 transition shadow-sm border border-red-100">

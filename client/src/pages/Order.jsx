@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext.jsx';
-import { ChevronRight, Package, Truck, Printer } from 'lucide-react';
+import { ChevronRight, Package, Truck, Printer, X } from 'lucide-react';
+import TrackingModal from '../components/TrackingModal.jsx';
 
 const Order = () => {
     const { id } = useParams();
@@ -10,8 +11,15 @@ const Order = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [isTrackingOpen, setIsTrackingOpen] = useState(false);
+
+    const handlePrint = () => {
+        window.print();
+    };
 
     useEffect(() => {
+        if (!user) return;
         const fetchOrder = async () => {
             try {
                 const config = {
@@ -29,7 +37,23 @@ const Order = () => {
         };
 
         fetchOrder();
-    }, [id, user]);
+    }, [id, user, navigate]); // Added navigate to dependency array
+
+    const payHandler = async () => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data } = await axios.put(`/api/orders/${order._id}/pay`, {}, config);
+            setOrder(data);
+            alert('Payment Successful!');
+        } catch (error) {
+            console.error(error);
+            alert('Payment Failed. Please try again.');
+        }
+    };
 
     const deliverHandler = async () => {
         try {
@@ -47,7 +71,7 @@ const Order = () => {
 
     if (loading) return (
         <div className="flex justify-center items-center h-screen bg-white">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary_navy"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-deep_blue"></div>
         </div>
     );
 
@@ -61,7 +85,7 @@ const Order = () => {
     );
 
     return (
-        <div className="bg-bg_light min-h-screen pb-12">
+        <div className="bg-bg_soft_gray min-h-screen pb-12">
             <div className="max-w-5xl mx-auto px-4 py-6">
                 {/* Breadcrumbs */}
                 <div className="flex items-center gap-1 text-xs text-gray-600 mb-6">
@@ -69,7 +93,7 @@ const Order = () => {
                     <ChevronRight className="w-3 h-3" />
                     <Link to="/your-orders" className="hover:underline">Your Orders</Link>
                     <ChevronRight className="w-3 h-3" />
-                    <span className="text-accent_gold font-bold">Order Details</span>
+                    <span className="text-sky_blue font-black">Order Details</span>
                 </div>
 
                 <div className="flex justify-between items-end mb-4 font-sans">
@@ -89,13 +113,13 @@ const Order = () => {
                         </div>
                         <div>
                             <p className="uppercase text-[10px] font-bold">Ship to</p>
-                            <p className="text-accent_teal hover:underline cursor-pointer font-medium">{user?.name}</p>
+                            <p className="text-sky_blue hover:underline cursor-pointer font-black">{user?.name}</p>
                         </div>
                     </div>
                     <div className="text-right">
                         <p className="uppercase text-[10px] font-bold">Order # {order._id}</p>
-                        <div className="flex gap-2 justify-end mt-1 text-blue-600 text-xs">
-                            <a href="#" className="hover:underline">View Invoice</a>
+                        <div className="flex gap-2 justify-end mt-1 text-blue-600 text-xs no-print">
+                            <button onClick={handlePrint} className="hover:underline">View Invoice</button>
                         </div>
                     </div>
                 </div>
@@ -139,8 +163,16 @@ const Order = () => {
                                 </div>
                                 <div className="flex justify-between font-bold mt-2 pt-2 border-t border-gray-200 text-sm italic">
                                     <span>Grand Total:</span>
-                                    <span className="text-accent_teal">₹{order.totalPrice?.toLocaleString('en-IN')}</span>
+                                    <span className="text-sky_blue">₹{order.totalPrice?.toLocaleString('en-IN')}</span>
                                 </div>
+                                {!order.isPaid && (
+                                    <button
+                                        onClick={payHandler}
+                                        className="w-full mt-4 bg-deep_blue text-white py-2 rounded-lg font-black shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark transition"
+                                    >
+                                        Pay Now
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -149,7 +181,7 @@ const Order = () => {
                 {/* Items Section */}
                 <div className="border border-[#d5d9d9] rounded-b-lg p-6 bg-white overflow-hidden mt-[-1px]">
                     <div className="flex items-center gap-2 mb-4">
-                        <h2 className={`text-xl font-bold ${order.isDelivered ? 'text-green-700' : 'text-accent_teal'}`}>
+                        <h2 className={`text-xl font-black ${order.isDelivered ? 'text-emerald-700' : 'text-sky_blue'}`}>
                             {order.isDelivered ? 'Delivered' : 'Arriving Soon'}
                         </h2>
                         {order.isDelivered && <span className="text-sm text-gray-600 font-normal ml-2">Delivered on {new Date(order.deliveredAt).toLocaleDateString()}</span>}
@@ -163,21 +195,27 @@ const Order = () => {
                                 </div>
                                 <div className="flex-1 flex flex-col md:flex-row justify-between gap-4">
                                     <div className="space-y-1">
-                                        <Link to={`/products/${item.product}`} className="text-sm text-accent_teal font-bold hover:underline line-clamp-2">
+                                        <Link to={`/products/${item.product}`} className="text-sm text-sky_blue font-bold hover:underline line-clamp-2">
                                             {item.name}
                                         </Link>
                                         <p className="text-xs text-gray-600 italic">Sold by: ShopSphere Direct</p>
-                                        <p className="text-xs font-bold text-accent_teal">₹{item.price?.toLocaleString('en-IN')}</p>
+                                        <p className="text-xs font-bold text-sky_blue">₹{item.price?.toLocaleString('en-IN')}</p>
                                         <div className="flex gap-4 pt-4">
-                                            <button className="bg-accent_gold px-4 py-1 rounded-full text-xs font-bold border border-[#a88734] hover:bg-[#f3a847]">Buy it again</button>
-                                            <button className="bg-bg_light px-4 py-1 rounded-full text-xs font-bold border border-[#d5d9d9] hover:bg-gray-200 text-primary_navy">View your item</button>
+                                            <button className="bg-sky_blue px-4 py-1 rounded-full text-xs font-bold border border-[#a88734] hover:bg-[#f3a847]">Buy it again</button>
+                                            <button className="bg-bg_soft_gray px-4 py-1 rounded-full text-xs font-bold border border-[#d5d9d9] hover:bg-gray-200 text-deep_blue">View your item</button>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col gap-2 w-full md:w-32">
-                                        <button className="w-full bg-white px-4 py-1 rounded-lg text-xs font-medium border border-[#d5d9d9] hover:bg-gray-50 flex items-center justify-center gap-1">
+                                    <div className="flex flex-col gap-2 w-full md:w-32 no-print">
+                                        <button
+                                            onClick={() => setIsTrackingOpen(true)}
+                                            className="w-full bg-white px-4 py-1 rounded-lg text-xs font-medium border border-[#d5d9d9] hover:bg-gray-50 flex items-center justify-center gap-1"
+                                        >
                                             <Truck className="w-3 h-3" /> Track package
                                         </button>
-                                        <button className="w-full bg-white px-4 py-1 rounded-lg text-xs font-medium border border-[#d5d9d9] hover:bg-gray-50 flex items-center justify-center gap-1">
+                                        <button
+                                            onClick={handlePrint}
+                                            className="w-full bg-white px-4 py-1 rounded-lg text-xs font-medium border border-[#d5d9d9] hover:bg-gray-50 flex items-center justify-center gap-1"
+                                        >
                                             <Printer className="w-3 h-3" /> Get invoice
                                         </button>
                                     </div>
@@ -190,7 +228,7 @@ const Order = () => {
                         <div className="mt-8 pt-6 border-t border-gray-200">
                             <button
                                 onClick={deliverHandler}
-                                className="bg-accent_gold px-6 py-2 rounded-lg text-sm font-bold border border-[#a88734] hover:bg-[#f3a847] text-primary_navy"
+                                className="bg-sky_blue px-6 py-2 rounded-lg text-sm font-bold border border-[#a88734] hover:bg-[#f3a847] text-deep_blue"
                             >
                                 Mark As Delivered (Admin Only)
                             </button>
@@ -198,6 +236,35 @@ const Order = () => {
                     )}
                 </div>
             </div>
+
+            <TrackingModal
+                isOpen={isTrackingOpen}
+                onClose={() => setIsTrackingOpen(false)}
+                order={order}
+            />
+
+            <style>{`
+                @media print {
+                    .no-print, 
+                    header, 
+                    footer, 
+                    button, 
+                    .breadcrumbs,
+                    .invoice-hide {
+                        display: none !important;
+                    }
+                    body {
+                        background-color: white !important;
+                    }
+                    .max-w-5xl {
+                        max-width: 100% !important;
+                        padding: 0 !important;
+                    }
+                    .bg-bg_soft_gray {
+                        background-color: white !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 };

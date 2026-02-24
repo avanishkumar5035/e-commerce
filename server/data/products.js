@@ -1,7 +1,7 @@
 const products = [
     {
         name: 'MacBook Pro 16-inch M3 Max',
-        image: '/images/macbook.jpg',
+        image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800',
         description: 'The most advanced Mac ever. Featuring the new M3 Max chip with unbelievable power, ray tracing, and up to 22 hours of battery life.',
         brand: 'Apple',
         category: 'Electronics',
@@ -12,7 +12,7 @@ const products = [
     },
     {
         name: 'Herman Miller Aeron Chair',
-        image: '/images/chair.jpg',
+        image: 'https://images.unsplash.com/photo-1581411516315-da8f349372bd?auto=format&fit=crop&q=80&w=800',
         description: 'The standard for ergonomic comfort. Engineered to support your posture during long study or coding sessions.',
         brand: 'Herman Miller',
         category: 'Furniture',
@@ -23,7 +23,7 @@ const products = [
     },
     {
         name: 'Sony WH-1000XM5 Headphones',
-        image: '/images/sony_headphones.jpg',
+        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800',
         description: 'Industry-leading noise cancellation with two processors controlling eight microphones. Auto NC Optimizer automatically optimizes sound.',
         brand: 'Sony',
         category: 'Electronics',
@@ -34,7 +34,7 @@ const products = [
     },
     {
         name: 'Nike Air Jordan 1 Retro High',
-        image: '/images/jordan.jpg',
+        image: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=800',
         description: 'The shoe that started it all. The Air Jordan 1 Retro High pairs classic design with premium materials for iconic style.',
         brand: 'Nike',
         category: 'Apparel',
@@ -45,7 +45,7 @@ const products = [
     },
     {
         name: 'Samsung 55" Neo QLED 4K Smart TV',
-        image: '/images/tv.jpg',
+        image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&q=80&w=800',
         description: 'Experience ultra-fine contrast with Quantum Matrix Technology. Brilliant 4K resolution and smooth 120Hz motion.',
         brand: 'Samsung',
         category: 'Electronics',
@@ -56,7 +56,7 @@ const products = [
     },
     {
         name: 'DJI Mini 4 Pro Drone',
-        image: '/images/drone.jpg',
+        image: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800',
         description: 'Under 249g. Omnidirectional obstacle sensing. 4K HDR video and up to 34 minutes of flight time.',
         brand: 'DJI',
         category: 'Photography',
@@ -67,7 +67,7 @@ const products = [
     },
     {
         name: 'Keychron Q1 Pro Mechanical Keyboard',
-        image: '/images/keyboard.jpg',
+        image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=800',
         description: 'A fully customizable 75% custom mechanical keyboard with QMK/VIA support, full aluminum CNC machined body.',
         brand: 'Keychron',
         category: 'Accessories',
@@ -78,7 +78,7 @@ const products = [
     },
     {
         name: 'Oculus Meta Quest 3',
-        image: '/images/quest.jpg',
+        image: 'https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?auto=format&fit=crop&q=80&w=800',
         description: 'Dive into mixed reality with the most powerful Quest yet. Breakthrough performance and higher resolution.',
         brand: 'Meta',
         category: 'Gaming',
@@ -86,6 +86,58 @@ const products = [
         countInStock: 20,
         rating: 4.7,
         numReviews: 275,
+    },
+    {
+        name: 'Nike Air Jordan 1 Retro High OG "Chicago"',
+        image: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&q=80&w=800',
+        description: 'The iconic Chicago colorway returns. Features premium leather, high-top silhouette, and encapsulated Air-Sole unit for ultimate comfort and style.',
+        brand: 'Nike',
+        category: 'Apparel',
+        price: 24500,
+        countInStock: 5,
+        rating: 5.0,
+        numReviews: 1250,
+        reviews: [
+            {
+                name: 'Avanish Kumar',
+                rating: 5,
+                comment: 'Absolutely legendary shoes. The quality is top-notch and they look even better in person!',
+            },
+            {
+                name: 'Priya Singh',
+                rating: 5,
+                comment: 'The comfort is surprising for a classic design. Highly recommended for any sneakerhead.',
+            }
+        ]
+    },
+    {
+        name: 'Sony PlayStation 5 Console',
+        image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=800',
+        description: 'Experience lightning-fast loading with an ultra-high-speed SSD, deeper immersion with support for haptic feedback, adaptive triggers, and 3D Audio.',
+        brand: 'Sony',
+        category: 'Electronics',
+        price: 54990,
+        countInStock: 15,
+        rating: 4.9,
+        numReviews: 5400,
+        reviews: [
+            {
+                name: 'Rahul Verma',
+                rating: 5,
+                comment: 'The graphics are mind-blowing. DualSense controller is a game-changer!',
+            }
+        ]
+    },
+    {
+        name: 'Air Jordan 4 Retro "Military Blue"',
+        image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=800',
+        description: 'A masterpiece of design and performance. The Air Jordan 4 "Military Blue" features a classic silhouette with modern comfort features.',
+        brand: 'Nike',
+        category: 'Apparel',
+        price: 21000,
+        countInStock: 10,
+        rating: 4.8,
+        numReviews: 890,
     }
 ];
 
