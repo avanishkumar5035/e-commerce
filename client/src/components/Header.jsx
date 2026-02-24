@@ -101,6 +101,11 @@ const Header = () => {
                                             <hr className="my-1 border-gray-50" />
                                         </>
                                     )}
+
+                                    <p className="px-2 py-1 text-[10px] uppercase font-bold text-gray-400">Your Account</p>
+                                    <Link to="/myorders" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">My Orders</Link>
+                                    <Link to="/wishlist" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">My Wishlist</Link>
+                                    <hr className="my-1 border-gray-50" />
                                     <button
                                         onClick={logout}
                                         className="w-full text-left text-sm hover:bg-deep_blue hover:text-white rounded px-2 py-1.5 transition-colors"
@@ -113,10 +118,10 @@ const Header = () => {
                     </Link>
 
                     {/* Orders */}
-                    <div className="hidden md:block p-2 border border-transparent hover:bg-gray-50 cursor-pointer transition-all rounded-md">
+                    <Link to="/myorders" className="hidden md:block p-2 border border-transparent hover:bg-gray-50 cursor-pointer transition-all rounded-md">
                         <p className="text-xs text-gray-500">Returns</p>
                         <p className="text-sm font-bold">& Orders</p>
-                    </div>
+                    </Link>
 
                     {/* Cart */}
                     {user && (
@@ -152,11 +157,11 @@ const Header = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    {['Best Sellers', "Today's Deals", 'New Releases', 'Prime', 'Mobiles'].map((item) => (
-                        <span key={item} className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">
-                            {item}
-                        </span>
-                    ))}
+                    <Link to="/products?sort=bestsellers" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Best Sellers</Link>
+                    <Link to="/products?filter=deals" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Today's Deals</Link>
+                    <Link to="/products?sort=newest" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">New Releases</Link>
+                    <span className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Prime</span>
+                    <Link to="/products?category=Electronics" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Electronics</Link>
                     <Link to="/customer-service" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">
                         Customer Service
                     </Link>

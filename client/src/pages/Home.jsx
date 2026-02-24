@@ -1,12 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ChevronRight, ChevronLeft, Star } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Star, Heart } from 'lucide-react';
+import AuthContext from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
+import { useWishlist } from '../context/WishlistContext.jsx';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentHero, setCurrentHero] = useState(0);
+    const { user } = useContext(AuthContext);
+    const { addToast } = useToast();
+    const { toggleWishlist, isInWishlist } = useWishlist();
+    const navigate = useNavigate();
 
     const heroImages = [
         "https://images-eu.ssl-images-amazon.com/images/G/31/img21/MA2024/GW/Aug/Unrec/BAU/PC/1-1._CB566141315_.jpg",
@@ -26,22 +33,26 @@ const Home = () => {
             }
         };
         fetchProducts();
+    }, []);
 
+    useEffect(() => {
         const timer = setInterval(() => {
             setCurrentHero((prev) => (prev + 1) % heroImages.length);
         }, 5000);
         return () => clearInterval(timer);
     }, []);
 
-    <div className="flex justify-center items-center h-screen bg-bg_soft_gray">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-deep_blue"></div>
-    </div>
+    if (loading) return (
+        <div className="flex justify-center items-center h-screen bg-bg_soft_gray">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-deep_blue"></div>
+        </div>
+    );
 
     const categories = [
-        { title: "Up to 70% off | Styles for men", image: "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-1-186-116._SY116_CB636110853_.jpg", link: "/products?category=Men" },
-        { title: "Appliances for your home", image: "https://images-eu.ssl-images-amazon.com/images/G/31/IMG15/IFA/PC_Dash_Default_1x._SY304_CB636110853_.jpg", link: "/products" },
-        { title: "Revamp your home in style", image: "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2024/Gateway/Home_decor_379x304._SY304_CB580970634_.jpg", link: "/products" },
-        { title: "Latest Smartwatches", image: "https://images-eu.ssl-images-amazon.com/images/G/31/img21/Smartwatches/CE/Nov24/GW/BTW/Unrec/379x304._SY304_CB541819777_.jpg", link: "/products" }
+        { title: "Shoes Collection", image: "/assets/shoes_banner.png", link: "/products?category=Shoes" },
+        { title: "Books Collection", image: "/assets/books_banner.png", link: "/products?category=Books" },
+        { title: "Styles for men", image: "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-1-186-116._SY116_CB636110853_.jpg", link: "/products?category=Men" },
+        { title: "Revamp your home in style", image: "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2024/Gateway/Home_decor_379x304._SY304_CB580970634_.jpg", link: "/products" }
     ];
 
     return (
@@ -93,17 +104,28 @@ const Home = () => {
                     <h2 className="text-xl font-bold mb-4">Today's Deals</h2>
                     <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
                         {products.map((product) => (
-                            <Link key={product._id} to={`/products/${product._id}`} className="min-w-[200px] group transition-transform duration-300 hover:scale-[1.03]">
-                                <div className="h-48 flex items-center justify-center p-4 bg-gray-50 mb-2 rounded-md">
-                                    <img src={product.image} alt={product.name} className="h-full object-contain transition-transform group-hover:scale-105" />
-                                </div>
-                                <div className="text-sm">
-                                    <span className="bg-sky_blue/10 text-sky_blue px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
-                                    <p className="text-deep_blue font-black inline-block uppercase tracking-tighter text-[10px]">Deal of the Day</p>
-                                    <p className="font-bold text-lg">₹{product.price.toLocaleString('en-IN')}</p>
-                                    <p className="text-text_secondary truncate">{product.name}</p>
-                                </div>
-                            </Link>
+                            <div key={product._id} className="min-w-[200px] relative group transition-transform duration-300 hover:scale-[1.03]">
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleWishlist(product._id);
+                                    }}
+                                    className="absolute top-2 right-2 z-10 p-1.5 bg-white/80 backdrop-blur-sm rounded-lg shadow-sm border border-gray-100 opacity-0 group-hover:opacity-100 transition-all hover:text-rose-500 active:scale-90"
+                                >
+                                    <Heart className={`w-3.5 h-3.5 ${isInWishlist(product._id) ? 'fill-rose-500 text-rose-500' : 'text-gray-400'}`} />
+                                </button>
+                                <Link to={`/products/${product._id}`}>
+                                    <div className="h-48 flex items-center justify-center p-4 bg-gray-50 mb-2 rounded-md">
+                                        <img src={product.image} alt={product.name} className="h-full object-contain transition-transform group-hover:scale-105" />
+                                    </div>
+                                    <div className="text-sm">
+                                        <span className="bg-sky_blue/10 text-sky_blue px-2 py-0.5 font-bold mr-2 rounded">Up to {Math.floor(Math.random() * 40) + 10}% off</span>
+                                        <p className="text-deep_blue font-black inline-block uppercase tracking-tighter text-[10px]">Deal of the Day</p>
+                                        <p className="font-bold text-lg">₹{product.price.toLocaleString('en-IN')}</p>
+                                        <p className="text-text_secondary truncate">{product.name}</p>
+                                    </div>
+                                </Link>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -120,7 +142,16 @@ const Home = () => {
                         </div>
                     </div>
                     {products.slice(0, 3).map((p, i) => (
-                        <div key={i} className="bg-white p-5 shadow-md rounded-lg hover:scale-[1.02] transition-transform duration-300">
+                        <div key={i} className="bg-white p-5 shadow-md rounded-lg relative group hover:scale-[1.02] transition-transform duration-300">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    toggleWishlist(p._id);
+                                }}
+                                className={`absolute top-5 right-5 z-10 p-2 rounded-xl shadow-sm border transition-all hover:scale-110 active:scale-90 ${isInWishlist(p._id) ? 'bg-red-500 text-white border-red-500' : 'bg-white/80 backdrop-blur-sm border-gray-100 text-gray-400 opacity-0 group-hover:opacity-100'}`}
+                            >
+                                <Heart className={`w-4 h-4 ${isInWishlist(p._id) ? 'fill-current' : ''}`} />
+                            </button>
                             <h2 className="text-xl font-bold mb-3">Inspired by your browsing</h2>
                             <Link to={`/products/${p._id}`} className="block h-64 mb-4">
                                 <img src={p.image} alt={p.name} className="w-full h-full object-contain" />

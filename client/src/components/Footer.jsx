@@ -27,9 +27,9 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold text-base mb-4">Connect with Us</h3>
                     <ul className="text-sm space-y-2 text-gray-300">
-                        <li className="hover:underline cursor-pointer">Facebook</li>
-                        <li className="hover:underline cursor-pointer">Twitter</li>
-                        <li className="hover:underline cursor-pointer">Instagram</li>
+                        <li><a href="https://facebook.com/shopsphere" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Facebook</a></li>
+                        <li><a href="https://twitter.com/shopsphere" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Twitter</a></li>
+                        <li><a href="https://instagram.com/shopsphere" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Instagram</a></li>
                     </ul>
                 </div>
                 <div>
@@ -45,11 +45,11 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold text-base mb-4">Let Us Help You</h3>
                     <ul className="text-sm space-y-2 text-gray-300">
-                        <Link to="/customer-service" className="hover:underline cursor-pointer block">Customer Service</Link>
-                        <li className="hover:underline cursor-pointer">Your Account</li>
-                        <li className="hover:underline cursor-pointer">Your Orders</li>
+                        <li><Link to="/customer-service" className="hover:underline cursor-pointer block">Customer Service</Link></li>
+                        <li><Link to="/login" className="hover:underline cursor-pointer block">Your Account</Link></li>
+                        <li><Link to="/myorders" className="hover:underline cursor-pointer block">Your Orders</Link></li>
                         <li className="hover:underline cursor-pointer">Shipping Rates & Policies</li>
-                        <li className="hover:underline cursor-pointer">Returns & Replacements</li>
+                        <li><Link to="/myorders" className="hover:underline cursor-pointer block">Returns & Replacements</Link></li>
                     </ul>
                 </div>
             </div>

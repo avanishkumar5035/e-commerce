@@ -75,9 +75,9 @@ const MonitorAdmin = () => {
     );
 
     return (
-        <div className="min-h-screen bg-[#0a0a0c] text-white p-6 font-sans selection:bg-sky_blue selection:text-deep_blue">
+        <div className="text-white selection:bg-sky_blue selection:text-deep_blue">
             {/* Header Area */}
-            <div className="max-w-[1600px] mx-auto mb-8">
+            <div className="mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-[#121216] p-8 rounded-[2rem] border border-white/5 shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-deep_blue/10 blur-[100px] -z-10" />
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-sky_blue/5 blur-[100px] -z-10" />
@@ -114,7 +114,7 @@ const MonitorAdmin = () => {
             </div>
 
             {/* Metrics Grid */}
-            <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {[
                     { label: 'Total Revenue', value: `₹${stats.totalRevenue.toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-400' },
                     { label: 'Live Orders', value: stats.totalOrders, icon: ShoppingBag, color: 'text-sky_blue' },
@@ -133,7 +133,7 @@ const MonitorAdmin = () => {
                 ))}
             </div>
 
-            <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Main Activity Feed */}
                 <div className="lg:col-span-2 bg-[#121216] rounded-[2.5rem] border border-white/5 overflow-hidden flex flex-col h-[700px] shadow-2xl">
                     <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -165,9 +165,9 @@ const MonitorAdmin = () => {
                                         <div className="flex items-center gap-3 mb-1">
                                             <p className="text-sm font-black text-gray-200">{a.userName}</p>
                                             <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest ${a.action === 'PURCHASE' ? 'bg-emerald-500/10 text-emerald-400' :
-                                                    a.action === 'PAYMENT' ? 'bg-sky_blue/10 text-sky_blue' :
-                                                        a.action === 'LOGIN' ? 'bg-orange-500/10 text-orange-400' :
-                                                            'bg-white/10 text-gray-400'
+                                                a.action === 'PAYMENT' ? 'bg-sky_blue/10 text-sky_blue' :
+                                                    a.action === 'LOGIN' ? 'bg-orange-500/10 text-orange-400' :
+                                                        'bg-white/10 text-gray-400'
                                                 }`}>
                                                 {a.action}
                                             </span>

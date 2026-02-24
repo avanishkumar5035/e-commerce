@@ -1,16 +1,25 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Star, MapPin, ChevronRight, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { Star, MapPin, ChevronRight, ShieldCheck, Truck, RotateCcw, Heart, MessageSquare, Send } from 'lucide-react';
+import AuthContext from '../context/AuthContext.jsx';
 import CartContext from '../context/CartContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
+import { useWishlist } from '../context/WishlistContext.jsx';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [qty, setQty] = useState(1);
+    const { user } = useContext(AuthContext);
     const { addToCart } = useContext(CartContext);
     const navigate = useNavigate();
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
+    const [submittingReview, setSubmittingReview] = useState(false);
+    const { addToast } = useToast();
+    const { toggleWishlist, isInWishlist: checkWishlist } = useWishlist();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -25,6 +34,33 @@ const ProductDetail = () => {
         };
         fetchProduct();
     }, [id]);
+
+    const toggleWishlistHandler = () => {
+        toggleWishlist(product._id);
+    };
+
+    const submitReviewHandler = async (e) => {
+        e.preventDefault();
+        if (rating === 0) {
+            addToast('Please select a rating', 'info');
+            return;
+        }
+        setSubmittingReview(true);
+        try {
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+            await axios.post(`/api/products/${id}/reviews`, { rating, comment }, config);
+            addToast('Review Submitted Successfully!', 'success');
+            setRating(0);
+            setComment('');
+            // Refresh product data
+            const { data } = await axios.get(`/api/products/${id}`);
+            setProduct(data);
+        } catch (error) {
+            addToast(error.response?.data?.message || 'Failed to submit review', 'error');
+        } finally {
+            setSubmittingReview(false);
+        }
+    };
 
     const addToCartHandler = () => {
         addToCart(product._id, qty);
@@ -180,8 +216,12 @@ const ProductDetail = () => {
                             </div>
                         </div>
 
-                        <button className="w-full text-xs bg-gray-100 py-1 border border-gray-300 rounded shadow-sm hover:bg-gray-200 transition">
-                            Add to Wish List
+                        <button
+                            onClick={toggleWishlistHandler}
+                            className={`w-full text-xs py-2 border rounded shadow-sm transition-all flex items-center justify-center gap-2 font-bold ${checkWishlist(product._id) ? 'bg-rose-50 border-rose-200 text-rose-500' : 'bg-gray-100 border-gray-300 hover:bg-gray-200 text-dark_charcoal'}`}
+                        >
+                            <Heart className={`w-4 h-4 ${checkWishlist(product._id) ? 'fill-rose-500' : ''}`} />
+                            {checkWishlist(product._id) ? 'In Wish List' : 'Add to Wish List'}
                         </button>
                     </div>
                 </div>
@@ -222,6 +262,56 @@ const ProductDetail = () => {
 
                     {/* Individual Reviews */}
                     <div className="flex-1">
+                        {/* Write a review */}
+                        {user ? (
+                            <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl mb-12">
+                                <h3 className="text-xl font-black text-dark_charcoal mb-6 flex items-center gap-2">
+                                    <MessageSquare className="w-6 h-6 text-deep_blue" />
+                                    Write a Customer Review
+                                </h3>
+                                <form onSubmit={submitReviewHandler} className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-black text-gray-500 uppercase tracking-widest mb-3">Overall Rating</label>
+                                        <div className="flex gap-2">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <button
+                                                    key={star}
+                                                    type="button"
+                                                    onClick={() => setRating(star)}
+                                                    className="transition-transform active:scale-90"
+                                                >
+                                                    <Star className={`w-8 h-8 ${star <= rating ? 'fill-sky_blue text-sky_blue' : 'text-gray-200'}`} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-black text-gray-500 uppercase tracking-widest mb-3">Add a written review</label>
+                                        <textarea
+                                            rows="4"
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            placeholder="What did you like or dislike? What should other customers know?"
+                                            className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-4 focus:ring-deep_blue/5 focus:border-deep_blue/20 transition-all text-sm"
+                                            required
+                                        ></textarea>
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        disabled={submittingReview}
+                                        className="bg-deep_blue text-white px-8 py-3 rounded-xl font-black text-sm hover:bg-deep_blue_dark transition-all shadow-lg shadow-deep_blue/20 flex items-center gap-2 disabled:opacity-50"
+                                    >
+                                        <Send className="w-4 h-4" />
+                                        {submittingReview ? 'Submitting...' : 'Submit Review'}
+                                    </button>
+                                </form>
+                            </div>
+                        ) : (
+                            <div className="bg-gray-50 p-8 rounded-[2rem] border border-dashed border-gray-200 text-center mb-12">
+                                <p className="text-gray-500 font-medium">Please <Link to="/login" className="text-deep_blue font-black hover:underline">sign in</Link> to write a review</p>
+                            </div>
+                        )}
+
                         <h3 className="text-xl font-bold mb-6">Top reviews from India</h3>
                         <div className="space-y-8">
                             {product.reviews && product.reviews.length > 0 ? (

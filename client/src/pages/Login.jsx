@@ -63,7 +63,7 @@ const Login = () => {
                     <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
                         <div className="flex justify-between items-center ml-1">
                             <label className="text-sm font-semibold">Password</label>
-                            <Link className="text-xs text-deep_blue hover:underline font-medium">Forgot Password?</Link>
+                            <Link to="/forgotpassword" title="Click to reset your password" className="text-xs text-deep_blue hover:underline font-medium">Forgot Password?</Link>
                         </div>
                         <input
                             type="password"

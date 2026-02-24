@@ -146,6 +146,65 @@ const getMyOrders = async (req, res) => {
     }
 };
 
+// @desc    Request a return
+// @route   PUT /api/orders/:id/return
+// @access  Private
+const requestReturn = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (order) {
+            if (!order.isDelivered) {
+                return res.status(400).json({ message: 'Only delivered orders can be returned' });
+            }
+
+            order.isReturned = true;
+            order.returnReason = req.body.reason;
+            order.returnStatus = 'Pending';
+            order.returnedAt = Date.now();
+
+            const updatedOrder = await order.save();
+
+            await Activity.create({
+                user: req.user._id,
+                userName: req.user.name,
+                action: 'RETURN_REQUEST',
+                details: `Return requested for order: ${updatedOrder._id}`,
+                payload: { orderId: updatedOrder._id, reason: req.body.reason },
+            });
+
+            res.json(updatedOrder);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update return status
+// @route   PUT /api/orders/:id/return-status
+// @access  Private/Admin
+const updateReturnStatus = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (order) {
+            order.returnStatus = req.body.status;
+            if (req.body.status === 'Completed') {
+                // Logic for refund could go here
+            }
+
+            const updatedOrder = await order.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     addOrderItems,
     getOrderById,
@@ -153,4 +212,6 @@ module.exports = {
     updateOrderToDelivered,
     getOrders,
     getMyOrders,
+    requestReturn,
+    updateReturnStatus,
 };

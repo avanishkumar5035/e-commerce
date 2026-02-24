@@ -2,11 +2,13 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Users, Trash2, Shield, User as UserIcon, Mail, Calendar } from 'lucide-react';
 import AuthContext from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext.jsx';
 
 const UserListAdmin = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user: currentUser } = useContext(AuthContext);
+    const { addToast } = useToast();
 
     const fetchUsers = async () => {
         try {
@@ -33,9 +35,10 @@ const UserListAdmin = () => {
                 await axios.delete(`/api/auth/users/${id}`, {
                     headers: { Authorization: `Bearer ${currentUser.token}` },
                 });
+                addToast('User deleted successfully', 'success');
                 fetchUsers();
             } catch (error) {
-                alert(error.response?.data?.message || 'Failed to delete user');
+                addToast(error.response?.data?.message || 'Failed to delete user', 'error');
             }
         }
     };
@@ -47,11 +50,8 @@ const UserListAdmin = () => {
     );
 
     return (
-        <div className="max-w-[1200px] mx-auto p-8 text-dark_charcoal font-sans">
+        <div className="text-dark_charcoal font-sans">
             <div className="flex items-center gap-4 mb-10">
-                <div className="bg-deep_blue p-4 rounded-2xl shadow-xl shadow-deep_blue/20">
-                    <Users className="w-8 h-8 text-white" />
-                </div>
                 <div>
                     <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">User Management</h1>
                     <p className="text-text_secondary font-medium">View and manage all registered customers</p>

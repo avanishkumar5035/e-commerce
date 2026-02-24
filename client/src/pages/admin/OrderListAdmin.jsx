@@ -1,34 +1,53 @@
-import { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import AuthContext from '../../context/AuthContext.jsx';
-import { ClipboardList, ExternalLink, CheckCircle, Clock } from 'lucide-react';
+import AuthContext from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext.jsx';
+import { ClipboardList, ExternalLink, CheckCircle, Clock, RotateCcw } from 'lucide-react';
 
 const OrderListAdmin = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
+    const { addToast } = useToast();
     const navigate = useNavigate();
+
+    const fetchOrders = async () => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data } = await axios.get('/api/orders', config);
+            setOrders(data);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
+
+    const updateReturnStatus = async (orderId, status) => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            await axios.put(`/api/orders/${orderId}/return-status`, { status }, config);
+            fetchOrders();
+            addToast(`Return ${status} Successfully!`, 'success');
+        } catch (error) {
+            console.error(error);
+            addToast('Failed to update return status', 'error');
+        }
+    };
 
     useEffect(() => {
         if (!user || user.role !== 'admin') {
             navigate('/login');
         } else {
-            const fetchOrders = async () => {
-                try {
-                    const config = {
-                        headers: {
-                            Authorization: `Bearer ${user.token}`,
-                        },
-                    };
-                    const { data } = await axios.get('/api/orders', config);
-                    setOrders(data);
-                    setLoading(false);
-                } catch (error) {
-                    console.error(error);
-                    setLoading(false);
-                }
-            };
             fetchOrders();
         }
     }, [user, navigate]);
@@ -40,14 +59,11 @@ const OrderListAdmin = () => {
     );
 
     return (
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
+        <div className="text-dark_charcoal">
             <div className="flex items-center gap-4 mb-10 text-dark_charcoal">
-                <div className="p-4 bg-deep_blue rounded-2xl text-white shadow-xl shadow-deep_blue/20">
-                    <ClipboardList className="w-8 h-8" />
-                </div>
                 <div>
                     <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">Order Management</h1>
-                    <p className="text-text_secondary font-medium">Review and process customer orders on <span className="text-sky_blue font-black underline">ShopSphere</span></p>
+                    <p className="text-text_secondary font-medium">Review and process customer orders</p>
                 </div>
             </div>
 
@@ -62,6 +78,8 @@ const OrderListAdmin = () => {
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Payment Status</th>
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Status</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Status</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Return Status</th>
                                 <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
@@ -92,6 +110,33 @@ const OrderListAdmin = () => {
                                             <div className="flex items-center text-sky_blue font-bold">
                                                 <Clock className="w-4 h-4 mr-1.5" /> Pending
                                             </div>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        {order.isReturned ? (
+                                            <div className="flex flex-col gap-1">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${order.returnStatus === 'Approved' ? 'bg-green-100 text-green-800' : order.returnStatus === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'}`}>
+                                                    {order.returnStatus}
+                                                </span>
+                                                {order.returnStatus === 'Pending' && (
+                                                    <div className="flex gap-1 mt-1">
+                                                        <button
+                                                            onClick={() => updateReturnStatus(order._id, 'Approved')}
+                                                            className="text-[10px] bg-emerald-500 text-white px-2 py-1 rounded hover:bg-emerald-600 font-bold"
+                                                        >
+                                                            Approve
+                                                        </button>
+                                                        <button
+                                                            onClick={() => updateReturnStatus(order._id, 'Rejected')}
+                                                            className="text-[10px] bg-rose-500 text-white px-2 py-1 rounded hover:bg-rose-600 font-bold"
+                                                        >
+                                                            Reject
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <span className="text-gray-300 text-xs">-</span>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

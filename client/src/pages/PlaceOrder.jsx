@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import CartContext from '../context/CartContext.jsx';
 import AuthContext from '../context/AuthContext.jsx';
 import axios from 'axios';
+import { useToast } from '../context/ToastContext.jsx';
 
 const PlaceOrder = () => {
     const { cartItems, shippingAddress, paymentMethod, clearCart } = useContext(CartContext);
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { addToast } = useToast();
 
     const addDecimals = (num) => {
         return (Math.round(num * 100) / 100).toFixed(2);
@@ -53,7 +55,7 @@ const PlaceOrder = () => {
             navigate(`/order/${data._id}`);
         } catch (error) {
             console.error(error);
-            alert('Failed to place order. Please try again.');
+            addToast('Failed to place order. Please try again.', 'error');
         }
     };
 

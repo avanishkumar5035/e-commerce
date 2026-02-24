@@ -77,24 +77,18 @@ const DashboardAdmin = () => {
     ];
 
     return (
-        <div className="max-w-[1400px] mx-auto p-8 text-dark_charcoal">
+        <div className="text-dark_charcoal">
             <div className="flex items-center justify-between mb-10">
-                <div className="flex items-center gap-4">
-                    <div className="bg-deep_blue p-4 rounded-2xl shadow-xl shadow-deep_blue/20 rotate-3">
-                        <LayoutDashboard className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                        <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">Admin Dashboard</h1>
-                        <p className="text-text_secondary font-medium">Overview of your store's performance</p>
-                    </div>
+                <div>
+                    <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">System Overview</h1>
+                    <p className="text-text_secondary font-medium">Real-time performance metrics</p>
                 </div>
                 <div className="flex gap-3 text-sm font-bold">
-                    <button className="px-6 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm">Export Data</button>
+                    <button className="px-6 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm active:scale-95">Export Data</button>
                     <Link to="/admin/monitor" className="px-6 py-2.5 bg-sky_blue text-white rounded-xl hover:bg-sky_blue_dark shadow-lg shadow-sky_blue/20 transition-all active:scale-95 flex items-center gap-2">
                         <ActivityIcon className="w-4 h-4" />
                         Live Monitor
                     </Link>
-                    <button className="px-6 py-2.5 bg-deep_blue text-white rounded-xl hover:bg-deep_blue_dark shadow-lg shadow-deep_blue/20 transition-all active:scale-95">Reports</button>
                 </div>
             </div>
 

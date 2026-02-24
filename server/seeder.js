@@ -6,7 +6,7 @@ const User = require('./models/User');
 const Product = require('./models/Product');
 const Order = require('./models/Order');
 
-dotenv.config({ path: 'server/.env' });
+dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI);
 

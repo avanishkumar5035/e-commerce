@@ -2,7 +2,8 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext.jsx';
-import { ChevronRight, Package, Truck, Printer, X } from 'lucide-react';
+import { useToast } from '../context/ToastContext.jsx';
+import { ChevronRight, Package, Truck, Printer, X, RotateCcw, AlertTriangle } from 'lucide-react';
 import TrackingModal from '../components/TrackingModal.jsx';
 
 const Order = () => {
@@ -12,6 +13,7 @@ const Order = () => {
     const [error, setError] = useState('');
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { addToast } = useToast();
     const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 
     const handlePrint = () => {
@@ -48,10 +50,10 @@ const Order = () => {
             };
             const { data } = await axios.put(`/api/orders/${order._id}/pay`, {}, config);
             setOrder(data);
-            alert('Payment Successful!');
+            addToast('Payment Successful!', 'success');
         } catch (error) {
             console.error(error);
-            alert('Payment Failed. Please try again.');
+            addToast('Payment Failed. Please try again.', 'error');
         }
     };
 
@@ -66,6 +68,22 @@ const Order = () => {
             setOrder({ ...order, isDelivered: true, deliveredAt: new Date().toISOString() });
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const returnHandler = async (reason) => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data } = await axios.put(`/api/orders/${order._id}/return`, { reason }, config);
+            setOrder(data);
+            addToast('Return Requested Successfully!', 'success');
+        } catch (error) {
+            console.error(error);
+            addToast(error.response?.data?.message || 'Return Request Failed', 'error');
         }
     };
 
@@ -176,6 +194,22 @@ const Order = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Return Status Section */}
+                    {order.isReturned && (
+                        <div className="mt-8 p-6 bg-orange-50 border border-orange-100 rounded-3xl flex items-start gap-4">
+                            <div className="bg-orange-500 text-white p-3 rounded-2xl">
+                                <RotateCcw className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-black text-orange-800">Return {order.returnStatus}</h3>
+                                <p className="text-orange-700 font-medium text-sm mt-1">
+                                    Reason: <span className="font-bold">{order.returnReason}</span>
+                                </p>
+                                <p className="text-orange-600 text-xs mt-2 italic">Requested on {new Date(order.returnedAt).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Items Section */}
@@ -231,6 +265,20 @@ const Order = () => {
                                 className="bg-sky_blue px-6 py-2 rounded-lg text-sm font-bold border border-[#a88734] hover:bg-[#f3a847] text-deep_blue"
                             >
                                 Mark As Delivered (Admin Only)
+                            </button>
+                        </div>
+                    )}
+
+                    {order.isDelivered && !order.isReturned && (
+                        <div className="mt-8 pt-6 border-t border-gray-200">
+                            <button
+                                onClick={() => {
+                                    const reason = prompt('Please enter a reason for the return:');
+                                    if (reason) returnHandler(reason);
+                                }}
+                                className="bg-white px-6 py-2 rounded-lg text-sm font-bold border border-gray-200 hover:bg-gray-50 text-dark_charcoal flex items-center gap-2"
+                            >
+                                <RotateCcw className="w-4 h-4" /> Return Items
                             </button>
                         </div>
                     )}

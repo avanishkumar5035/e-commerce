@@ -2,12 +2,14 @@ import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext.jsx';
+import { useToast } from '../../context/ToastContext.jsx';
 import { Package, Plus, Edit, Trash2 } from 'lucide-react';
 
 const ProductListAdmin = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
+    const { addToast } = useToast();
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
@@ -38,10 +40,11 @@ const ProductListAdmin = () => {
                     },
                 };
                 await axios.delete(`/api/products/${id}`, config);
+                addToast('Product deleted successfully', 'success');
                 fetchProducts();
             } catch (error) {
                 console.error(error);
-                alert('Error deleting product');
+                addToast('Error deleting product', 'error');
             }
         }
     };
@@ -54,10 +57,11 @@ const ProductListAdmin = () => {
                 },
             };
             const { data } = await axios.post('/api/products', {}, config);
+            addToast('Draft product created', 'success');
             navigate(`/admin/product/${data._id}/edit`);
         } catch (error) {
             console.error(error);
-            alert('Error creating product');
+            addToast('Error creating product', 'error');
         }
     };
 
@@ -68,16 +72,11 @@ const ProductListAdmin = () => {
     );
 
     return (
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
+        <div className="text-dark_charcoal">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                <div className="flex items-center gap-4">
-                    <div className="p-4 bg-deep_blue rounded-2xl text-white shadow-xl shadow-deep_blue/20">
-                        <Package className="w-8 h-8" />
-                    </div>
-                    <div>
-                        <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">Products Catalog</h1>
-                        <p className="text-text_secondary font-medium">Manage all products in your <span className="text-sky_blue font-black underline">ShopSphere</span> store</p>
-                    </div>
+                <div>
+                    <h1 className="text-3xl font-black text-dark_charcoal tracking-tight">Products Catalog</h1>
+                    <p className="text-text_secondary font-medium">Manage all products in your store</p>
                 </div>
                 <button
                     onClick={createProductHandler}
