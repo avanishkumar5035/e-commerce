@@ -5,6 +5,7 @@ import AuthContext from '../context/AuthContext.jsx';
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -27,72 +28,87 @@ const Register = () => {
             setError('Passwords do not match');
             return;
         }
-        const result = await register(name, email, password);
+        const result = await register(name, email, password, mobileNumber);
         if (!result.success) {
             setError(result.message);
         }
     };
 
     return (
-        <div className="flex flex-col items-center pt-6 bg-white min-h-screen">
-            <Link to="/" className="text-3xl font-black tracking-tighter text-deep_blue mb-4">
-                Shop<span className="text-sky_blue">Sphere</span>
+        <div className="flex flex-col items-center pt-8 bg-bg_soft_gray min-h-screen">
+            <Link to="/" className="flex items-center mb-8">
+                <span className="text-4xl font-extrabold tracking-tighter text-deep_blue">Shop<span className="text-deep_blue_dark">Sphere</span></span>
             </Link>
 
-            <div className="w-full max-w-[350px] border border-gray-300 rounded-lg p-6 mb-4">
-                <h1 className="text-3xl font-normal mb-4">Create Account</h1>
+            <div className="w-full max-w-[450px] bg-white shadow-2xl rounded-2xl p-8 mb-8 border border-gray-100">
+                <h1 className="text-3xl font-bold mb-6 text-dark_charcoal text-center">Create Account</h1>
 
                 {error && (
-                    <div className="bg-red-50 border border-red-700 text-red-700 p-2 text-xs mb-4 rounded flex items-center gap-2">
-                        <span className="font-bold text-lg">!</span>
+                    <div className="bg-red-50 border border-red-200 text-red-700 p-4 text-sm mb-6 rounded-xl flex items-center gap-3">
+                        <div className="bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs italic">!</div>
                         <div>
-                            <p className="font-bold">There was a problem</p>
-                            <p>{error}</p>
+                            <p className="font-bold">Registration failed</p>
+                            <p className="text-xs opacity-90">{error}</p>
                         </div>
                     </div>
                 )}
 
-                <form onSubmit={submitHandler} className="space-y-3">
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-bold">Your name</label>
+                <form onSubmit={submitHandler} className="space-y-5">
+                    <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                        <label className="text-sm font-semibold ml-1">Your Name</label>
                         <input
                             type="text"
                             placeholder="First and last name"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
+                            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
                         />
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-bold">Mobile number or email</label>
-                        <input
-                            type="email"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                            <label className="text-sm font-semibold ml-1">Email Address</label>
+                            <input
+                                type="email"
+                                placeholder="name@example.com"
+                                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                            <label className="text-sm font-semibold ml-1">Mobile Number</label>
+                            <input
+                                type="tel"
+                                placeholder="10-digit number"
+                                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
+                                value={mobileNumber}
+                                onChange={(e) => setMobileNumber(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-bold">Password</label>
+                    <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                        <label className="text-sm font-semibold ml-1">Password</label>
                         <input
                             type="password"
                             placeholder="At least 6 characters"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
+                            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-bold">Confirm password</label>
+                    <div className="flex flex-col gap-1.5 focus-within:text-deep_blue transition-colors">
+                        <label className="text-sm font-semibold ml-1">Confirm Password</label>
                         <input
                             type="password"
-                            className="w-full border border-gray-400 rounded-sm px-2 py-1 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
+                            placeholder="Re-enter password"
+                            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-deep_blue focus:ring-4 focus:ring-deep_blue/10 outline-none transition-all placeholder:text-gray-400"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
@@ -101,30 +117,30 @@ const Register = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-deep_blue text-white py-1.5 rounded shadow-sm hover:bg-deep_blue_dark text-sm transition mt-4 font-black"
+                        className="w-full bg-deep_blue text-white py-4 rounded-xl shadow-xl shadow-deep_blue/20 hover:bg-deep_blue_dark text-sm font-bold transition-all active:scale-95 mt-2"
                     >
-                        Continue
+                        Create Account
                     </button>
                 </form>
 
-                <p className="text-xs text-gray-800 mt-6 leading-relaxed">
-                    By creating an account, you agree to ShopSphere's <span className="text-blue-600 hover:underline">Conditions of Use</span> and <span className="text-blue-600 hover:underline">Privacy Notice</span>.
+                <p className="text-xs text-gray-500 mt-8 text-center leading-relaxed">
+                    By creating an account, you agree to ShopSphere's <span className="text-deep_blue font-semibold hover:underline cursor-pointer">Conditions of Use</span> and <span className="text-deep_blue font-semibold hover:underline cursor-pointer">Privacy Notice</span>.
                 </p>
 
-                <div className="mt-8 border-t border-gray-200 pt-4">
-                    <p className="text-sm">
-                        Already have an account? <Link to={`/login?redirect=${redirect}`} className="text-blue-600 hover:text-red-700 hover:underline">Sign in</Link>
+                <div className="mt-8 border-t border-gray-50 pt-6 flex flex-col items-center">
+                    <p className="text-sm text-gray-600">
+                        Already have an account? <Link to={`/login?redirect=${redirect}`} className="text-deep_blue font-bold hover:underline">Sign in</Link>
                     </p>
                 </div>
             </div>
 
-            <div className="w-full max-w-5xl border-t border-gray-200 mt-8 pt-8 pb-10 px-4">
-                <div className="flex justify-center gap-10 text-xs text-blue-600 mb-2">
-                    <span className="hover:underline hover:text-red-700 cursor-pointer">Conditions of Use</span>
-                    <span className="hover:underline hover:text-red-700 cursor-pointer">Privacy Notice</span>
-                    <span className="hover:underline hover:text-red-700 cursor-pointer">Help</span>
+            <div className="flex flex-col items-center gap-4 text-xs pb-10">
+                <div className="flex gap-8 text-gray-400 font-medium">
+                    <span className="hover:text-deep_blue transition-colors cursor-pointer">Conditions of Use</span>
+                    <span className="hover:text-deep_blue transition-colors cursor-pointer">Privacy Notice</span>
+                    <span className="hover:text-deep_blue transition-colors cursor-pointer">Help</span>
                 </div>
-                <p className="text-center text-[10px] text-gray-500">© 1996-2026, Amazon.com, Inc. or its affiliates</p>
+                <p className="text-gray-400">© 2026 ShopSphere E-Commerce. Premium Collection.</p>
             </div>
         </div>
     );

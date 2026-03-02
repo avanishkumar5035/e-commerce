@@ -1,13 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, Menu, MapPin, User } from 'lucide-react';
+import { ShoppingCart, Search, Menu, MapPin, User, Sun, Moon } from 'lucide-react';
 import { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext.jsx';
 import CartContext from '../context/CartContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const Header = () => {
     const { user, logout } = useContext(AuthContext);
     const { cartItems } = useContext(CartContext);
+    const { isDarkMode, toggleTheme } = useTheme();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [categories, setCategories] = useState([]);
@@ -37,28 +39,19 @@ const Header = () => {
         navigate(url);
     };
     return (
-        <header className="sticky top-0 z-50 border-b border-gray-100 shadow-sm">
+        <header className="sticky top-0 z-50 glass-morphism border-b border-white/20 dark:border-slate-800/50 premium-shadow">
             {/* Top Header */}
-            <div className="bg-white text-dark_charcoal px-4 py-3 flex items-center justify-between gap-4">
+            <div className="px-6 py-4 flex items-center justify-between gap-8">
                 {/* Logo */}
-                <Link to="/" className="flex items-center p-2 border border-transparent hover:border-deep_blue/10 transition-all rounded-md">
-                    <span className="text-2xl font-extrabold tracking-tighter text-deep_blue">Shop<span className="text-sky_blue">Sphere</span></span>
+                <Link to="/" className="flex items-center group">
+                    <span className="text-3xl font-black tracking-tighter text-deep_blue group-hover:scale-105 transition-transform duration-300">Shop<span className="text-sky_blue">Sphere</span></span>
                 </Link>
 
-                {/* Deliver To */}
-                <div className="hidden lg:flex items-center gap-1 p-2 border border-transparent hover:border-gray-100 cursor-pointer transition-all rounded-md">
-                    <MapPin className="w-5 h-5 text-deep_blue" />
-                    <div className="text-xs">
-                        <p className="text-gray-500">Deliver to</p>
-                        <p className="font-bold -mt-1">India</p>
-                    </div>
-                </div>
-
                 {/* Search Bar */}
-                <div className="flex-1 flex max-w-3xl">
-                    <form onSubmit={handleSearch} className="flex w-full rounded-full overflow-hidden group border border-gray-300 focus-within:border-deep_blue focus-within:ring-4 focus-within:ring-deep_blue/10 transition-all">
+                <div className="flex-1 flex max-w-4xl">
+                    <form onSubmit={handleSearch} className="flex w-full rounded-2xl overflow-hidden group border-2 border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 focus-within:border-deep_blue dark:focus-within:border-sky_blue focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:ring-8 focus-within:ring-deep_blue/5 dark:focus-within:ring-sky_blue/10 transition-all">
                         <select
-                            className="bg-gray-100 text-dark_charcoal text-xs font-bold px-4 py-2 border-r border-gray-200 outline-none hover:bg-gray-200 cursor-pointer"
+                            className="bg-transparent text-dark_charcoal dark:text-gray-300 text-xs font-bold px-5 py-3 border-r border-gray-100 dark:border-slate-700 outline-none hover:bg-gray-100/50 dark:hover:bg-slate-800 cursor-pointer"
                             value={selectedCategory}
                             onChange={(e) => setSelectedCategory(e.target.value)}
                         >
@@ -68,101 +61,112 @@ const Header = () => {
                         </select>
                         <input
                             type="text"
-                            placeholder="Search ShopSphere..."
-                            className="flex-1 px-4 py-2 text-dark_charcoal outline-none bg-transparent"
+                            placeholder="Search everything you need..."
+                            className="flex-1 px-5 py-3 text-dark_charcoal dark:text-gray-100 outline-none bg-transparent font-medium placeholder-gray-400 dark:placeholder-gray-500"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <button type="submit" className="bg-deep_blue px-6 py-2 hover:bg-deep_blue_dark transition-all text-white">
+                        <button type="submit" className="bg-deep_blue px-8 py-3 hover:bg-deep_blue_dark transition-all text-white flex items-center justify-center">
                             <Search className="w-5 h-5" />
                         </button>
                     </form>
                 </div>
 
                 {/* Right Sections */}
-                <div className="flex items-center gap-2">
-                    {/* Account */}
-                    <Link to={user ? '#' : '/login'} className="hidden md:block p-2 border border-transparent hover:bg-gray-50 cursor-pointer transition-all group relative rounded-md">
+                <div className="flex items-center gap-4">
+                    {/* Deliver To (Optional/Hidden for cleaner look) */}
+                    <div className="hidden xl:flex items-center gap-2 p-2 px-4 hover:bg-gray-50 rounded-2xl cursor-pointer transition-all">
+                        <MapPin className="w-4 h-4 text-sky_blue" />
                         <div className="text-xs">
-                            <p className="text-gray-500">Hello, {user ? user.name : 'sign in'}</p>
-                            <p className="font-bold -mt-1 text-sm">Account & Lists</p>
+                            <p className="text-gray-400 font-bold uppercase tracking-tighter">Deliver to</p>
+                            <p className="font-black text-deep_blue -mt-0.5">India</p>
                         </div>
+                    </div>
+
+                    {/* Theme Toggle */}
+                    <button onClick={toggleTheme} className="hidden sm:flex items-center justify-center p-2 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-all cursor-pointer border border-transparent hover:border-gray-100 dark:hover:border-slate-700">
+                        <div className="bg-deep_blue/5 dark:bg-slate-700 p-2 rounded-xl">
+                            {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-deep_blue" />}
+                        </div>
+                    </button>
+
+                    {/* Account */}
+                    <div className="group relative">
+                        <Link to={user ? '#' : '/login'} className="flex items-center gap-3 p-2 px-4 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-gray-100 dark:hover:border-slate-700">
+                            <div className="bg-deep_blue/5 dark:bg-slate-700 p-2 rounded-xl">
+                                <User className="w-5 h-5 text-deep_blue" />
+                            </div>
+                            <div className="text-xs hidden sm:block">
+                                <p className="text-gray-400 font-bold uppercase tracking-tighter">Hello, {user ? user.name.split(' ')[0] : 'Sign In'}</p>
+                                <p className="font-black text-deep_blue -mt-0.5">Account & Lists</p>
+                            </div>
+                        </Link>
                         {user && (
-                            <div className="absolute top-full right-0 mt-0 pt-2 w-40 hidden group-hover:block z-50">
-                                <div className="bg-white text-black p-2 rounded-lg shadow-xl border border-gray-100 flex flex-col gap-1 min-w-[150px]">
+                            <div className="absolute top-full right-0 mt-2 w-56 hidden group-hover:block z-50 animate-slide-in">
+                                <div className="bg-white/90 dark:bg-slate-900/95 backdrop-blur-xl p-4 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-800 flex flex-col gap-1 premium-shadow">
                                     {user.role === 'admin' && (
-                                        <>
-                                            <p className="px-2 py-1 text-[10px] uppercase font-bold text-gray-400">Admin</p>
-                                            <Link to="/admin/dashboard" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors font-bold text-deep_blue">Dashboard</Link>
-                                            <Link to="/admin/products" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">Products</Link>
-                                            <Link to="/admin/orders" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">Orders</Link>
-                                            <Link to="/admin/users" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">Customers</Link>
-                                            <Link to="/admin/activities" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">Activity Logs</Link>
-                                            <hr className="my-1 border-gray-50" />
-                                        </>
+                                        <div className="mb-2">
+                                            <p className="px-3 py-1 text-[10px] uppercase font-black text-sky_blue mb-1">Admin Panel</p>
+                                            <Link to="/admin/dashboard" className="flex items-center px-3 py-2 hover:bg-deep_blue/5 rounded-xl transition-colors font-bold text-deep_blue text-sm">Dashboard</Link>
+                                            <hr className="my-2 border-gray-50" />
+                                        </div>
                                     )}
 
-                                    <p className="px-2 py-1 text-[10px] uppercase font-bold text-gray-400">Your Account</p>
-                                    <Link to="/myorders" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">My Orders</Link>
-                                    <Link to="/wishlist" className="text-sm hover:bg-gray-50 rounded px-2 py-1.5 transition-colors">My Wishlist</Link>
-                                    <hr className="my-1 border-gray-50" />
+                                    <p className="px-3 py-1 text-[10px] uppercase font-black text-gray-400 dark:text-gray-500 mb-1">Your Account</p>
+                                    <Link to="/myorders" className="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-xl transition-colors text-sm font-bold text-gray-700 dark:text-gray-300">My Orders</Link>
+                                    <Link to="/wishlist" className="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-xl transition-colors text-sm font-bold text-gray-700 dark:text-gray-300">Wishlist</Link>
+                                    <hr className="my-2 border-gray-50 dark:border-slate-800" />
                                     <button
                                         onClick={logout}
-                                        className="w-full text-left text-sm hover:bg-deep_blue hover:text-white rounded px-2 py-1.5 transition-colors"
+                                        className="w-full text-left px-3 py-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white dark:hover:text-white rounded-xl transition-all font-bold text-sm"
                                     >
                                         Sign Out
                                     </button>
                                 </div>
                             </div>
                         )}
-                    </Link>
-
-                    {/* Orders */}
-                    <Link to="/myorders" className="hidden md:block p-2 border border-transparent hover:bg-gray-50 cursor-pointer transition-all rounded-md">
-                        <p className="text-xs text-gray-500">Returns</p>
-                        <p className="text-sm font-bold">& Orders</p>
-                    </Link>
+                    </div>
 
                     {/* Cart */}
                     {user && (
-                        <Link to="/cart" className="flex items-end p-2 border border-transparent hover:bg-gray-50 transition-all relative rounded-md">
+                        <Link to="/cart" className="flex items-center p-2 px-4 bg-deep_blue/5 hover:bg-deep_blue/10 transition-all relative rounded-2xl group">
                             <div className="relative">
-                                <ShoppingCart className="w-7 h-7 text-deep_blue" />
-                                <span className="absolute -top-2 -right-2 bg-deep_blue text-white rounded-full min-w-5 h-5 px-1.5 flex items-center justify-center text-[10px] font-bold ring-2 ring-white">{cartCount}</span>
+                                <ShoppingCart className="w-6 h-6 text-deep_blue" />
+                                <span className="absolute -top-3 -right-3 bg-deep_blue text-white rounded-full min-w-5 h-5 px-1.5 flex items-center justify-center text-[10px] font-black ring-4 ring-white group-hover:scale-110 transition-transform">{cartCount}</span>
                             </div>
-                            <span className="font-bold hidden sm:block ml-2 text-sm">Cart</span>
+                            <span className="font-black hidden lg:block ml-3 text-sm text-deep_blue">Cart</span>
                         </Link>
                     )}
                 </div>
             </div>
 
             {/* Bottom Header / Nav Bar */}
-            <div className="bg-gray-50 text-dark_charcoal px-4 py-2 flex items-center gap-4 text-xs font-bold overflow-x-auto scrollbar-hide border-b border-gray-100 shadow-inner">
+            <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md px-6 py-2 flex items-center gap-6 text-[11px] font-black uppercase tracking-wider overflow-x-auto scrollbar-hide border-t border-white/20 dark:border-slate-800/50">
                 <div className="group relative">
-                    <div className="flex items-center gap-1.5 p-1.5 px-3 bg-white border border-gray-200 hover:border-deep_blue rounded cursor-pointer transition-all whitespace-nowrap shadow-sm">
-                        <Menu className="w-4 h-4 text-deep_blue" />
-                        <span>All Categories</span>
+                    <div className="flex items-center gap-1.5 p-1.5 px-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-deep_blue dark:hover:border-sky_blue rounded cursor-pointer transition-all whitespace-nowrap shadow-sm">
+                        <Menu className="w-4 h-4 text-deep_blue dark:text-sky_blue" />
+                        <span className="dark:text-gray-300">All Categories</span>
                     </div>
                     {/* Categories Dropdown */}
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-2xl hidden group-hover:block z-50 py-2">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-2xl hidden group-hover:block z-50 py-2">
                         {categories.map(cat => (
                             <Link
                                 key={cat}
                                 to={`/products?category=${cat}`}
-                                className="block px-4 py-2 hover:bg-deep_blue hover:text-white transition-colors text-sm font-semibold"
+                                className="block px-4 py-2 hover:bg-deep_blue hover:text-white transition-colors text-sm font-semibold dark:text-gray-300"
                             >
                                 {cat}
                             </Link>
                         ))}
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Link to="/products?sort=bestsellers" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Best Sellers</Link>
-                    <Link to="/products?filter=deals" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Today's Deals</Link>
-                    <Link to="/products?sort=newest" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">New Releases</Link>
-                    <span className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Prime</span>
-                    <Link to="/products?category=Electronics" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">Electronics</Link>
-                    <Link to="/customer-service" className="p-1.5 px-3 hover:bg-deep_blue/5 rounded-full cursor-pointer transition-all whitespace-nowrap">
+                <div className="flex items-center gap-2 dark:text-gray-400">
+                    <Link to="/products?sort=bestsellers" className="p-1.5 px-3 hover:bg-deep_blue/5 dark:hover:bg-slate-800 dark:hover:text-gray-200 rounded-full cursor-pointer transition-all whitespace-nowrap">Best Sellers</Link>
+                    <Link to="/products?filter=deals" className="p-1.5 px-3 hover:bg-deep_blue/5 dark:hover:bg-slate-800 dark:hover:text-gray-200 rounded-full cursor-pointer transition-all whitespace-nowrap">Today's Deals</Link>
+                    <Link to="/products?sort=newest" className="p-1.5 px-3 hover:bg-deep_blue/5 dark:hover:bg-slate-800 dark:hover:text-gray-200 rounded-full cursor-pointer transition-all whitespace-nowrap">New Releases</Link>
+                    <span className="p-1.5 px-3 hover:bg-deep_blue/5 dark:hover:bg-slate-800 dark:hover:text-gray-200 rounded-full cursor-pointer transition-all whitespace-nowrap">Prime</span>
+                    <Link to="/products?category=Electronics" className="p-1.5 px-3 hover:bg-deep_blue/5 dark:hover:bg-slate-800 dark:hover:text-gray-200 rounded-full cursor-pointer transition-all whitespace-nowrap">Electronics</Link>
+                    <Link to="/customer-service" className="p-1.5 px-3 hover:bg-deep_blue/5 dark:hover:bg-slate-800 dark:hover:text-gray-200 rounded-full cursor-pointer transition-all whitespace-nowrap">
                         Customer Service
                     </Link>
                 </div>

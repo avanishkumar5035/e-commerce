@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema(
                 ref: 'Product',
             },
         ],
+        mobileNumber: {
+            type: String,
+            unique: true,
+            sparse: true, // Allows null/missing values to be unique
+        },
         resetPasswordToken: String,
         resetPasswordExpire: Date,
     },

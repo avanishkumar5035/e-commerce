@@ -17,23 +17,29 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, mobileNumber } = req.body;
 
     try {
         if (email === 'avanishkumar5035@gmail.com') {
             return res.status(400).json({ message: 'Registration not allowed for admin email. Please login.' });
         }
 
-        const userExists = await User.findOne({ email });
+        const userExists = await User.findOne({
+            $or: [
+                { email },
+                { mobileNumber: mobileNumber || '---non-existent---' }
+            ]
+        });
 
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists with this email or mobile number' });
         }
 
         const user = await User.create({
             name,
             email,
             password,
+            mobileNumber
         });
 
         if (user) {
@@ -41,6 +47,7 @@ const registerUser = async (req, res) => {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
+                mobileNumber: user.mobileNumber,
                 role: user.role,
                 token: generateToken(user._id),
             });
@@ -56,7 +63,7 @@ const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body; // email field can now contain email OR mobile number
 
     try {
         if (email === 'avanishkumar5035@gmail.com') {
@@ -65,6 +72,7 @@ const loginUser = async (req, res) => {
             }
 
             let user = await User.findOne({ email });
+            // ... (rest of admin logic remains the same)
             if (!user) {
                 user = await User.create({
                     name: 'Super Admin',
@@ -93,7 +101,13 @@ const loginUser = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ email });
+        // Find user by email OR mobile number
+        const user = await User.findOne({
+            $or: [
+                { email: email },
+                { mobileNumber: email }
+            ]
+        });
 
         if (user && (await user.matchPassword(password))) {
             await Activity.create({
@@ -107,11 +121,12 @@ const loginUser = async (req, res) => {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
+                mobileNumber: user.mobileNumber,
                 role: user.role,
                 token: generateToken(user._id),
             });
         } else {
-            res.status(401).json({ message: 'Invalid email or password' });
+            res.status(401).json({ message: 'Invalid email, mobile number or password' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
