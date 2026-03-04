@@ -138,6 +138,28 @@ const products = [
         countInStock: 10,
         rating: 4.8,
         numReviews: 890,
+    },
+    {
+        name: 'iPhone 15 Pro Max',
+        image: 'https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=800',
+        description: 'Forged in titanium and featuring the groundbreaking A17 Pro chip, a customizable Action button, and a more versatile Pro camera system.',
+        brand: 'Apple',
+        category: 'Mobile',
+        price: 159900,
+        countInStock: 25,
+        rating: 4.9,
+        numReviews: 850,
+    },
+    {
+        name: 'Samsung Galaxy S24 Ultra',
+        image: 'https://images.unsplash.com/photo-1707227155355-1b32d1be7947?auto=format&fit=crop&q=80&w=800',
+        description: 'Welcome to the era of mobile AI. With Galaxy S24 Ultra in your hands, you can unleash whole new levels of creativity, productivity and possibility.',
+        brand: 'Samsung',
+        category: 'Mobile',
+        price: 129999,
+        countInStock: 18,
+        rating: 4.8,
+        numReviews: 620,
     }
 ];
 

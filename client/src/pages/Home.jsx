@@ -49,6 +49,7 @@ const Home = () => {
     );
 
     const categories = [
+        { title: "Smartphones", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800", link: "/products?category=Mobile" },
         { title: "Shoes Collection", image: "/assets/shoes_banner.png", link: "/products?category=Shoes" },
         { title: "Books Collection", image: "/assets/books_banner.png", link: "/products?category=Books" },
         { title: "Styles for men", image: "/assets/cat_mens_fashion.png", link: "/products?category=Men" },
@@ -58,7 +59,7 @@ const Home = () => {
     return (
         <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen pb-16 font-sans text-dark_charcoal dark:text-gray-100 transition-colors duration-300">
             {/* Hero Section */}
-            <div className="relative h-[650px] overflow-hidden bg-white dark:bg-slate-900">
+            <div className="relative h-[450px] md:h-[650px] overflow-hidden bg-white dark:bg-slate-900">
                 <div className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out">
                     <img
                         src={heroImages[currentHero]}
@@ -69,17 +70,17 @@ const Home = () => {
                 </div>
 
                 {/* Hero Content Overlay */}
-                <div className="absolute top-1/2 left-12 -translate-y-1/2 z-20 max-w-xl animate-slide-in">
-                    <div className="glass-morphism dark:bg-slate-900/40 p-10 rounded-3xl premium-shadow border-white/50 dark:border-slate-800/50">
-                        <span className="bg-deep_blue text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block">Flash Sale Live</span>
-                        <h1 className="text-6xl font-black text-deep_blue leading-none mb-4 tracking-tighter">
+                <div className="absolute top-1/2 left-4 md:left-12 -translate-y-1/2 z-20 max-w-sm md:max-w-xl animate-slide-in">
+                    <div className="glass-morphism dark:bg-slate-900/40 p-6 md:p-10 rounded-3xl premium-shadow border-white/50 dark:border-slate-800/50">
+                        <span className="bg-deep_blue text-white px-3 md:px-4 py-1 mb-2 md:mb-4 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest inline-block">Flash Sale Live</span>
+                        <h1 className="text-4xl md:text-6xl font-black text-deep_blue leading-none mb-3 md:mb-4 tracking-tighter">
                             Upgrade Your <br />
                             <span className="text-sky_blue">Lifestyle</span>
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-300 mb-8 font-medium leading-relaxed">Discover our premium collection of electronics, fashion, and home decor with exclusive offers.</p>
-                        <div className="flex gap-4">
-                            <button className="bg-deep_blue text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-deep_blue/20 hover:bg-deep_blue_dark transition-all active:scale-95">Shop Now</button>
-                            <button className="bg-white dark:bg-slate-800 text-deep_blue dark:text-sky_blue border-2 border-deep_blue/10 dark:border-slate-700 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 dark:hover:bg-slate-700 transition-all active:scale-95">Learn More</button>
+                        <p className="hidden md:block text-gray-600 dark:text-gray-300 mb-8 font-medium leading-relaxed">Discover our premium collection of electronics, fashion, and home decor with exclusive offers.</p>
+                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-2 md:mt-0">
+                            <button className="bg-deep_blue text-white w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold shadow-xl shadow-deep_blue/20 hover:bg-deep_blue_dark transition-all active:scale-95 text-sm md:text-base">Shop Now</button>
+                            <button className="bg-white dark:bg-slate-800 text-deep_blue dark:text-sky_blue w-full sm:w-auto border-2 border-deep_blue/10 dark:border-slate-700 px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold hover:bg-gray-50 dark:hover:bg-slate-700 transition-all active:scale-95 text-sm md:text-base">Learn More</button>
                         </div>
                     </div>
                 </div>
@@ -136,9 +137,9 @@ const Home = () => {
                         </div>
                         <Link to="/products" className="text-deep_blue dark:text-sky_blue font-bold hover:underline">View All</Link>
                     </div>
-                    <div className="flex gap-8 overflow-x-auto pb-6 scrollbar-hide px-2">
+                    <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide px-2 snap-x snap-mandatory">
                         {products.map((product) => (
-                            <div key={product._id} className="min-w-[280px] relative group transition-all duration-500 hover:scale-[1.02]">
+                            <div key={product._id} className="min-w-[240px] md:min-w-[280px] relative group transition-all duration-500 hover:scale-[1.02] snap-start">
                                 <button
                                     onClick={(e) => {
                                         e.preventDefault();
