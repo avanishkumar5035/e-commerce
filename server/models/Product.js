@@ -30,6 +30,19 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        images: [String],
+        colors: [
+            {
+                name: { type: String },
+                image: { type: String }
+            }
+        ],
+        highlights: [
+            {
+                title: { type: String },
+                description: { type: String }
+            }
+        ],
         brand: {
             type: String,
             required: true,

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Star, MapPin, ChevronRight, ShieldCheck, Truck, RotateCcw, Heart, MessageSquare, Send } from 'lucide-react';
+import { Star, MapPin, ChevronRight, ShieldCheck, Truck, RotateCcw, Heart, MessageSquare, Send, Cpu, Camera, HardDrive, Package, CheckCircle, Tag, CreditCard, X } from 'lucide-react';
 import AuthContext from '../context/AuthContext.jsx';
 import CartContext from '../context/CartContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -12,6 +12,8 @@ const ProductDetail = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [qty, setQty] = useState(1);
+    const [selectedImage, setSelectedImage] = useState('');
+    const [selectedColor, setSelectedColor] = useState('');
     const { user } = useContext(AuthContext);
     const { addToCart } = useContext(CartContext);
     const navigate = useNavigate();
@@ -21,11 +23,121 @@ const ProductDetail = () => {
     const { addToast } = useToast();
     const { toggleWishlist, isInWishlist: checkWishlist } = useWishlist();
 
+    const [deliveryPincode, setDeliveryPincode] = useState(() => {
+        const stored = localStorage.getItem('deliveryLocation');
+        return (stored && /^\d{6}$/.test(stored)) ? stored : '281406';
+    });
+    const [deliveryPlaceName, setDeliveryPlaceName] = useState(() => {
+        return localStorage.getItem('deliveryPlaceName') || 'Mathura, Uttar Pradesh';
+    });
+    const [isCheckingPincode, setIsCheckingPincode] = useState(false);
+    const [showPincodeInput, setShowPincodeInput] = useState(false);
+    const [pincodeInput, setPincodeInput] = useState(deliveryPincode);
+    const [deliveryMessage, setDeliveryMessage] = useState('Usually delivered in 3-5 days');
+
+    // Bank Offer State
+    const [appliedOffer, setAppliedOffer] = useState(null);
+    const [showBankModal, setShowBankModal] = useState(false);
+    const [selectedBankOffer, setSelectedBankOffer] = useState(null);
+    const [cardNumber, setCardNumber] = useState('');
+    const [expiryDate, setExpiryDate] = useState('');
+    const [cvv, setCvv] = useState('');
+    const [relatedProducts, setRelatedProducts] = useState([]);
+
+    const handleApplyOfferClick = (offerId, offerName) => {
+        if (appliedOffer === offerId) {
+            setAppliedOffer(null);
+            addToast(`Removed ${offerName}`, 'info');
+        } else {
+            setSelectedBankOffer({ id: offerId, name: offerName });
+            setShowBankModal(true);
+        }
+    };
+
+    const submitBankDetails = (e) => {
+        e.preventDefault();
+        // Basic validation
+        if (cardNumber.replace(/\s/g, '').length < 16 || !expiryDate || cvv.length < 3) {
+            addToast('Please enter valid card details to apply this offer', 'error');
+            return;
+        }
+        setAppliedOffer(selectedBankOffer.id);
+        addToast(`${selectedBankOffer.name} applied successfully!`, 'success');
+        setShowBankModal(false);
+        // Reset form
+        setCardNumber('');
+        setExpiryDate('');
+        setCvv('');
+    };
+
+    const checkDelivery = async () => {
+        if (!pincodeInput || !/^\d{6}$/.test(pincodeInput)) {
+            addToast('Please enter a valid 6-digit pincode', 'error');
+            return;
+        }
+        setIsCheckingPincode(true);
+        try {
+            const response = await axios.get(`https://api.postalpincode.in/pincode/${pincodeInput}`);
+            const data = response.data[0];
+            if (data.Status === "Success" && data.PostOffice && data.PostOffice.length > 0) {
+                const po = data.PostOffice[0];
+                const place = `${po.District}, ${po.State}`;
+                setDeliveryPincode(pincodeInput);
+                setDeliveryPlaceName(place);
+                localStorage.setItem('deliveryLocation', pincodeInput);
+                localStorage.setItem('deliveryPlaceName', place);
+                setDeliveryMessage(`Delivering to ${place} in 3-5 days`);
+                setShowPincodeInput(false);
+                addToast(`Delivery updated to ${place}`, 'success');
+            } else {
+                addToast('Invalid Pincode. Using estimated delivery.', 'info');
+                // Fallback if API says invalid but user typed 6 digits
+                setDeliveryPincode(pincodeInput);
+                setDeliveryPlaceName('India');
+                localStorage.setItem('deliveryLocation', pincodeInput);
+                localStorage.setItem('deliveryPlaceName', 'India');
+                setDeliveryMessage('Usually delivered in 3-5 days');
+                setShowPincodeInput(false);
+            }
+        } catch (error) {
+            // Error handling if API fails (e.g. CORS or network)
+            setDeliveryPincode(pincodeInput);
+            setDeliveryPlaceName('India');
+            localStorage.setItem('deliveryLocation', pincodeInput);
+            setDeliveryMessage('Usually delivered in 3-5 days');
+            setShowPincodeInput(false);
+            addToast('Location updated', 'success');
+        } finally {
+            setIsCheckingPincode(false);
+        }
+    };
+
+    const handleApplyOffer = (offerId, offerName) => {
+        if (appliedOffer === offerId) {
+            setAppliedOffer(null);
+            addToast(`Removed ${offerName}`, 'info');
+        } else {
+            setAppliedOffer(offerId);
+            addToast(`${offerName} applied successfully!`, 'success');
+        }
+    };
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const { data } = await axios.get(`/api/products/${id}`);
                 setProduct(data);
+                setSelectedImage(data.image);
+                if (data.colors && data.colors.length > 0) {
+                    setSelectedColor(data.colors[0].name);
+                }
+
+                // Fetch related products
+                const relatedRes = await axios.get('/api/products');
+                const allP = relatedRes.data.products || relatedRes.data;
+                const filtered = allP.filter(p => p.category === data.category && p._id !== data._id).slice(0, 4);
+                setRelatedProducts(filtered);
+
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -67,6 +179,18 @@ const ProductDetail = () => {
         navigate('/cart');
     };
 
+    const buyNowHandler = () => {
+        addToCart(product._id, qty);
+        navigate('/shipping');
+    };
+
+    const getDiscountedPrice = () => {
+        if (!product || !product.price) return 0;
+        if (appliedOffer === 'axis') return product.price - Math.floor(product.price * 0.05); // 5%
+        if (appliedOffer === 'sbi') return product.price - Math.floor(product.price * 0.10);  // 10%
+        return product.price;
+    };
+
     if (loading) return (
         <div className="flex justify-center items-center h-screen bg-white">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-deep_blue"></div>
@@ -93,14 +217,37 @@ const ProductDetail = () => {
 
             <div className="max-w-[1500px] mx-auto px-6 flex flex-col lg:flex-row gap-8">
                 {/* Left: Image Section */}
-                <div className="lg:w-1/3 flex flex-col gap-4">
-                    <div className="h-[450px] border border-gray-100 rounded-lg p-6 flex items-center justify-center bg-gray-50 overflow-hidden sticky top-24">
+                <div className="lg:w-1/3 flex flex-col gap-4 sticky top-24 h-fit">
+                    <div className="h-[450px] border border-gray-100 rounded-lg p-6 flex items-center justify-center bg-white overflow-hidden shadow-sm">
                         <img
-                            src={product.image}
+                            src={selectedImage || product.image}
                             alt={product.name}
                             className="max-h-full max-w-full object-contain hover:scale-110 transition-transform duration-500 cursor-zoom-in"
                         />
                     </div>
+
+                    {/* Gallery Thumbnails */}
+                    {product.images && product.images.length > 0 && (
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide py-1">
+                            {/* Main Image Thumbnail */}
+                            <div
+                                onClick={() => setSelectedImage(product.image)}
+                                className={`w-16 h-16 flex-shrink-0 border-2 rounded-lg p-1 cursor-pointer transition-all bg-white ${selectedImage === product.image ? 'border-deep_blue shadow-md' : 'border-gray-200 hover:border-deep_blue/50'}`}
+                            >
+                                <img src={product.image} alt="Main" className="w-full h-full object-contain rounded-md" />
+                            </div>
+                            {/* Additional Images */}
+                            {product.images.map((imgUrl, idx) => (
+                                <div
+                                    key={idx}
+                                    onClick={() => setSelectedImage(imgUrl)}
+                                    className={`w-16 h-16 flex-shrink-0 border-2 rounded-lg p-1 cursor-pointer transition-all bg-white ${selectedImage === imgUrl ? 'border-deep_blue shadow-md' : 'border-gray-200 hover:border-deep_blue/50'}`}
+                                >
+                                    <img src={imgUrl} alt={`Gallery ${idx + 1}`} className="w-full h-full object-contain rounded-md" />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Middle: Info Section */}
@@ -119,15 +266,158 @@ const ProductDetail = () => {
 
                     <hr className="mb-4" />
 
-                    <div className="mb-4">
+                    <div className="mb-6">
                         <div className="flex items-baseline gap-1 text-red-700">
                             <span className="text-lg">-15%</span>
                             <span className="text-xs align-top mt-1">₹</span>
-                            <span className="text-3xl font-medium">{product.price.toLocaleString('en-IN')}</span>
+                            <span className="text-3xl font-medium">{getDiscountedPrice().toLocaleString('en-IN')}</span>
                         </div>
                         <p className="text-xs text-gray-500">M.R.P.: <span className="line-through">₹{(product.price * 1.15).toLocaleString('en-IN')}</span></p>
                         <p className="text-sm mt-1 font-medium">Inclusive of all taxes</p>
                     </div>
+
+                    {/* Offers & EMI */}
+                    <div className="mb-6 space-y-4">
+                        {/* Bank Offers */}
+                        <div className="border border-sky_blue/20 bg-[#f4f8fc] rounded-xl p-4">
+                            <h4 className="text-[15px] font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                <Tag className="w-5 h-5 text-sky_blue" />
+                                Bank offers
+                            </h4>
+                            <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide">
+                                <div className={`min-w-[240px] border relative rounded-xl p-3 shadow-sm transition-all ${appliedOffer === 'axis' ? 'border-green-500 bg-green-50/30' : 'border-gray-200 bg-white'}`}>
+                                    <div className="absolute -top-3 left-3 text-[11px] font-bold bg-[#fdf3c6] text-yellow-900 px-2.5 py-1 rounded">Best value for you</div>
+                                    <div className="flex justify-between items-start mb-2 mt-2">
+                                        <div>
+                                            <p className="font-bold text-[15px] text-gray-900">₹{Math.floor(product.price * 0.05).toLocaleString('en-IN')} off</p>
+                                            <p className="text-[13px] text-gray-500">Flipkart Axis</p>
+                                        </div>
+                                        {appliedOffer === 'axis' ? (
+                                            <span onClick={() => handleApplyOfferClick('axis', 'Flipkart Axis Offer')} className="text-green-600 text-[13px] font-bold cursor-pointer hover:underline flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Applied</span>
+                                        ) : (
+                                            <span onClick={() => handleApplyOfferClick('axis', 'Flipkart Axis Offer')} className="text-sky_blue text-[13px] font-bold cursor-pointer hover:underline">Apply</span>
+                                        )}
+                                    </div>
+                                    <p className="text-[13px] text-gray-600 border-t mt-3 pt-2 border-gray-100 flex items-center justify-between">
+                                        Credit Card • Cashback <ChevronRight className="w-4 h-4 text-gray-400" />
+                                    </p>
+                                </div>
+                                <div className={`min-w-[240px] border rounded-xl p-3 shadow-sm pt-5 transition-all ${appliedOffer === 'sbi' ? 'border-green-500 bg-green-50/30' : 'border-gray-200 bg-white'}`}>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div>
+                                            <p className="font-bold text-[15px] text-gray-900">₹{Math.floor(product.price * 0.10).toLocaleString('en-IN')} off</p>
+                                            <p className="text-[13px] text-gray-500">Flipkart SBI</p>
+                                        </div>
+                                        {appliedOffer === 'sbi' ? (
+                                            <span onClick={() => handleApplyOfferClick('sbi', 'Flipkart SBI Offer')} className="text-green-600 text-[13px] font-bold cursor-pointer hover:underline flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Applied</span>
+                                        ) : (
+                                            <span onClick={() => handleApplyOfferClick('sbi', 'Flipkart SBI Offer')} className="text-sky_blue text-[13px] font-bold cursor-pointer hover:underline">Apply</span>
+                                        )}
+                                    </div>
+                                    <p className="text-[13px] text-gray-600 border-t mt-3 pt-2 border-gray-100 flex items-center justify-between">
+                                        Credit Card • Cashback <ChevronRight className="w-4 h-4 text-gray-400" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* EMI Banner */}
+                        <div onClick={() => addToast('Redirecting to secure Partner Portal for Card EMI Application...', 'info')} className="border border-gray-200 rounded-xl p-4 cursor-pointer hover:bg-gray-50 transition-colors">
+                            <div className="flex justify-between items-center mb-4">
+                                <h4 className="text-[15px] font-bold text-gray-900">Apply for Card and Instant EMI</h4>
+                                <ChevronRight className="w-4 h-4 text-gray-400" />
+                            </div>
+                            <div className="flex gap-3 focus:outline-none">
+                                <div className="flex-1 border border-gray-200 rounded-xl p-3.5 flex gap-4 items-center">
+                                    <div className="w-10 h-8 border border-deep_blue rounded flex items-center justify-center bg-white flex-shrink-0">
+                                        <div className="w-full h-1 bg-deep_blue mb-3"></div>
+                                    </div>
+                                    <div>
+                                        <p className="text-[13px] font-bold text-gray-900">Get ₹1250 Voucher | 5% Cash...</p>
+                                        <p className="text-[12px] text-gray-500 mb-1">Flipkart Axis Bank Credit Card</p>
+                                        <span className="text-sky_blue text-[13px] font-bold hover:underline">Apply Now</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Delivery Details */}
+                    <div className="mb-6">
+                        <h3 className="font-bold text-[18px] text-gray-900 mb-4">Delivery details</h3>
+                        <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
+                            <div className="bg-[#f8f9fa] p-4 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center border-b border-gray-200 gap-y-3">
+                                <div className="flex items-center gap-2.5">
+                                    <MapPin className="w-5 h-5 text-gray-600" />
+                                    <div className="flex flex-col">
+                                        <span className="text-[15px] font-bold text-gray-900">
+                                            {deliveryPlaceName} - {deliveryPincode}
+                                        </span>
+                                    </div>
+                                </div>
+                                {showPincodeInput ? (
+                                    <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Pincode"
+                                            value={pincodeInput}
+                                            onChange={(e) => setPincodeInput(e.target.value)}
+                                            className="border border-gray-300 rounded px-3 py-1 text-sm outline-none focus:border-sky_blue w-full sm:w-32"
+                                            maxLength={6}
+                                        />
+                                        <button
+                                            onClick={checkDelivery}
+                                            disabled={isCheckingPincode}
+                                            className="bg-deep_blue text-white text-xs px-3 py-1.5 rounded font-bold hover:bg-deep_blue_dark disabled:opacity-50"
+                                        >
+                                            {isCheckingPincode ? '...' : 'Check'}
+                                        </button>
+                                        <button onClick={() => setShowPincodeInput(false)} className="text-gray-400 hover:text-gray-600 ml-1">
+                                            <RotateCcw className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <span onClick={() => setShowPincodeInput(true)} className="text-sky_blue text-[14px] font-bold cursor-pointer flex items-center hover:underline">
+                                        Select delivery location <ChevronRight className="w-4 h-4 ml-0.5" />
+                                    </span>
+                                )}
+                            </div>
+                            <div className="p-4 flex items-center gap-2.5 border-b border-gray-200 bg-[#fefefe]">
+                                <Truck className="w-5 h-5 text-gray-600 flex-shrink-0" />
+                                <span className="text-[15px] font-bold text-gray-900">{deliveryMessage}</span>
+                            </div>
+                            <div className="p-4 flex items-start gap-2.5 bg-[#fefefe]">
+                                <Package className="w-5 h-5 text-gray-600 mt-0.5" />
+                                <div>
+                                    <p className="text-[15px] text-gray-700">Fulfilled by Vision Star</p>
+                                    <p className="text-[13px] text-gray-500 mt-0.5">4.7 ★ • 8 years positive rating</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Color Selection */}
+                    {product.colors && product.colors.length > 0 && (
+                        <div className="mb-6">
+                            <h3 className="text-sm text-gray-700 font-bold mb-3">
+                                Color: <span className="text-deep_blue font-black">{selectedColor}</span>
+                            </h3>
+                            <div className="flex flex-wrap gap-3">
+                                {product.colors.map(color => (
+                                    <div
+                                        key={color.name}
+                                        onClick={() => {
+                                            setSelectedImage(color.image);
+                                            setSelectedColor(color.name);
+                                        }}
+                                        className={`w-16 h-16 border-2 rounded-lg p-1 cursor-pointer transition-all ${selectedColor === color.name ? 'border-sky_blue shadow-[0_0_0_1px_rgba(2,132,199,1)]' : 'border-gray-200 hover:border-gray-400'}`}
+                                    >
+                                        <img src={color.image} alt={color.name} className="w-full h-full object-contain rounded-md" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Features Row */}
                     <div className="grid grid-cols-4 gap-2 mb-6 border-y border-gray-100 py-4">
@@ -149,6 +439,35 @@ const ProductDetail = () => {
                         </div>
                     </div>
 
+                    {/* Product Highlights */}
+                    {product.highlights && product.highlights.length > 0 && (
+                        <div className="mb-8">
+                            <h3 className="font-bold text-lg text-dark_charcoal mb-4">Product Highlights</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {product.highlights.map((highlight, idx) => {
+                                    let Icon = CheckCircle;
+                                    const text = (highlight.title + highlight.description).toLowerCase();
+                                    if (text.includes('rom') || text.includes('ram') || text.includes('storage') || text.includes('memory') || text.includes('gb')) Icon = HardDrive;
+                                    else if (text.includes('chip') || text.includes('processor') || text.includes('core')) Icon = Cpu;
+                                    else if (text.includes('camera') || text.includes('lens') || text.includes('zoom')) Icon = Camera;
+                                    else if (text.includes('box') || text.includes('cable') || text.includes('charger')) Icon = Package;
+
+                                    return (
+                                        <div key={idx} className="flex gap-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md hover:border-sky_blue/30 group">
+                                            <div className="w-10 h-10 rounded-full bg-slate-50 border border-gray-100 flex items-center justify-center flex-shrink-0 group-hover:bg-sky_blue/5 transition-colors">
+                                                <Icon className="w-5 h-5 text-gray-500 group-hover:text-deep_blue" />
+                                            </div>
+                                            <div className="flex flex-col justify-center">
+                                                <p className="text-sm font-bold text-gray-800 leading-tight mb-1">{highlight.title}</p>
+                                                <p className="text-xs text-gray-500 font-medium">{highlight.description}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
                     <div className="mb-6">
                         <h3 className="font-bold text-sm mb-2">About this item</h3>
                         <ul className="text-sm space-y-2 list-disc pl-4 text-gray-800">
@@ -162,9 +481,19 @@ const ProductDetail = () => {
                 {/* Right: Actions Sidebar */}
                 <div className="lg:w-64 flex-shrink-0">
                     <div className="border border-gray-300 rounded-lg p-4 space-y-4 shadow-sm sticky top-24">
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-xs align-top">₹</span>
-                            <span className="text-2xl font-medium">{product.price.toLocaleString('en-IN')}</span>
+                        <div className="flex flex-col gap-1">
+                            {appliedOffer && (
+                                <div className="flex items-center">
+                                    <span className="text-[10px] bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded tracking-wide uppercase">Bank Offer Applied</span>
+                                </div>
+                            )}
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-xs align-top">₹</span>
+                                <span className="text-2xl font-medium">{getDiscountedPrice().toLocaleString('en-IN')}</span>
+                                {appliedOffer && (
+                                    <span className="text-sm line-through text-gray-500 ml-1">₹{product.price.toLocaleString('en-IN')}</span>
+                                )}
+                            </div>
                         </div>
 
                         <div className="text-sm">
@@ -200,7 +529,10 @@ const ProductDetail = () => {
                                 Add to Cart
                             </button>
 
-                            <button className="w-full bg-deep_blue_dark text-white py-2.5 px-4 rounded-full shadow-md hover:bg-black text-sm font-bold transition-all active:scale-95">
+                            <button
+                                onClick={buyNowHandler}
+                                className="w-full bg-deep_blue_dark text-white py-2.5 px-4 rounded-full shadow-md hover:bg-black text-sm font-bold transition-all active:scale-95"
+                            >
                                 Buy Now
                             </button>
                         </div>
@@ -347,6 +679,98 @@ const ProductDetail = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Related Products */}
+            {relatedProducts && relatedProducts.length > 0 && (
+                <div className="max-w-[1500px] mx-auto px-6 mt-12 pt-10 border-t border-gray-200">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Similar Products You Might Like</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {relatedProducts.map(item => (
+                            <Link to={`/product/${item._id}`} key={item._id} className="group bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-xl hover:border-sky_blue/30 transition-all duration-300">
+                                <div className="aspect-square mb-4 bg-gray-50 rounded-xl overflow-hidden relative p-4 flex items-center justify-center">
+                                    <img src={item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                                </div>
+                                <h3 className="font-bold text-gray-800 truncate mb-1">{item.name}</h3>
+                                <div className="flex items-center gap-1 mb-2">
+                                    <Star className="w-4 h-4 fill-sky_blue text-sky_blue" />
+                                    <span className="text-xs font-bold text-gray-600">{item.rating}</span>
+                                    <span className="text-xs text-gray-400">({item.numReviews})</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-lg font-black text-gray-900">₹{item.price.toLocaleString('en-IN')}</span>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Bank details modal */}
+            {showBankModal && selectedBankOffer && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowBankModal(false)}>
+                    <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden premium-shadow transform transition-all scale-100 relative" onClick={(e) => e.stopPropagation()}>
+                        <div className="p-5 border-b border-gray-100 bg-sky_blue/5 flex items-center justify-between">
+                            <h3 className="font-bold text-gray-900 flex items-center gap-2 text-lg">
+                                <CreditCard className="w-5 h-5 text-deep_blue" />
+                                {selectedBankOffer.name}
+                            </h3>
+                            <button onClick={() => setShowBankModal(false)} className="text-gray-400 hover:text-gray-900 transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <form onSubmit={submitBankDetails} className="p-5 space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Card Number</label>
+                                <input
+                                    type="text"
+                                    placeholder="XXXX XXXX XXXX XXXX"
+                                    maxLength={19}
+                                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:border-deep_blue focus:ring-1 focus:ring-deep_blue transition-all"
+                                    value={cardNumber}
+                                    onChange={(e) => setCardNumber(e.target.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim())}
+                                    required
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Expiry Date</label>
+                                    <input
+                                        type="text"
+                                        placeholder="MM/YY"
+                                        maxLength={5}
+                                        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:border-deep_blue focus:ring-1 focus:ring-deep_blue transition-all"
+                                        value={expiryDate}
+                                        onChange={(e) => {
+                                            let val = e.target.value.replace(/\D/g, '');
+                                            if (val.length >= 2) {
+                                                val = val.substring(0, 2) + '/' + val.substring(2, 4);
+                                            }
+                                            setExpiryDate(val);
+                                        }}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">CVV</label>
+                                    <input
+                                        type="password"
+                                        placeholder="XXX"
+                                        maxLength={3}
+                                        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:border-deep_blue focus:ring-1 focus:ring-deep_blue transition-all"
+                                        value={cvv}
+                                        onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2 flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-green-500" /> Secure 256-bit encryption. No money will be deducted.</p>
+                            <button type="submit" className="w-full bg-deep_blue hover:bg-deep_blue_dark text-white font-bold py-3 mt-4 rounded-xl shadow-md transition-all active:scale-[0.98]">
+                                Verify Card & Apply Offer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

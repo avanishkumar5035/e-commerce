@@ -7,7 +7,7 @@ import { useToast } from '../context/ToastContext.jsx';
 
 const PlaceOrder = () => {
     const { cartItems, shippingAddress, paymentMethod, clearCart } = useContext(CartContext);
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const { addToast } = useToast();
 
@@ -55,7 +55,15 @@ const PlaceOrder = () => {
             navigate(`/order/${data._id}`);
         } catch (error) {
             console.error(error);
-            addToast('Failed to place order. Please try again.', 'error');
+            const errorMessage = error.response && error.response.data.message
+                ? error.response.data.message
+                : 'Failed to place order. Please try again.';
+            addToast(errorMessage, 'error');
+
+            if (error.response?.status === 401 && errorMessage.includes('user not found')) {
+                if (logout) logout();
+                navigate('/login?redirect=/placeorder');
+            }
         }
     };
 

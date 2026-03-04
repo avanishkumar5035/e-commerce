@@ -1,10 +1,12 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CartContext from '../context/CartContext.jsx';
+import { useWishlist } from '../context/WishlistContext.jsx';
 import { Trash2, ShoppingBag, CheckCircle } from 'lucide-react';
 
 const Cart = () => {
     const { cartItems, addToCart, removeFromCart } = useContext(CartContext);
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const navigate = useNavigate();
 
     const checkoutHandler = () => {
@@ -90,9 +92,27 @@ const Cart = () => {
                                             Delete
                                         </button>
                                         <span className="text-gray-300">|</span>
-                                        <button className="text-xs text-sky_blue hover:underline font-bold">Save for later</button>
+                                        <button
+                                            onClick={() => {
+                                                if (!isInWishlist(item.product)) {
+                                                    toggleWishlist(item.product);
+                                                }
+                                                removeFromCart(item.product);
+                                            }}
+                                            className="text-xs text-sky_blue hover:underline font-bold"
+                                        >
+                                            Save for later
+                                        </button>
                                         <span className="text-gray-300">|</span>
-                                        <button className="text-xs text-sky_blue hover:underline font-bold">See more like this</button>
+                                        <button
+                                            onClick={() => {
+                                                const keyword = item.name.split(' ')[0];
+                                                navigate(`/products?search=${keyword}`);
+                                            }}
+                                            className="text-xs text-sky_blue hover:underline font-bold"
+                                        >
+                                            See more like this
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, Menu, MapPin, User, Sun, Moon } from 'lucide-react';
+import { ShoppingCart, Search, Menu, MapPin, User, Sun, Moon, X } from 'lucide-react';
 import { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext.jsx';
@@ -15,6 +15,54 @@ const Header = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const cartCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
+
+    const [deliveryLocation, setDeliveryLocation] = useState(() => {
+        return localStorage.getItem('deliveryLocation') || 'India';
+    });
+    const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+    const [locationInput, setLocationInput] = useState('');
+    const [isLocationLoading, setIsLocationLoading] = useState(false);
+    const [locationError, setLocationError] = useState('');
+
+    const handleLocationSubmit = async (e) => {
+        e.preventDefault();
+        const input = locationInput.trim();
+
+        if (!input) return;
+
+        // Check if input is a 6-digit Indian pincode
+        if (/^\d{6}$/.test(input)) {
+            setIsLocationLoading(true);
+            setLocationError('');
+            try {
+                const response = await axios.get(`https://api.postalpincode.in/pincode/${input}`);
+                const data = response.data[0];
+
+                if (data.Status === "Success" && data.PostOffice && data.PostOffice.length > 0) {
+                    const postOffice = data.PostOffice[0];
+                    const newLocation = `${postOffice.District}, ${postOffice.State}`;
+
+                    setDeliveryLocation(newLocation);
+                    localStorage.setItem('deliveryLocation', newLocation);
+                    setIsLocationModalOpen(false);
+                    setLocationInput('');
+                } else {
+                    setLocationError('Invalid Pincode or details not found.');
+                }
+            } catch (err) {
+                setLocationError('Failed to fetch pincode details. Please try again.');
+            } finally {
+                setIsLocationLoading(false);
+            }
+        } else {
+            // Treat as a direct city/location name
+            setDeliveryLocation(input);
+            localStorage.setItem('deliveryLocation', input);
+            setIsLocationModalOpen(false);
+            setLocationInput('');
+            setLocationError('');
+        }
+    };
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -45,7 +93,11 @@ const Header = () => {
                 <div className="px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4 md:gap-8">
                     {/* Logo */}
                     <Link to="/" className="flex items-center group">
-                        <span className="text-2xl md:text-3xl font-black tracking-tighter text-deep_blue group-hover:scale-105 transition-transform duration-300">Shop<span className="text-sky_blue">Sphere</span></span>
+                        <img
+                            src="/logo.png"
+                            alt="ShopSphere Logo"
+                            className="h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                        />
                     </Link>
 
                     {/* Search Bar */}
@@ -75,12 +127,17 @@ const Header = () => {
 
                     {/* Right Sections */}
                     <div className="flex items-center gap-4">
-                        {/* Deliver To (Optional/Hidden for cleaner look) */}
-                        <div className="hidden xl:flex items-center gap-2 p-2 px-4 hover:bg-gray-50 rounded-2xl cursor-pointer transition-all">
-                            <MapPin className="w-4 h-4 text-sky_blue" />
+                        {/* Deliver To */}
+                        <div
+                            onClick={() => setIsLocationModalOpen(true)}
+                            className="hidden xl:flex items-center gap-2 p-2 px-4 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-gray-100 dark:hover:border-slate-700"
+                        >
+                            <div className="bg-sky_blue/10 dark:bg-slate-700 p-2 rounded-xl">
+                                <MapPin className="w-5 h-5 text-sky_blue" />
+                            </div>
                             <div className="text-xs">
                                 <p className="text-gray-400 font-bold uppercase tracking-tighter">Deliver to</p>
-                                <p className="font-black text-deep_blue -mt-0.5">India</p>
+                                <p className="font-black text-deep_blue dark:text-gray-200 -mt-0.5 truncate max-w-[120px]">{deliveryLocation}</p>
                             </div>
                         </div>
 
@@ -93,15 +150,16 @@ const Header = () => {
 
                         {/* Account */}
                         <div className="group relative">
-                            <Link to={user ? '#' : '/login'} className="flex items-center gap-3 p-2 px-4 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-gray-100 dark:hover:border-slate-700">
+                            <Link to={user ? '/profile' : '/login'} className="flex items-center gap-3 p-2 px-4 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-gray-100 dark:hover:border-slate-700">
                                 <div className="bg-deep_blue/5 dark:bg-slate-700 p-2 rounded-xl">
                                     <User className="w-5 h-5 text-deep_blue" />
                                 </div>
                                 <div className="text-xs hidden sm:block">
                                     <p className="text-gray-400 font-bold uppercase tracking-tighter">Hello, {user ? user.name.split(' ')[0] : 'Sign In'}</p>
-                                    <p className="font-black text-deep_blue -mt-0.5">Account & Lists</p>
+                                    <p className="font-black text-deep_blue -mt-0.5 whitespace-nowrap">Account & Lists</p>
                                 </div>
                             </Link>
+
                             {user && (
                                 <div className="absolute top-full right-0 mt-2 w-56 hidden group-hover:block z-50 animate-slide-in">
                                     <div className="bg-white/90 dark:bg-slate-900/95 backdrop-blur-xl p-4 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-800 flex flex-col gap-1 premium-shadow">
@@ -196,6 +254,52 @@ const Header = () => {
                     <span className="text-[10px] font-bold uppercase">{user ? "Profile" : "Login"}</span>
                 </Link>
             </div>
+            {/* Location Modal */}
+            {isLocationModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[2rem] shadow-2xl overflow-hidden animate-[slideUp_0.3s_ease-out] relative">
+                        <div className="p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-black text-dark_charcoal dark:text-gray-100">Choose your location</h3>
+                                <button onClick={() => setIsLocationModalOpen(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors text-gray-500">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                                Delivery options and delivery speeds may vary for different locations.
+                            </p>
+
+                            <form onSubmit={handleLocationSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Pincode or City</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. 110001 or New Delhi"
+                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-sky_blue focus:border-transparent outline-none transition-all text-sm font-medium dark:text-white"
+                                        value={locationInput}
+                                        onChange={(e) => {
+                                            setLocationInput(e.target.value);
+                                            setLocationError('');
+                                        }}
+                                        autoFocus
+                                    />
+                                    {locationError && <p className="text-red-500 text-xs mt-1.5 font-bold">{locationError}</p>}
+                                </div>
+                                <button
+                                    disabled={isLocationLoading}
+                                    type="submit"
+                                    className="w-full bg-deep_blue text-white py-3 rounded-xl text-sm font-black shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                                >
+                                    {isLocationLoading && (
+                                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                                    )}
+                                    {isLocationLoading ? 'Fetching Details...' : 'Apply Location'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

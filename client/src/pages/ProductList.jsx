@@ -28,20 +28,29 @@ const ProductList = () => {
     const querySort = searchParams.get('sort') || 'Featured';
     const queryFilter = searchParams.get('filter') || '';
     const queryRating = searchParams.get('rating') || '';
+    const queryMinPrice = searchParams.get('minPrice') || '';
+    const queryMaxPrice = searchParams.get('maxPrice') || '';
 
     const [selectedSort, setSelectedSort] = useState(querySort);
     const [selectedRating, setSelectedRating] = useState(queryRating);
+    const [selectedMinPrice, setSelectedMinPrice] = useState(queryMinPrice);
+    const [selectedMaxPrice, setSelectedMaxPrice] = useState(queryMaxPrice);
 
     useEffect(() => {
         if (queryCategory) setSelectedCategory(queryCategory);
         if (querySort) setSelectedSort(querySort);
         if (queryRating) setSelectedRating(queryRating);
-    }, [queryCategory, querySort, queryRating]);
+        if (queryMinPrice) setSelectedMinPrice(queryMinPrice);
+        if (queryMaxPrice) setSelectedMaxPrice(queryMaxPrice);
+    }, [queryCategory, querySort, queryRating, queryMinPrice, queryMaxPrice]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 let url = `/api/products?keyword=${keyword}&category=${selectedCategory}&sort=${selectedSort}&rating=${selectedRating}&filter=${queryFilter}`;
+                if (selectedMinPrice) url += `&minPrice=${selectedMinPrice}`;
+                if (selectedMaxPrice) url += `&maxPrice=${selectedMaxPrice}`;
+
                 const { data } = await axios.get(url);
                 const fetchedProducts = data.products || data;
 
@@ -56,7 +65,7 @@ const ProductList = () => {
             }
         };
         fetchProducts();
-    }, [keyword, selectedCategory, selectedSort, selectedRating, queryFilter]);
+    }, [keyword, selectedCategory, selectedSort, selectedRating, queryFilter, selectedMinPrice, selectedMaxPrice]);
 
     if (loading) return (
         <div className="flex justify-center items-center h-screen bg-bg_soft_gray">
@@ -131,13 +140,40 @@ const ProductList = () => {
                         </div>
 
                         <h3 className="font-bold text-sm mb-2">Price</h3>
-                        <ul className="text-sm space-y-1">
-                            <li className="hover:text-sky_blue cursor-pointer transition-colors">Under ₹500</li>
-                            <li className="hover:text-sky_blue cursor-pointer">₹500 - ₹1,000</li>
-                            <li className="hover:text-sky_blue cursor-pointer">₹1,000 - ₹2,000</li>
-                            <li className="hover:text-sky_blue cursor-pointer">₹2,000 - ₹5,000</li>
-                            <li className="hover:text-sky_blue cursor-pointer">Over ₹5,000</li>
-                        </ul>
+                        <div className="space-y-1">
+                            <ul className="text-sm space-y-1">
+                                {[
+                                    { label: 'Under ₹500', min: '', max: '500' },
+                                    { label: '₹500 - ₹1,000', min: '500', max: '1000' },
+                                    { label: '₹1,000 - ₹2,000', min: '1000', max: '2000' },
+                                    { label: '₹2,000 - ₹5,000', min: '2000', max: '5000' },
+                                    { label: 'Over ₹5,000', min: '5000', max: '' },
+                                ].map((range, index) => {
+                                    const isSelected = selectedMinPrice === range.min && selectedMaxPrice === range.max;
+                                    return (
+                                        <li
+                                            key={index}
+                                            onClick={() => {
+                                                setSelectedMinPrice(range.min);
+                                                setSelectedMaxPrice(range.max);
+                                            }}
+                                            className={`cursor-pointer transition-colors ${isSelected ? 'font-black text-deep_blue' : 'hover:text-sky_blue'}`}
+                                        >
+                                            {range.label}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                            <button
+                                onClick={() => {
+                                    setSelectedMinPrice('');
+                                    setSelectedMaxPrice('');
+                                }}
+                                className="text-[10px] text-gray-400 hover:text-deep_blue underline mt-2"
+                            >
+                                Clear Price
+                            </button>
+                        </div>
                     </div>
                 </div>
 

@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 // @access  Public
 const getProducts = async (req, res) => {
     try {
-        const { keyword, category, rating, sort, filter } = req.query;
+        const { keyword, category, rating, sort, filter, minPrice, maxPrice } = req.query;
 
         let query = {};
 
@@ -19,6 +19,12 @@ const getProducts = async (req, res) => {
 
         if (rating) {
             query.rating = { $gte: Number(rating) };
+        }
+
+        if (minPrice || maxPrice) {
+            query.price = {};
+            if (minPrice) query.price.$gte = Number(minPrice);
+            if (maxPrice) query.price.$lte = Number(maxPrice);
         }
 
         if (filter === 'deals') {
