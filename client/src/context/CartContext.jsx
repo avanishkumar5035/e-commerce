@@ -40,13 +40,13 @@ export const CartProvider = ({ children }) => {
         }
     }, [user]);
 
-    const addToCart = async (id, qty) => {
+    const addToCart = async (id, qty, priceOverride = null) => {
         const { data } = await axios.get(`/api/products/${id}`);
         const newItem = {
             product: data._id,
             name: data.name,
             image: data.image,
-            price: data.price,
+            price: priceOverride !== null ? priceOverride : data.price,
             countInStock: data.countInStock,
             qty,
         };

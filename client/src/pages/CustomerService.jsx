@@ -12,18 +12,18 @@ const CustomerService = () => {
     ];
 
     return (
-        <div className="bg-bg_soft_gray min-h-screen">
+        <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen">
             {/* Hero Section */}
-            <div className="bg-bg_soft_gray py-10 px-4">
+            <div className="bg-bg_soft_gray dark:bg-slate-900 py-10 px-4">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Hello. What can we help you with?</h1>
-                    <div className="relative max-w-2xl mx-auto">
+                    <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Hello. What can we help you with?</h1>
+                    <div className="relative max-w-2xl mx-auto flex items-center">
                         <input
                             type="text"
                             placeholder="Search our help topics"
-                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none shadow-sm"
+                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-dark_charcoal dark:text-white focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none shadow-sm transition-colors"
                         />
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <Search className="absolute left-4 text-gray-400 w-5 h-5" />
                     </div>
                 </div>
             </div>
@@ -32,13 +32,13 @@ const CustomerService = () => {
             <div className="max-w-6xl mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categories.map((cat, idx) => (
-                        <div key={idx} className="flex items-start gap-4 p-6 border border-gray-200 rounded-xl hover:bg-gray-50 transition cursor-pointer group">
-                            <div className="p-3 bg-white rounded-lg shadow-sm group-hover:shadow-md transition">
+                        <div key={idx} className="flex items-start gap-4 p-6 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800/50 transition cursor-pointer group">
+                            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm group-hover:shadow-md dark:shadow-none transition border border-transparent dark:border-slate-700">
                                 {cat.icon}
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg text-gray-800">{cat.title}</h3>
-                                <p className="text-sm text-gray-500">{cat.desc}</p>
+                                <h3 className="font-bold text-lg text-gray-800 dark:text-white">{cat.title}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{cat.desc}</p>
                             </div>
                         </div>
                     ))}
@@ -46,10 +46,10 @@ const CustomerService = () => {
             </div>
 
             {/* FAQ Section */}
-            <div className="bg-gray-50 py-16">
+            <div className="bg-gray-50 dark:bg-slate-800/30 py-16">
                 <div className="max-w-4xl mx-auto px-4">
-                    <h2 className="text-2xl font-bold mb-8 text-center text-gray-800">Quick solutions</h2>
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-100 overflow-hidden">
+                    <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 dark:text-white">Quick solutions</h2>
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700 divide-y divide-gray-100 dark:divide-slate-700 overflow-hidden">
                         {[
                             "How do I track my package?",
                             "How do I return an item?",
@@ -58,8 +58,8 @@ const CustomerService = () => {
                             "Manage your Prime membership",
                             "Troubleshoot login issues"
                         ].map((q, idx) => (
-                            <div key={idx} className="p-5 flex justify-between items-center hover:bg-gray-50 cursor-pointer transition">
-                                <span className="text-gray-700 font-medium">{q}</span>
+                            <div key={idx} className="p-5 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-700/50 cursor-pointer transition">
+                                <span className="text-gray-700 dark:text-gray-300 font-medium">{q}</span>
                                 <span className="text-sky_blue text-sm font-bold">Details</span>
                             </div>
                         ))}

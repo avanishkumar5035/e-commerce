@@ -45,6 +45,7 @@ const addOrderItems = async (req, res) => {
         }
     } catch (error) {
         console.error('Order creation error:', error);
+        require('fs').appendFileSync('logs.txt', new Date().toISOString() + ' : ' + error?.stack + '\n');
         res.status(500).json({ message: error.message });
     }
 };

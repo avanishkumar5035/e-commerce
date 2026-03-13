@@ -19,22 +19,22 @@ const Shipping = () => {
     };
 
     return (
-        <div className="bg-bg_soft_gray min-h-screen">
-            <div className="bg-bg_soft_gray border-b border-[#d5d9d9] py-4 px-6 mb-6">
+        <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen text-dark_charcoal dark:text-gray-100">
+            <div className="bg-bg_soft_gray dark:bg-slate-900 border-b border-[#d5d9d9] dark:border-slate-700 py-4 px-6 mb-6">
                 <div className="max-w-3xl mx-auto flex justify-between items-center">
-                    <h1 className="text-2xl font-normal text-gray-800">Select a delivery address</h1>
+                    <h1 className="text-2xl font-normal text-gray-800 dark:text-gray-100">Select a delivery address</h1>
                 </div>
             </div>
 
             <div className="max-w-3xl mx-auto px-4 pb-12">
-                <div className="border border-gray-300 rounded-lg p-8">
+                <div className="border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-8">
                     <h2 className="text-2xl font-bold mb-6">Add a new address</h2>
 
                     <form onSubmit={submitHandler} className="space-y-6">
                         <div className="flex flex-col gap-1">
                             <label className="text-sm font-bold">Country/Region</label>
                             <select
-                                className="w-full border border-gray-400 rounded bg-bg_soft_gray px-2 py-2 text-sm focus:border-deep_blue focus:ring-1 focus:ring-deep_blue outline-none"
+                                className="w-full border border-gray-400 dark:border-slate-600 rounded bg-bg_soft_gray dark:bg-slate-700 px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none text-dark_charcoal dark:text-white"
                                 value={country}
                                 onChange={(e) => setCountry(e.target.value)}
                                 required
@@ -50,7 +50,7 @@ const Shipping = () => {
                             <label className="text-sm font-bold">Full name (First and Last name)</label>
                             <input
                                 type="text"
-                                className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none"
+                                className="w-full border border-gray-400 dark:border-slate-600 rounded bg-white dark:bg-slate-700 px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none text-dark_charcoal dark:text-white"
                                 required
                             />
                         </div>
@@ -60,7 +60,7 @@ const Shipping = () => {
                             <input
                                 type="text"
                                 placeholder="Street address, P.O. box, company name, c/o"
-                                className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none mb-2"
+                                className="w-full border border-gray-400 dark:border-slate-600 rounded bg-white dark:bg-slate-700 px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none mb-2 text-dark_charcoal dark:text-white"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 required
@@ -72,7 +72,7 @@ const Shipping = () => {
                                 <label className="text-sm font-bold">City</label>
                                 <input
                                     type="text"
-                                    className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none"
+                                    className="w-full border border-gray-400 dark:border-slate-600 rounded bg-white dark:bg-slate-700 px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none text-dark_charcoal dark:text-white"
                                     value={city}
                                     onChange={(e) => setCity(e.target.value)}
                                     required
@@ -83,7 +83,7 @@ const Shipping = () => {
                                 <input
                                     type="text"
                                     placeholder="6 digits [0-9] PIN Code"
-                                    className="w-full border border-gray-400 rounded px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none"
+                                    className="w-full border border-gray-400 dark:border-slate-600 rounded bg-white dark:bg-slate-700 px-2 py-2 text-sm focus:border-sky_blue focus:ring-1 focus:ring-sky_blue outline-none text-dark_charcoal dark:text-white"
                                     value={postalCode}
                                     onChange={(e) => setPostalCode(e.target.value)}
                                     required

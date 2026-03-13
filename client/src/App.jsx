@@ -16,6 +16,7 @@ import MyOrders from './pages/MyOrders';
 import Wishlist from './pages/Wishlist';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Profile from './pages/Profile';
 import ProductListAdmin from './pages/admin/ProductListAdmin';
 import OrderListAdmin from './pages/admin/OrderListAdmin';
 import ActivityLogAdmin from './pages/admin/ActivityLogAdmin';
@@ -54,6 +55,7 @@ function App() {
                     <Route path="/myorders" element={<MyOrders />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/order/:id" element={<Order />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="/forgotpassword" element={<ForgotPassword />} />
                     <Route path="/resetpassword/:token" element={<ResetPassword />} />
                 </Route>

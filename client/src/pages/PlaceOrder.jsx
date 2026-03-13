@@ -57,10 +57,10 @@ const PlaceOrder = () => {
             console.error(error);
             const errorMessage = error.response && error.response.data.message
                 ? error.response.data.message
-                : 'Failed to place order. Please try again.';
+                : error.message || 'Failed to place order. Please try again.';
             addToast(errorMessage, 'error');
 
-            if (error.response?.status === 401 && errorMessage.includes('user not found')) {
+            if (error.response?.status === 401) {
                 if (logout) logout();
                 navigate('/login?redirect=/placeorder');
             }
@@ -68,14 +68,14 @@ const PlaceOrder = () => {
     };
 
     return (
-        <div className="bg-bg_soft_gray min-h-screen">
+        <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen text-dark_charcoal dark:text-gray-100">
             {/* Simple Checkout Header */}
-            <div className="bg-bg_soft_gray border-b border-[#d5d9d9] py-4 px-6 mb-6">
+            <div className="bg-bg_soft_gray dark:bg-slate-900 border-b border-[#d5d9d9] dark:border-slate-700 py-4 px-6 mb-6">
                 <div className="max-w-5xl mx-auto flex justify-between items-center">
-                    <Link to="/" className="text-2xl font-bold tracking-tighter text-deep_blue">
+                    <Link to="/" className="text-2xl font-bold tracking-tighter text-deep_blue dark:text-sky_blue">
                         Shop<span className="text-sky_blue">Sphere</span>
                     </Link>
-                    <h1 className="text-2xl font-normal text-gray-800">Checkout</h1>
+                    <h1 className="text-2xl font-normal text-gray-800 dark:text-gray-100">Checkout</h1>
                     <div className="w-8"></div> {/* Spacer */}
                 </div>
             </div>
@@ -84,7 +84,7 @@ const PlaceOrder = () => {
                 {/* Steps Section */}
                 <div className="flex-1 space-y-4">
                     {/* Shipping */}
-                    <div className="flex border-b border-gray-200 pb-4">
+                    <div className="flex border-b border-gray-200 dark:border-slate-700 pb-4">
                         <span className="text-lg font-bold mr-4">1</span>
                         <div className="flex-1 flex justify-between">
                             <div>
@@ -101,7 +101,7 @@ const PlaceOrder = () => {
                     </div>
 
                     {/* Payment */}
-                    <div className="flex border-b border-gray-200 pb-4">
+                    <div className="flex border-b border-gray-200 dark:border-slate-700 pb-4">
                         <span className="text-lg font-bold mr-4">2</span>
                         <div className="flex-1 flex justify-between">
                             <div>
@@ -117,20 +117,20 @@ const PlaceOrder = () => {
                         <span className="text-lg font-bold mr-4">3</span>
                         <div className="flex-1">
                             <h3 className="font-bold text-lg mb-4">Review items and shipping</h3>
-                            <div className="border border-gray-200 rounded-lg p-4 bg-white">
-                                <p className="text-green-700 text-sm font-bold mb-4">Guaranteed delivery: Tomorrow</p>
+                            <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 bg-white dark:bg-slate-800">
+                                <p className="text-green-700 dark:text-green-400 text-sm font-bold mb-4">Guaranteed delivery: Tomorrow</p>
                                 <div className="space-y-6">
                                     {cartItems.map((item, index) => (
                                         <div key={index} className="flex gap-4">
-                                            <div className="w-20 h-20 flex-shrink-0 bg-gray-50 flex items-center justify-center">
-                                                <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain" />
+                                            <div className="w-20 h-20 flex-shrink-0 bg-gray-50 dark:bg-gray-50 flex items-center justify-center rounded">
+                                                <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-sm font-bold text-gray-800">{item.name}</h4>
-                                                <p className="text-xs text-gray-600 mt-1">Sold by: Cloudtail India</p>
+                                                <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">{item.name}</h4>
+                                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Sold by: ShopSphere Direct</p>
                                                 <div className="flex items-center gap-2 mt-2">
                                                     <span className="text-sm font-bold text-sky_blue">₹{item.price.toLocaleString('en-IN')}</span>
-                                                    <span className="text-xs text-gray-500">Qty: {item.qty}</span>
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">Qty: {item.qty}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,19 +143,19 @@ const PlaceOrder = () => {
 
                 {/* Summary Sidebar */}
                 <div className="w-full lg:w-72 flex-shrink-0">
-                    <div className="border border-gray-300 rounded-lg p-4 sticky top-6 bg-white shadow-sm">
+                    <div className="border border-gray-300 dark:border-slate-700 rounded-lg p-4 sticky top-6 bg-white dark:bg-slate-800 shadow-sm dark:shadow-none">
                         <button
                             onClick={placeOrderHandler}
-                            className="w-full bg-sky_blue py-2 px-4 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition mb-4"
+                            className="w-full bg-sky_blue py-2 px-4 rounded-lg shadow-sm border border-[#a88734] hover:bg-[#f3a847] text-sm font-bold transition mb-4 text-deep_blue"
                             disabled={cartItems.length === 0}
                         >
                             Place your order
                         </button>
-                        <p className="text-[10px] text-gray-600 text-center mb-4 leading-tight">
+                        <p className="text-[10px] text-gray-600 dark:text-gray-400 text-center mb-4 leading-tight">
                             By placing your order, you agree to ShopSphere's <span className="text-sky_blue hover:underline cursor-pointer font-bold">privacy notice</span> and <span className="text-sky_blue hover:underline cursor-pointer font-bold">conditions of use</span>.
                         </p>
 
-                        <hr className="mb-4" />
+                        <hr className="mb-4 dark:border-slate-700" />
 
                         <h3 className="font-bold text-base mb-3">Order Summary</h3>
                         <div className="text-xs space-y-1.5 mb-4">
@@ -173,14 +173,14 @@ const PlaceOrder = () => {
                             </div>
                         </div>
 
-                        <hr className="mb-4" />
+                        <hr className="mb-4 dark:border-slate-700" />
 
                         <div className="flex justify-between text-lg font-bold text-sky_blue mb-4">
                             <span>Order Total:</span>
                             <span>₹{Number(totalPrice).toLocaleString('en-IN')}</span>
                         </div>
 
-                        <div className="bg-bg_soft_gray -mx-4 -mb-4 p-4 rounded-b-lg border-t border-gray-300">
+                        <div className="bg-bg_soft_gray dark:bg-slate-700 -mx-4 -mb-4 p-4 rounded-b-lg border-t border-gray-300 dark:border-slate-700">
                             <Link to="/how-to-pay" className="text-xs text-sky_blue hover:underline font-bold">How are delivery costs calculated?</Link>
                         </div>
                     </div>

@@ -68,22 +68,22 @@ const ProductList = () => {
     }, [keyword, selectedCategory, selectedSort, selectedRating, queryFilter, selectedMinPrice, selectedMaxPrice]);
 
     if (loading) return (
-        <div className="flex justify-center items-center h-screen bg-bg_soft_gray">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-deep_blue"></div>
+        <div className="flex justify-center items-center h-screen bg-bg_soft_gray dark:bg-slate-900">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-deep_blue dark:border-sky_blue"></div>
         </div>
     );
 
     return (
-        <div className="bg-bg_soft_gray min-h-screen text-dark_charcoal">
+        <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen text-dark_charcoal dark:text-gray-100">
             {/* Results Header */}
-            <div className="border-b border-gray-200 py-2 px-6 flex justify-between items-center shadow-sm">
+            <div className="border-b border-gray-200 dark:border-slate-800 py-2 px-6 flex justify-between items-center shadow-sm">
                 <p className="text-sm font-medium">
-                    1-{products.length} of {products.length} results for <span className="text-deep_blue font-black underline decoration-sky_blue decoration-2">"{keyword || selectedCategory}"</span>
+                    1-{products.length} of {products.length} results for <span className="text-deep_blue dark:text-sky_blue font-black underline decoration-sky_blue decoration-2">"{keyword || selectedCategory}"</span>
                 </p>
                 <div className="flex items-center gap-2">
-                    <label className="text-xs text-gray-600">Sort by:</label>
+                    <label className="text-xs text-gray-600 dark:text-gray-400">Sort by:</label>
                     <select
-                        className="text-xs bg-gray-100 border border-gray-300 rounded px-2 py-1 outline-none"
+                        className="text-xs bg-gray-100 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded px-2 py-1 outline-none text-dark_charcoal dark:text-gray-200"
                         value={selectedSort}
                         onChange={(e) => setSelectedSort(e.target.value)}
                     >
@@ -101,13 +101,13 @@ const ProductList = () => {
                 {/* Sidebar Filter */}
                 <div className="w-full md:w-60 flex-shrink-0">
                     <div className="sticky top-24">
-                        <h3 className="font-bold text-sm mb-2">Category</h3>
+                        <h3 className="font-bold text-sm mb-2 text-dark_charcoal dark:text-white">Category</h3>
                         <ul className="space-y-1 mb-6">
                             {categories.map((cat) => (
                                 <li key={cat}>
                                     <button
                                         onClick={() => setSelectedCategory(cat)}
-                                        className={`text-sm hover:text-deep_blue hover:underline transition-all ${selectedCategory === cat ? 'font-black text-deep_blue underline decoration-sky_blue decoration-2' : 'text-gray-600 font-medium'}`}
+                                        className={`text-sm hover:text-deep_blue dark:hover:text-sky_blue hover:underline transition-all ${selectedCategory === cat ? 'font-black text-deep_blue dark:text-sky_blue underline decoration-sky_blue decoration-2' : 'text-gray-600 dark:text-gray-400 font-medium'}`}
                                     >
                                         {cat}
                                     </button>
@@ -115,31 +115,31 @@ const ProductList = () => {
                             ))}
                         </ul>
 
-                        <h3 className="font-bold text-sm mb-2">Customer Review</h3>
+                        <h3 className="font-bold text-sm mb-2 text-dark_charcoal dark:text-white">Customer Review</h3>
                         <div className="space-y-1 mb-6">
                             {[4, 3, 2, 1].map((rating) => (
                                 <div
                                     key={rating}
                                     onClick={() => setSelectedRating(rating)}
-                                    className={`flex items-center gap-1 cursor-pointer group ${selectedRating == rating ? 'font-black text-deep_blue' : ''}`}
+                                    className={`flex items-center gap-1 cursor-pointer group ${selectedRating == rating ? 'font-black text-deep_blue dark:text-sky_blue' : ''}`}
                                 >
                                     <div className="flex">
                                         {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className={`w-4 h-4 ${i < rating ? 'fill-sky_blue text-sky_blue' : 'text-gray-300'}`} />
+                                            <Star key={i} className={`w-4 h-4 ${i < rating ? 'fill-sky_blue text-sky_blue' : 'text-gray-300 dark:text-gray-600'}`} />
                                         ))}
                                     </div>
-                                    <span className="text-sm group-hover:text-deep_blue font-medium transition-colors">& Up</span>
+                                    <span className={`text-sm group-hover:text-deep_blue dark:group-hover:text-sky_blue font-medium transition-colors ${selectedRating == rating ? 'text-deep_blue dark:text-sky_blue' : 'text-gray-600 dark:text-gray-400'}`}>& Up</span>
                                 </div>
                             ))}
                             <button
                                 onClick={() => setSelectedRating('')}
-                                className="text-[10px] text-gray-400 hover:text-deep_blue underline mt-2"
+                                className="text-[10px] text-gray-400 hover:text-deep_blue dark:hover:text-sky_blue underline mt-2"
                             >
                                 Clear Rating
                             </button>
                         </div>
 
-                        <h3 className="font-bold text-sm mb-2">Price</h3>
+                        <h3 className="font-bold text-sm mb-2 text-dark_charcoal dark:text-white">Price</h3>
                         <div className="space-y-1">
                             <ul className="text-sm space-y-1">
                                 {[
@@ -157,7 +157,7 @@ const ProductList = () => {
                                                 setSelectedMinPrice(range.min);
                                                 setSelectedMaxPrice(range.max);
                                             }}
-                                            className={`cursor-pointer transition-colors ${isSelected ? 'font-black text-deep_blue' : 'hover:text-sky_blue'}`}
+                                            className={`cursor-pointer transition-colors ${isSelected ? 'font-black text-deep_blue dark:text-sky_blue' : 'text-gray-600 dark:text-gray-400 hover:text-sky_blue'}`}
                                         >
                                             {range.label}
                                         </li>
@@ -179,32 +179,32 @@ const ProductList = () => {
 
                 {/* Product Area */}
                 <div className="flex-1">
-                    <h2 className="text-xl font-bold mb-4">Results</h2>
+                    <h2 className="text-xl font-bold mb-4 text-dark_charcoal dark:text-white">Results</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {products.map((product) => (
-                            <div key={product._id} className="border border-gray-200 bg-white p-4 flex flex-col group rounded-[2rem] shadow-md hover:scale-[1.03] transition-all duration-300 relative">
+                            <div key={product._id} className="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-800 p-4 flex flex-col group rounded-[2rem] shadow-md hover:scale-[1.03] transition-all duration-300 relative">
                                 <button
                                     onClick={() => toggleWishlist(product._id)}
-                                    className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 hover:text-rose-500 transition-all active:scale-90"
+                                    className="absolute top-4 right-4 z-10 p-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:text-rose-500 transition-all active:scale-90"
                                 >
                                     <Heart className={`w-4 h-4 ${isInWishlist(product._id) ? 'fill-rose-500 text-rose-500' : 'text-gray-400'}`} />
                                 </button>
                                 <Link to={`/products/${product._id}`} className="flex-1">
-                                    <div className="h-48 mb-4">
-                                        <img src={product.image} alt={product.name} className="w-full h-full object-contain" />
+                                    <div className="h-48 mb-4 bg-white dark:bg-gray-50 rounded-xl p-2">
+                                        <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply" />
                                     </div>
-                                    <h3 className="text-sm font-black mb-1 line-clamp-2 group-hover:text-deep_blue transition-colors">
+                                    <h3 className="text-sm font-black mb-1 line-clamp-2 group-hover:text-deep_blue dark:group-hover:text-sky_blue transition-colors text-dark_charcoal dark:text-white">
                                         {product.name}
                                     </h3>
                                     <div className="flex items-center gap-1 mb-2">
                                         <div className="flex">
                                             {[...Array(5)].map((_, i) => (
-                                                <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(product.rating) ? 'fill-sky_blue text-sky_blue' : 'text-gray-300'}`} />
+                                                <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(product.rating) ? 'fill-sky_blue text-sky_blue' : 'text-gray-300 dark:text-gray-600'}`} />
                                             ))}
                                         </div>
-                                        <span className="text-xs text-deep_blue font-bold">({product.numReviews})</span>
+                                        <span className="text-xs text-deep_blue dark:text-sky_blue font-bold">({product.numReviews})</span>
                                     </div>
-                                    <div className="flex items-baseline gap-1">
+                                    <div className="flex items-baseline gap-1 text-dark_charcoal dark:text-white">
                                         <span className="text-xs align-top">₹</span>
                                         <span className="text-2xl font-black">{product.price.toLocaleString('en-IN')}</span>
                                     </div>

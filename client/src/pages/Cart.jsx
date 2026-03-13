@@ -15,18 +15,18 @@ const Cart = () => {
 
     if (cartItems.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-24 text-center bg-bg_soft_gray min-h-screen">
+            <div className="flex flex-col items-center justify-center py-24 text-center bg-bg_soft_gray dark:bg-slate-900 min-h-screen text-dark_charcoal dark:text-gray-100">
                 <div className="p-6 mb-6">
-                    <ShoppingBag className="w-24 h-24 text-gray-200" />
+                    <ShoppingBag className="w-24 h-24 text-gray-200 dark:text-slate-700" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Your ShopSphere Cart is empty</h2>
-                <p className="text-sm text-gray-600 mb-8">Your shopping cart lives to serve. Give it purpose — fill it with electronics, clothes, and more.</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your ShopSphere Cart is empty</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-8">Your shopping cart lives to serve. Give it purpose — fill it with electronics, clothes, and more.</p>
                 <div className="flex gap-4">
                     <Link to="/products" className="bg-deep_blue text-white px-8 py-2 rounded-lg font-black shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark transition">
                         Shop latest offers
                     </Link>
                 </div>
-                <div className="mt-8 flex gap-4 text-xs text-blue-600">
+                <div className="mt-8 flex gap-4 text-xs text-blue-600 dark:text-sky_blue">
                     <button className="hover:underline">Sign in to your account</button>
                     <button className="hover:underline">Sign up now</button>
                 </div>
@@ -38,40 +38,40 @@ const Cart = () => {
     const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
     return (
-        <div className="bg-bg_soft_gray min-h-screen py-6 px-4">
+        <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen py-6 px-4 text-dark_charcoal dark:text-gray-100">
             <div className="max-w-[1500px] mx-auto flex flex-col lg:flex-row gap-6">
 
                 {/* Left Section: Cart Items */}
-                <div className="flex-1 bg-white p-6 shadow-sm">
-                    <div className="flex justify-between items-end border-b border-gray-200 pb-2 mb-4">
+                <div className="flex-1 bg-white dark:bg-slate-800 p-6 shadow-sm dark:shadow-none border border-transparent dark:border-slate-700 rounded-lg">
+                    <div className="flex justify-between items-end border-b border-gray-200 dark:border-slate-700 pb-2 mb-4">
                         <h1 className="text-3xl font-normal">Shopping Cart</h1>
-                        <p className="text-sm text-gray-600 hidden sm:block">Price</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 hidden sm:block">Price</p>
                     </div>
 
                     <div className="space-y-4">
                         {cartItems.map((item) => (
-                            <div key={item.product} className="flex gap-6 py-4 border-b border-gray-200 last:border-0">
+                            <div key={item.product} className="flex gap-6 py-4 border-b border-gray-200 dark:border-slate-700 last:border-0">
                                 {/* Image */}
-                                <div className="w-44 h-44 flex-shrink-0 flex items-center justify-center bg-gray-50 p-4">
-                                    <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain" />
+                                <div className="w-44 h-44 flex-shrink-0 flex items-center justify-center bg-gray-50 dark:bg-gray-50 rounded-lg overflow-hidden p-4">
+                                    <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
                                 </div>
 
                                 {/* Details */}
                                 <div className="flex-1 flex flex-col">
                                     <div className="flex justify-between">
-                                        <Link to={`/products/${item.product}`} className="text-lg font-medium text-gray-900 hover:text-sky_blue hover:underline line-clamp-2">
+                                        <Link to={`/products/${item.product}`} className="text-lg font-medium text-gray-900 dark:text-white hover:text-sky_blue hover:underline line-clamp-2">
                                             {item.name}
                                         </Link>
-                                        <div className="text-lg font-bold text-gray-900">
+                                        <div className="text-lg font-bold text-gray-900 dark:text-white">
                                             ₹{item.price.toLocaleString('en-IN')}
                                         </div>
                                     </div>
-                                    <p className="text-xs text-green-700 font-bold mt-1">In stock</p>
-                                    <p className="text-gray-600 text-xs mt-1 italic font-medium">Eligible for FREE Shipping by ShopSphere</p>
+                                    <p className="text-xs text-green-700 dark:text-green-400 font-bold mt-1">In stock</p>
+                                    <p className="text-gray-600 dark:text-gray-400 text-xs mt-1 italic font-medium">Eligible for FREE Shipping by ShopSphere</p>
 
                                     <div className="flex items-center gap-4 mt-auto">
-                                        <div className="flex items-center bg-[#f0f2f2] border border-[#d5d9d9] rounded-lg shadow-sm">
-                                            <span className="text-xs px-2 text-gray-600">Qty:</span>
+                                        <div className="flex items-center bg-[#f0f2f2] dark:bg-slate-700 border border-[#d5d9d9] dark:border-slate-600 rounded-lg shadow-sm text-dark_charcoal dark:text-white">
+                                            <span className="text-xs px-2 text-gray-600 dark:text-gray-300">Qty:</span>
                                             <select
                                                 className="bg-transparent text-sm py-1.5 pr-8 pl-1 outline-none cursor-pointer"
                                                 value={item.qty}
@@ -84,14 +84,14 @@ const Cart = () => {
                                                 ))}
                                             </select>
                                         </div>
-                                        <span className="text-gray-300">|</span>
+                                        <span className="text-gray-300 dark:text-slate-600">|</span>
                                         <button
                                             onClick={() => removeFromCart(item.product)}
                                             className="text-xs text-deep_blue hover:underline font-black"
                                         >
                                             Delete
                                         </button>
-                                        <span className="text-gray-300">|</span>
+                                        <span className="text-gray-300 dark:text-slate-600">|</span>
                                         <button
                                             onClick={() => {
                                                 if (!isInWishlist(item.product)) {
@@ -103,7 +103,7 @@ const Cart = () => {
                                         >
                                             Save for later
                                         </button>
-                                        <span className="text-gray-300">|</span>
+                                        <span className="text-gray-300 dark:text-slate-600">|</span>
                                         <button
                                             onClick={() => {
                                                 const keyword = item.name.split(' ')[0];
@@ -129,12 +129,12 @@ const Cart = () => {
 
                 {/* Right Section: Subtotal & Ad */}
                 <div className="w-full lg:w-72 flex-shrink-0 flex flex-col gap-4">
-                    <div className="bg-white p-5 shadow-sm">
-                        <div className="flex items-start gap-2 text-xs text-green-700 mb-4">
+                    <div className="bg-white dark:bg-slate-800 p-5 shadow-sm dark:shadow-none border border-transparent dark:border-slate-700 rounded-lg">
+                        <div className="flex items-start gap-2 text-xs text-green-700 dark:text-green-400 mb-4">
                             <CheckCircle className="w-4 h-4 mt-0.5" />
                             <div>
                                 <p>Your order is eligible for FREE Delivery.</p>
-                                <p className="text-gray-600 mt-1">Select this option at checkout. Details</p>
+                                <p className="text-gray-600 dark:text-gray-400 mt-1">Select this option at checkout. Details</p>
                             </div>
                         </div>
                         <p className="text-lg mb-4">
@@ -148,9 +148,9 @@ const Cart = () => {
                         </button>
                     </div>
 
-                    <div className="bg-white p-4 shadow-sm">
+                    <div className="bg-white dark:bg-slate-800 p-4 shadow-sm dark:shadow-none border border-transparent dark:border-slate-700 rounded-lg">
                         <h3 className="text-sm font-bold mb-2">EMI available</h3>
-                        <p className="text-xs text-gray-600">No Cost EMI available on select cards. <span className="text-blue-600 hover:underline cursor-pointer">Learn more</span></p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">No Cost EMI available on select cards. <span className="text-blue-600 dark:text-sky_blue hover:underline cursor-pointer">Learn more</span></p>
                     </div>
                 </div>
             </div>

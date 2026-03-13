@@ -43,22 +43,44 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateProfile = async (userData) => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data } = await axios.put('/api/auth/profile', userData, config);
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+            return { success: true, user: data };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Profile update failed'
+            };
+        }
+    };
+
     const logout = async () => {
+        const currentUser = user;
+        // Synchronously clear user
+        setUser(null);
+        localStorage.removeItem('user');
+
         try {
             await axios.post('/api/activity', {
                 action: 'LOGOUT',
-                details: `User ${user?.name || 'Unknown'} logged out`,
-                payload: { userId: user?._id }
+                details: `User ${currentUser?.name || 'Unknown'} logged out`,
+                payload: { userId: currentUser?._id }
             });
         } catch (error) {
             console.error('Failed to log logout activity');
         }
-        setUser(null);
-        localStorage.removeItem('user');
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );
