@@ -19,7 +19,7 @@ const Cart = () => {
                 <div className="p-6 mb-6">
                     <ShoppingBag className="w-24 h-24 text-gray-200 dark:text-slate-700" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your ShopSphere Cart is empty</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your Marketo Cart is empty</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-8">Your shopping cart lives to serve. Give it purpose — fill it with electronics, clothes, and more.</p>
                 <div className="flex gap-4">
                     <Link to="/products" className="bg-deep_blue text-white px-8 py-2 rounded-lg font-black shadow-lg shadow-deep_blue/20 hover:bg-deep_blue_dark transition">
@@ -67,7 +67,7 @@ const Cart = () => {
                                         </div>
                                     </div>
                                     <p className="text-xs text-green-700 dark:text-green-400 font-bold mt-1">In stock</p>
-                                    <p className="text-gray-600 dark:text-gray-400 text-xs mt-1 italic font-medium">Eligible for FREE Shipping by ShopSphere</p>
+                                    <p className="text-gray-600 dark:text-gray-400 text-xs mt-1 italic font-medium">Eligible for FREE Shipping by Marketo</p>
 
                                     <div className="flex items-center gap-4 mt-auto">
                                         <div className="flex items-center bg-[#f0f2f2] dark:bg-slate-700 border border-[#d5d9d9] dark:border-slate-600 rounded-lg shadow-sm text-dark_charcoal dark:text-white">

@@ -127,7 +127,7 @@ const PlaceOrder = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">{item.name}</h4>
-                                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Sold by: ShopSphere Direct</p>
+                                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Sold by: Marketo Direct</p>
                                                 <div className="flex items-center gap-2 mt-2">
                                                     <span className="text-sm font-bold text-sky_blue">₹{item.price.toLocaleString('en-IN')}</span>
                                                     <span className="text-xs text-gray-500 dark:text-gray-400">Qty: {item.qty}</span>
@@ -152,7 +152,7 @@ const PlaceOrder = () => {
                             Place your order
                         </button>
                         <p className="text-[10px] text-gray-600 dark:text-gray-400 text-center mb-4 leading-tight">
-                            By placing your order, you agree to ShopSphere's <span className="text-sky_blue hover:underline cursor-pointer font-bold">privacy notice</span> and <span className="text-sky_blue hover:underline cursor-pointer font-bold">conditions of use</span>.
+                            By placing your order, you agree to Marketo's <span className="text-sky_blue hover:underline cursor-pointer font-bold">privacy notice</span> and <span className="text-sky_blue hover:underline cursor-pointer font-bold">conditions of use</span>.
                         </p>
 
                         <hr className="mb-4 dark:border-slate-700" />

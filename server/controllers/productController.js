@@ -197,6 +197,59 @@ const createProductReview = async (req, res) => {
     }
 };
 
+// @desc    Get all reviews from all products (admin)
+// @route   GET /api/products/reviews/all
+// @access  Private/Admin
+const getAllReviews = async (req, res) => {
+    try {
+        const products = await Product.find({ 'reviews.0': { $exists: true } }, 'name image reviews rating numReviews');
+        const reviews = [];
+        products.forEach((product) => {
+            product.reviews.forEach((review) => {
+                reviews.push({
+                    _id: review._id,
+                    productId: product._id,
+                    productName: product.name,
+                    productImage: product.image,
+                    productRating: product.rating,
+                    reviewerName: review.name,
+                    rating: review.rating,
+                    comment: review.comment,
+                    user: review.user,
+                    createdAt: review.createdAt,
+                });
+            });
+        });
+        // Sort by most recent first
+        reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        res.json(reviews);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Delete a review (admin)
+// @route   DELETE /api/products/:id/reviews/:reviewId
+// @access  Private/Admin
+const deleteReview = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+
+        product.reviews = product.reviews.filter(
+            (r) => r._id.toString() !== req.params.reviewId
+        );
+        product.numReviews = product.reviews.length;
+        product.rating = product.reviews.length > 0
+            ? product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length
+            : 0;
+        await product.save();
+        res.json({ message: 'Review removed' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -204,4 +257,6 @@ module.exports = {
     createProduct,
     updateProduct,
     createProductReview,
+    getAllReviews,
+    deleteReview,
 };

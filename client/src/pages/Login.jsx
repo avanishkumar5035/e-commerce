@@ -87,7 +87,7 @@ const Login = () => {
                     <div className="mt-10">
                         <div className="relative flex items-center justify-center mb-8">
                             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100 dark:border-slate-700"></div></div>
-                            <span className="relative bg-white dark:bg-slate-800 px-6 text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-[0.2em]">New to ShopSphere?</span>
+                            <span className="relative bg-white dark:bg-slate-800 px-6 text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-[0.2em]">New to Marketo?</span>
                         </div>
                         <Link
                             to={`/register?redirect=${redirect}`}
@@ -104,7 +104,7 @@ const Login = () => {
                         <span className="hover:text-deep_blue dark:hover:text-sky_blue cursor-pointer transition-colors">Privacy</span>
                         <span className="hover:text-deep_blue dark:hover:text-sky_blue cursor-pointer transition-colors">Help</span>
                     </div>
-                    <p className="text-gray-300 dark:text-gray-600 font-medium">© 2026 ShopSphere E-Commerce. Premium Collection.</p>
+                    <p className="text-gray-300 dark:text-gray-600 font-medium">© 2026 Marketo E-Commerce. Premium Collection.</p>
                 </div>
             </div>
         </div>

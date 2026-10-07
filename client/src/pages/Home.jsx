@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ChevronRight, ChevronLeft, Star, Heart } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Star, Heart, Zap, Tag, TrendingUp, Package } from 'lucide-react';
 import AuthContext from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import { useWishlist } from '../context/WishlistContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
@@ -13,12 +14,37 @@ const Home = () => {
     const { user } = useContext(AuthContext);
     const { addToast } = useToast();
     const { toggleWishlist, isInWishlist } = useWishlist();
+    const { isDarkMode } = useTheme();
     const navigate = useNavigate();
 
-    const heroImages = [
-        "/assets/hero_fashion.png",
-        "/assets/hero_electronics.png",
-        "/assets/hero_home.png"
+    const heroSlides = [
+        {
+            title: "Everything",
+            highlight: "You Love",
+            sub: "Shop the best products at the best prices.",
+            cta: "Shop Now →",
+            bg: "linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%)",
+            darkBg: "linear-gradient(135deg, #3d1a00 0%, #5c2900 100%)",
+            img: "/assets/hero_electronics.png",
+        },
+        {
+            title: "Trending",
+            highlight: "Fashion",
+            sub: "Discover styles that define your personality.",
+            cta: "Explore →",
+            bg: "linear-gradient(135deg, #FFF8F0 0%, #FDEBD0 100%)",
+            darkBg: "linear-gradient(135deg, #2d1500 0%, #4a2200 100%)",
+            img: "/assets/hero_fashion.png",
+        },
+        {
+            title: "Premium",
+            highlight: "Home Decor",
+            sub: "Transform your space with modern style.",
+            cta: "Discover →",
+            bg: "linear-gradient(135deg, #FFF3E0 0%, #FFE5CC 100%)",
+            darkBg: "linear-gradient(135deg, #2a1000 0%, #442000 100%)",
+            img: "/assets/hero_home.png",
+        },
     ];
 
     useEffect(() => {
@@ -37,170 +63,356 @@ const Home = () => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentHero((prev) => (prev + 1) % heroImages.length);
+            setCurrentHero((prev) => (prev + 1) % heroSlides.length);
         }, 5000);
         return () => clearInterval(timer);
     }, []);
 
     if (loading) return (
-        <div className="flex justify-center items-center h-screen bg-bg_soft_gray dark:bg-slate-900">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-deep_blue dark:border-sky_blue"></div>
+        <div className="flex flex-col justify-center items-center h-screen" style={{ background: isDarkMode ? '#1a0f00' : '#FFF8F0' }}>
+            <div
+                className="w-14 h-14 rounded-full animate-spin mb-4"
+                style={{ border: '3px solid rgba(232,99,10,0.15)', borderTop: '3px solid #E8630A' }}
+            />
+            <p className="font-bold text-sm" style={{ color: '#E8630A' }}>Loading Marketo...</p>
         </div>
     );
 
-    const categories = [
-        { title: "Smartphones", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800", link: "/products?category=Mobile" },
-        { title: "Shoes Collection", image: "/assets/shoes_banner.png", link: "/products?category=Shoes" },
-        { title: "Books Collection", image: "/assets/books_banner.png", link: "/products?category=Books" },
-        { title: "Styles for men", image: "/assets/cat_mens_fashion.png", link: "/products?category=Men" },
-        { title: "Revamp your home in style", image: "/assets/cat_home_decor.png", link: "/products" }
+    const categoryCards = [
+        { title: "Smartphones", emoji: "📱", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800", link: "/products?category=Mobile", color: "#E8630A" },
+        { title: "Shoes", emoji: "👟", image: "/assets/shoes_banner.png", link: "/products?category=Shoes", color: "#F59E0B" },
+        { title: "Books", emoji: "📚", image: "/assets/books_banner.png", link: "/products?category=Books", color: "#D97706" },
+        { title: "Men's Fashion", emoji: "👔", image: "/assets/cat_mens_fashion.png", link: "/products?category=Men", color: "#B45309" },
+        { title: "Home Decor", emoji: "🏠", image: "/assets/cat_home_decor.png", link: "/products", color: "#92400E" },
     ];
 
-    return (
-        <div className="bg-bg_soft_gray dark:bg-slate-900 min-h-screen pb-16 font-sans text-dark_charcoal dark:text-gray-100 transition-colors duration-300">
-            {/* Hero Section */}
-            <div className="relative h-[450px] md:h-[650px] overflow-hidden bg-white dark:bg-slate-900">
-                <div className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out">
-                    <img
-                        src={heroImages[currentHero]}
-                        alt="Hero"
-                        className="w-full h-full object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,1)_80%,rgba(0,0,0,0)_100%)] opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-bg_soft_gray dark:from-slate-900 via-transparent to-transparent opacity-60"></div>
-                </div>
+    const slide = heroSlides[currentHero];
 
-                {/* Hero Content Overlay */}
-                <div className="absolute top-1/2 left-4 md:left-12 -translate-y-1/2 z-20 max-w-sm md:max-w-xl animate-slide-in">
-                    <div className="glass-morphism dark:bg-slate-900/40 p-6 md:p-10 rounded-3xl premium-shadow border-white/50 dark:border-slate-800/50">
-                        <span className="bg-deep_blue text-white px-3 md:px-4 py-1 mb-2 md:mb-4 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest inline-block">Flash Sale Live</span>
-                        <h1 className="text-4xl md:text-6xl font-black text-deep_blue leading-none mb-3 md:mb-4 tracking-tighter">
-                            Upgrade Your <br />
-                            <span className="text-sky_blue">Lifestyle</span>
+    return (
+        <div
+            className="min-h-screen pb-20 md:pb-8 font-sans transition-colors duration-300"
+            style={{ background: isDarkMode ? '#1a0f00' : '#FFF8F0' }}
+        >
+            {/* ══ Hero Banner — App Style ══ */}
+            <div
+                className="mx-4 mt-4 md:mx-6 md:mt-5 rounded-3xl overflow-hidden relative"
+                style={{
+                    background: isDarkMode ? slide.darkBg : slide.bg,
+                    minHeight: '200px',
+                }}
+            >
+                <div className="flex items-center justify-between p-6 md:p-10 min-h-[200px] md:min-h-[320px]">
+                    {/* Text */}
+                    <div className="flex-1 z-10">
+                        <span
+                            className="inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3"
+                            style={{ background: 'rgba(232,99,10,0.15)', color: '#E8630A' }}
+                        >
+                            🔥 Flash Sale Live
+                        </span>
+                        <h1 className="text-3xl md:text-5xl font-black leading-none tracking-tight mb-1" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>
+                            {slide.title}
                         </h1>
-                        <p className="hidden md:block text-gray-600 dark:text-gray-300 mb-8 font-medium leading-relaxed">Discover our premium collection of electronics, fashion, and home decor with exclusive offers.</p>
-                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-2 md:mt-0">
-                            <button className="bg-deep_blue text-white w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold shadow-xl shadow-deep_blue/20 hover:bg-deep_blue_dark transition-all active:scale-95 text-sm md:text-base">Shop Now</button>
-                            <button className="bg-white dark:bg-slate-800 text-deep_blue dark:text-sky_blue w-full sm:w-auto border-2 border-deep_blue/10 dark:border-slate-700 px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold hover:bg-gray-50 dark:hover:bg-slate-700 transition-all active:scale-95 text-sm md:text-base">Learn More</button>
-                        </div>
+                        <h1 className="text-3xl md:text-5xl font-black leading-none tracking-tight mb-3" style={{ color: '#E8630A' }}>
+                            {slide.highlight}
+                        </h1>
+                        <p className="text-sm font-medium mb-5 max-w-xs" style={{ color: isDarkMode ? 'rgba(255,255,255,0.6)' : '#6B7280' }}>
+                            {slide.sub}
+                        </p>
+                        <button
+                            onClick={() => navigate('/products')}
+                            className="btn-orange tap-ripple"
+                            style={{ fontSize: '13px', padding: '10px 22px', borderRadius: '12px' }}
+                        >
+                            {slide.cta}
+                        </button>
+                    </div>
+                    {/* Hero Image */}
+                    <div className="flex-1 flex items-center justify-end">
+                        <img
+                            src={slide.img}
+                            alt="Hero"
+                            className="h-36 md:h-64 object-contain drop-shadow-2xl transition-all duration-700"
+                            style={{ transform: 'scale(1.05)' }}
+                        />
                     </div>
                 </div>
 
-                {/* Hero Navigation */}
-                <button
-                    onClick={() => setCurrentHero((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-4 bg-white/20 dark:bg-slate-800/50 backdrop-blur-md rounded-full hover:bg-white/40 dark:hover:bg-slate-700/50 border border-white/30 dark:border-slate-700/50 transition-all group z-30"
-                >
-                    <ChevronLeft className="w-8 h-8 text-white" />
-                </button>
-                <button
-                    onClick={() => setCurrentHero((prev) => (prev + 1) % heroImages.length)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-white/20 dark:bg-slate-800/50 backdrop-blur-md rounded-full hover:bg-white/40 dark:hover:bg-slate-700/50 border border-white/30 dark:border-slate-700/50 transition-all group z-30"
-                >
-                    <ChevronRight className="w-8 h-8 text-white" />
-                </button>
-
-                {/* Indicators */}
-                <div className="absolute bottom-40 left-12 z-30 flex gap-2">
-                    {heroImages.map((_, i) => (
-                        <div
+                {/* Slide indicators */}
+                <div className="absolute bottom-4 left-6 flex gap-1.5">
+                    {heroSlides.map((_, i) => (
+                        <button
                             key={i}
                             onClick={() => setCurrentHero(i)}
-                            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${currentHero === i ? 'w-8 bg-deep_blue dark:bg-sky_blue' : 'w-2 bg-deep_blue/20 dark:bg-slate-700'}`}
-                        ></div>
+                            className="rounded-full transition-all duration-300"
+                            style={{
+                                width: currentHero === i ? '24px' : '8px',
+                                height: '8px',
+                                background: currentHero === i ? '#E8630A' : 'rgba(232,99,10,0.3)',
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* Prev / Next */}
+                <button
+                    onClick={() => setCurrentHero((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(232,99,10,0.15)' }}
+                >
+                    <ChevronLeft className="w-4 h-4" style={{ color: '#E8630A' }} />
+                </button>
+                <button
+                    onClick={() => setCurrentHero((prev) => (prev + 1) % heroSlides.length)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(232,99,10,0.15)' }}
+                >
+                    <ChevronRight className="w-4 h-4" style={{ color: '#E8630A' }} />
+                </button>
+            </div>
+
+            {/* ══ Quick Stats Strip ══ */}
+            <div className="px-4 md:px-6 mt-5">
+                <div className="grid grid-cols-4 gap-3">
+                    {[
+                        { icon: Zap, label: 'Flash Deals', color: '#E8630A' },
+                        { icon: Tag, label: 'Best Price', color: '#F59E0B' },
+                        { icon: TrendingUp, label: 'Trending', color: '#D97706' },
+                        { icon: Package, label: 'Free Ship', color: '#B45309' },
+                    ].map((item, i) => (
+                        <Link
+                            key={i}
+                            to="/products"
+                            className="flex flex-col items-center gap-2 py-4 rounded-2xl tap-ripple orange-card-hover"
+                            style={{
+                                background: isDarkMode ? 'rgba(255,255,255,0.05)' : '#fff',
+                                border: '1.5px solid rgba(232,99,10,0.1)',
+                            }}
+                        >
+                            <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${item.color}15` }}>
+                                <item.icon className="w-5 h-5" style={{ color: item.color }} />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-tight" style={{ color: isDarkMode ? '#ccc' : '#555' }}>
+                                {item.label}
+                            </span>
+                        </Link>
                     ))}
                 </div>
             </div>
 
-            {/* Content Container (Overlapping Hero) */}
-            <div className="relative -mt-32 z-30 px-6 max-w-[1600px] mx-auto">
-                {/* Category Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    {categories.map((cat, i) => (
-                        <div key={i} className="bg-white dark:bg-slate-800 p-6 flex flex-col justify-between shadow-xl shadow-gray-200/50 dark:shadow-none rounded-3xl hover:-translate-y-2 transition-all duration-500 border border-gray-100 dark:border-slate-700 group">
-                            <h2 className="text-2xl font-bold mb-4 text-dark_charcoal dark:text-gray-100">{cat.title}</h2>
-                            <div className="flex-1 overflow-hidden rounded-2xl bg-gray-50 dark:bg-slate-700/50 mb-4 h-64 flex items-center justify-center p-4">
-                                <img src={cat.image} alt={cat.title} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700" />
-                            </div>
-                            <Link to={cat.link} className="inline-flex items-center gap-2 text-deep_blue dark:text-sky_blue font-extrabold group-hover:gap-3 transition-all">
-                                Explore Collection <ChevronRight className="w-4 h-4" />
-                            </Link>
-                        </div>
-                    ))}
+            {/* ══ Category Grid ══ */}
+            <div className="px-4 md:px-6 mt-6">
+                <div className="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 className="text-xl font-black" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>Shop by Category</h2>
+                        <p className="text-xs font-medium text-gray-400">Find exactly what you need</p>
+                    </div>
+                    <Link to="/products" className="text-xs font-black px-3 py-1.5 rounded-full" style={{ background: 'rgba(232,99,10,0.1)', color: '#E8630A' }}>
+                        See All
+                    </Link>
                 </div>
 
-                {/* Featured Products Scroller */}
-                <div className="bg-white dark:bg-slate-800 p-8 shadow-xl shadow-gray-200/50 dark:shadow-none mb-10 rounded-[2.5rem] border border-gray-100 dark:border-slate-700">
-                    <div className="flex justify-between items-center mb-8">
-                        <div>
-                            <h2 className="text-3xl font-black text-dark_charcoal dark:text-gray-100 tracking-tight">Today's Deals</h2>
-                            <p className="text-gray-400 font-medium">Limited time offers you can't miss</p>
-                        </div>
-                        <Link to="/products" className="text-deep_blue dark:text-sky_blue font-bold hover:underline">View All</Link>
-                    </div>
-                    <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide px-2 snap-x snap-mandatory">
-                        {products.map((product) => (
-                            <div key={product._id} className="min-w-[240px] md:min-w-[280px] relative group transition-all duration-500 hover:scale-[1.02] snap-start">
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        toggleWishlist(product._id);
-                                    }}
-                                    className={`absolute top-4 right-4 z-20 p-3 rounded-2xl shadow-lg backdrop-blur-md border transition-all hover:scale-110 active:scale-90 ${isInWishlist(product._id) ? 'bg-rose-500 text-white border-rose-500' : 'bg-white/80 dark:bg-slate-700/80 border-white/50 dark:border-slate-600 text-gray-400 opacity-0 group-hover:opacity-100'}`}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {categoryCards.map((cat, i) => (
+                        <Link
+                            key={i}
+                            to={cat.link}
+                            className="rounded-3xl overflow-hidden relative group tap-ripple orange-card-hover"
+                            style={{
+                                background: isDarkMode ? 'rgba(255,255,255,0.04)' : '#fff',
+                                border: '1.5px solid rgba(232,99,10,0.1)',
+                                minHeight: '170px',
+                            }}
+                        >
+                            <div className="p-4">
+                                <span className="text-2xl">{cat.emoji}</span>
+                                <h3 className="font-black text-sm mt-2 mb-3 leading-tight" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>
+                                    {cat.title}
+                                </h3>
+                                <span
+                                    className="text-[10px] font-black px-2 py-1 rounded-full"
+                                    style={{ background: `${cat.color}15`, color: cat.color }}
                                 >
-                                    <Heart className={`w-4 h-4 ${isInWishlist(product._id) ? 'fill-current' : ''}`} />
+                                    Explore →
+                                </span>
+                            </div>
+                            <div className="absolute bottom-0 right-0 w-20 h-20 flex items-end justify-end p-1">
+                                <img src={cat.image} alt={cat.title} className="h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* ══ Today's Deals ══ */}
+            <div className="px-4 md:px-6 mt-8">
+                <div
+                    className="rounded-3xl overflow-hidden"
+                    style={{
+                        background: isDarkMode ? 'rgba(255,255,255,0.04)' : '#fff',
+                        border: '1.5px solid rgba(232,99,10,0.1)',
+                    }}
+                >
+                    <div className="p-5 pb-0 flex justify-between items-center">
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">🔥</span>
+                                <h2 className="text-xl font-black" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>Today's Deals</h2>
+                            </div>
+                            <p className="text-xs text-gray-400 font-medium">Limited time offers you can't miss</p>
+                        </div>
+                        <Link
+                            to="/products"
+                            className="text-xs font-black px-3 py-1.5 rounded-full"
+                            style={{ background: 'rgba(232,99,10,0.1)', color: '#E8630A' }}
+                        >
+                            View All
+                        </Link>
+                    </div>
+
+                    <div className="flex gap-4 overflow-x-auto pb-5 px-5 pt-4 scrollbar-hide snap-x snap-mandatory">
+                        {products.map((product) => (
+                            <div
+                                key={product._id}
+                                className="min-w-[160px] md:min-w-[200px] relative group snap-start"
+                                style={{
+                                    background: isDarkMode ? 'rgba(255,255,255,0.04)' : '#FFF8F0',
+                                    border: '1.5px solid rgba(232,99,10,0.08)',
+                                    borderRadius: '20px',
+                                    overflow: 'hidden',
+                                    flexShrink: 0,
+                                }}
+                            >
+                                {/* Wishlist button */}
+                                <button
+                                    onClick={(e) => { e.preventDefault(); toggleWishlist(product._id); }}
+                                    className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-all active:scale-90"
+                                    style={{
+                                        background: isInWishlist(product._id) ? '#E8630A' : 'rgba(255,255,255,0.9)',
+                                    }}
+                                >
+                                    <Heart className={`w-4 h-4 ${isInWishlist(product._id) ? 'fill-white text-white' : 'text-gray-400'}`} />
                                 </button>
-                                <Link to={`/products/${product._id}`} className="block">
-                                    <div className="h-64 flex items-center justify-center p-8 bg-gray-50 dark:bg-slate-700/50 mb-4 rounded-3xl border border-gray-100 dark:border-slate-600 group-hover:shadow-inner transition-all">
-                                        <img src={product.image} alt={product.name} className="h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+
+                                {/* Discount badge */}
+                                <div className="absolute top-3 left-3 z-20">
+                                    <span
+                                        className="text-[10px] font-black px-2 py-0.5 rounded-full text-white"
+                                        style={{ background: 'linear-gradient(135deg, #E8630A, #F59E0B)' }}
+                                    >
+                                        -{Math.floor(Math.random() * 40) + 10}%
+                                    </span>
+                                </div>
+
+                                <Link to={`/products/${product._id}`} className="block p-4 pt-10">
+                                    <div className="h-32 flex items-center justify-center mb-3">
+                                        <img
+                                            src={product.image}
+                                            alt={product.name}
+                                            className="h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                        />
                                     </div>
-                                    <div className="px-1">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className="bg-sky_blue text-white text-[10px] px-2 py-0.5 font-black rounded-lg uppercase tracking-wider">-{Math.floor(Math.random() * 40) + 10}%</span>
-                                            <p className="text-rose-500 dark:text-rose-400 font-bold uppercase tracking-tighter text-[10px] bg-rose-50 dark:bg-rose-500/10 px-2 py-0.5 rounded-lg">Deal of the Day</p>
-                                        </div>
-                                        <p className="font-black text-2xl text-dark_charcoal dark:text-gray-100 mb-1">₹{product.price.toLocaleString('en-IN')}</p>
-                                        <p className="text-gray-500 dark:text-gray-400 font-medium truncate text-sm">{product.name}</p>
+                                    <p className="font-black text-lg" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>
+                                        ₹{product.price.toLocaleString('en-IN')}
+                                    </p>
+                                    <p className="text-gray-400 font-medium truncate text-xs mt-0.5">{product.name}</p>
+                                    <div className="flex items-center gap-1 mt-2">
+                                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                        <span className="text-xs font-bold text-gray-400">{product.rating?.toFixed(1)}</span>
                                     </div>
                                 </Link>
                             </div>
                         ))}
                     </div>
                 </div>
+            </div>
 
-                {/* Promo Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-                    <div className="lg:col-span-1 bg-deep_blue rounded-[2.5rem] p-10 text-white relative overflow-hidden flex flex-col justify-between group">
-                        <div className="relative z-10">
-                            <h2 className="text-3xl font-black mb-4">Join ShopSphere <br /> Plus Today</h2>
-                            <p className="text-blue-100 font-medium mb-8">Get free shipping, early access to sales, and exclusive rewards.</p>
+            {/* ══ Promo Banner ══ */}
+            <div className="px-4 md:px-6 mt-6 mb-4">
+                <div
+                    className="rounded-3xl p-7 relative overflow-hidden"
+                    style={{
+                        background: 'linear-gradient(135deg, #E8630A 0%, #F59E0B 60%, #FBBF24 100%)',
+                    }}
+                >
+                    {/* Decorative circles */}
+                    <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-2xl" />
+                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-white/10 blur-xl" />
+
+                    <div className="relative z-10 flex items-center justify-between">
+                        <div>
+                            <span className="text-white/70 text-xs font-black uppercase tracking-widest">Marketo Plus</span>
+                            <h2 className="text-2xl md:text-3xl font-black text-white mt-1 mb-2 leading-tight">
+                                Join Today &<br />Save More!
+                            </h2>
+                            <p className="text-white/80 text-sm font-medium mb-4">
+                                Free shipping, early access & exclusive rewards.
+                            </p>
                             {!user && (
-                                <Link to="/login" className="inline-block bg-white dark:bg-slate-800 text-deep_blue dark:text-sky_blue px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 transition-all">Join Now</Link>
+                                <Link
+                                    to="/register"
+                                    className="inline-block bg-white font-black text-sm px-6 py-3 rounded-2xl transition-all hover:scale-105 active:scale-95"
+                                    style={{ color: '#E8630A' }}
+                                >
+                                    Join Now →
+                                </Link>
                             )}
                         </div>
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-sky_blue/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl"></div>
+                        <div className="text-6xl md:text-8xl hidden sm:block select-none">🛍️</div>
                     </div>
-                    {products.slice(0, 2).map((p, i) => (
-                        <div key={i} className="bg-white dark:bg-slate-800 p-8 shadow-xl shadow-gray-200/50 dark:shadow-none rounded-[2.5rem] relative group border border-gray-100 dark:border-slate-700">
-                            <div className="flex justify-between items-start mb-6">
-                                <h2 className="text-2xl font-bold text-dark_charcoal dark:text-gray-100 tracking-tight">Based on your <br /> interests</h2>
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        toggleWishlist(p._id);
-                                    }}
-                                    className={`p-3 rounded-2xl border transition-all ${isInWishlist(p._id) ? 'bg-rose-500 text-white border-rose-500' : 'bg-gray-50 dark:bg-slate-700/50 border-gray-100 dark:border-slate-600 text-gray-300 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700'}`}
+                </div>
+            </div>
+
+            {/* ══ More Products Grid ══ */}
+            <div className="px-4 md:px-6 mt-2 mb-8">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-black" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>Recommended for You</h2>
+                    <Link to="/products" className="text-xs font-black px-3 py-1.5 rounded-full" style={{ background: 'rgba(232,99,10,0.1)', color: '#E8630A' }}>
+                        View All
+                    </Link>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    {products.slice(0, 10).map((product) => (
+                        <Link
+                            key={product._id}
+                            to={`/products/${product._id}`}
+                            className="rounded-3xl overflow-hidden group tap-ripple orange-card-hover"
+                            style={{
+                                background: isDarkMode ? 'rgba(255,255,255,0.04)' : '#fff',
+                                border: '1.5px solid rgba(232,99,10,0.08)',
+                            }}
+                        >
+                            <div className="relative">
+                                <div
+                                    className="h-40 flex items-center justify-center p-4"
+                                    style={{ background: isDarkMode ? 'rgba(255,255,255,0.03)' : '#FFF8F0' }}
                                 >
-                                    <Heart className="w-4 h-4 fill-current" />
+                                    <img
+                                        src={product.image}
+                                        alt={product.name}
+                                        className="h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                                <button
+                                    onClick={(e) => { e.preventDefault(); toggleWishlist(product._id); }}
+                                    className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-all active:scale-90"
+                                    style={{ background: isInWishlist(product._id) ? '#E8630A' : 'rgba(255,255,255,0.9)' }}
+                                >
+                                    <Heart className={`w-3.5 h-3.5 ${isInWishlist(product._id) ? 'fill-white text-white' : 'text-gray-400'}`} />
                                 </button>
                             </div>
-                            <Link to={`/products/${p._id}`} className="block h-64 mb-6">
-                                <img src={p.image} alt={p.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
-                            </Link>
-                            <Link to={`/products/${p._id}`} className="inline-flex items-center gap-2 text-deep_blue dark:text-sky_blue font-extrabold">
-                                Discover More <ChevronRight className="w-4 h-4" />
-                            </Link>
-                        </div>
+                            <div className="p-3">
+                                <p className="text-xs text-gray-400 truncate mb-1">{product.name}</p>
+                                <p className="font-black text-base" style={{ color: isDarkMode ? '#fff' : '#1C1C1E' }}>
+                                    ₹{product.price.toLocaleString('en-IN')}
+                                </p>
+                                <div className="flex items-center gap-1 mt-1">
+                                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                    <span className="text-xs font-bold text-gray-400">{product.rating?.toFixed(1)}</span>
+                                    <span className="text-[10px] text-gray-300">({product.numReviews})</span>
+                                </div>
+                            </div>
+                        </Link>
                     ))}
                 </div>
             </div>

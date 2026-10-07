@@ -153,6 +153,10 @@ const ProductDetail = () => {
 
     const submitReviewHandler = async (e) => {
         e.preventDefault();
+        if (user && user.role === 'admin') {
+            addToast('Admins cannot submit reviews.', 'info');
+            return;
+        }
         if (rating === 0) {
             addToast('Please select a rating', 'info');
             return;
@@ -175,11 +179,19 @@ const ProductDetail = () => {
     };
 
     const addToCartHandler = () => {
+        if (user && user.role === 'admin') {
+            addToast('Admins cannot add to cart. View-only mode.', 'info');
+            return;
+        }
         addToCart(product._id, qty, getDiscountedPrice());
         navigate('/cart');
     };
 
     const buyNowHandler = () => {
+        if (user && user.role === 'admin') {
+            addToast('Admins cannot place orders. View-only mode.', 'info');
+            return;
+        }
         addToCart(product._id, qty, getDiscountedPrice());
         navigate('/shipping');
     };
@@ -435,7 +447,7 @@ const ProductDetail = () => {
                         </div>
                         <div className="flex flex-col items-center text-center">
                             <MapPin className="w-6 h-6 text-deep_blue mb-2" />
-                            <span className="text-[10px] text-sky_blue font-bold">ShopSphere Delivered</span>
+                            <span className="text-[10px] text-sky_blue font-bold">Marketo Delivered</span>
                         </div>
                     </div>
 
@@ -481,6 +493,12 @@ const ProductDetail = () => {
                 {/* Right: Actions Sidebar */}
                 <div className="lg:w-64 flex-shrink-0">
                     <div className="border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-4 space-y-4 shadow-sm sticky top-24">
+                        {/* Admin View-Only Banner */}
+                        {user && user.role === 'admin' && (
+                            <div className="flex items-center gap-2 p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(30,58,138,0.15), rgba(14,165,233,0.1))', border: '1px solid rgba(14,165,233,0.3)' }}>
+                                <span className="text-[10px] font-black text-sky-600 uppercase tracking-widest">🔒 Admin View Only</span>
+                            </div>
+                        )}
                         <div className="flex flex-col gap-1">
                             {appliedOffer && (
                                 <div className="flex items-center">
@@ -540,11 +558,11 @@ const ProductDetail = () => {
                         <div className="text-xs space-y-1 py-4 border-t border-gray-200 dark:border-slate-700">
                             <div className="flex justify-between">
                                 <span className="text-gray-600 dark:text-gray-400">Ships from</span>
-                                <span className="text-dark_charcoal dark:text-white">ShopSphere</span>
+                                <span className="text-dark_charcoal dark:text-white">Marketo</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-gray-600 dark:text-gray-400">Sold by</span>
-                                <span className="text-sky_blue truncate hover:underline cursor-pointer font-medium">ShopSphere Direct</span>
+                                <span className="text-sky_blue truncate hover:underline cursor-pointer font-medium">Marketo Direct</span>
                             </div>
                         </div>
 

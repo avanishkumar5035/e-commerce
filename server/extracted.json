@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Road Running",
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80",
+    "description": "Description",
+    "brand": "PUMA",
+    "category": "Apparel",
+    "price": 4999,
+    "countInStock": 15,
+    "rating": 4.004276117943764,
+    "numReviews": 15
+  },
+  {
+    "name": "Running Accessories",
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80",
+    "description": "High performance Running Accessories designed for ultimate comfort and speed.",
+    "brand": "PUMA",
+    "category": "Apparel",
+    "price": 4999,
+    "countInStock": 15,
+    "rating": 4.503521505539701,
+    "numReviews": 204
+  },
+  {
+    "name": "Running",
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80",
+    "description": "High performance Running designed for ultimate comfort and speed.",
+    "brand": "PUMA",
+    "category": "Apparel",
+    "price": 4999,
+    "countInStock": 15,
+    "rating": 4.341040394753476,
+    "numReviews": 207
+  },
+  {
+    "name": "Indoor Shoes",
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80",
+    "description": "High performance Indoor Shoes designed for ultimate comfort and speed.",
+    "brand": "PUMA",
+    "category": "Apparel",
+    "price": 4999,
+    "countInStock": 15,
+    "rating": 4.072105374984249,
+    "numReviews": 52
+  },
+  {
+    "name": "Cricket Shoes - Rubber",
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80",
+    "description": "High performance Cricket Shoes - Rubber designed for ultimate comfort and speed.",
+    "brand": "PUMA",
+    "category": "Apparel",
+    "price": 4999,
+    "countInStock": 15,
+    "rating": 4.923616621775944,
+    "numReviews": 170
+  }
+]

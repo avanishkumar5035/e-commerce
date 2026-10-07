@@ -18,27 +18,27 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold text-base mb-4">Get to Know Us</h3>
                     <ul className="text-sm space-y-2 text-gray-300">
-                        <li className="hover:underline cursor-pointer">About ShopSphere</li>
+                        <li className="hover:underline cursor-pointer">About Marketo</li>
                         <li className="hover:underline cursor-pointer">Careers</li>
                         <li className="hover:underline cursor-pointer">Press Releases</li>
-                        <li className="hover:underline cursor-pointer">ShopSphere Science</li>
+                        <li className="hover:underline cursor-pointer">Marketo Science</li>
                     </ul>
                 </div>
                 <div>
                     <h3 className="font-bold text-base mb-4">Connect with Us</h3>
                     <ul className="text-sm space-y-2 text-gray-300">
-                        <li><a href="https://facebook.com/shopsphere" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Facebook</a></li>
-                        <li><a href="https://twitter.com/shopsphere" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Twitter</a></li>
-                        <li><a href="https://instagram.com/shopsphere" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Instagram</a></li>
+                        <li><a href="https://facebook.com/marketo" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Facebook</a></li>
+                        <li><a href="https://twitter.com/marketo" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Twitter</a></li>
+                        <li><a href="https://instagram.com/marketo" target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Instagram</a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 className="font-bold text-base mb-4">Make Money with Us</h3>
                     <ul className="text-sm space-y-2 text-gray-300">
-                        <li className="hover:underline cursor-pointer">Sell on ShopSphere</li>
-                        <li className="hover:underline cursor-pointer">Supply to ShopSphere</li>
+                        <li className="hover:underline cursor-pointer">Sell on Marketo</li>
+                        <li className="hover:underline cursor-pointer">Supply to Marketo</li>
                         <li className="hover:underline cursor-pointer">Become an Affiliate</li>
-                        <li className="hover:underline cursor-pointer">Fulfillment by ShopSphere</li>
+                        <li className="hover:underline cursor-pointer">Fulfillment by Marketo</li>
                         <li className="hover:underline cursor-pointer">Advertise Your Products</li>
                     </ul>
                 </div>
@@ -71,7 +71,7 @@ const Footer = () => {
                     <span className="hover:underline cursor-pointer">Privacy Notice</span>
                     <span className="hover:underline cursor-pointer">Interest-Based Ads</span>
                 </div>
-                <p className="text-[10px] text-gray-400">© 1996-2026, ShopSphere.com, Inc. or its affiliates</p>
+                <p className="text-[10px] text-gray-400">© 1996-2026, Marketo.com, Inc. or its affiliates</p>
             </div>
         </footer>
     );

@@ -30,7 +30,7 @@ const Payment = () => {
 
             <div className="max-w-3xl mx-auto px-4 pb-12">
                 <div className="border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-8">
-                    <h2 className="text-xl font-black mb-6 italic text-deep_blue underline decoration-sky_blue underline-offset-4">ShopSphere <span className="text-sky_blue not-italic">Pay</span></h2>
+                    <h2 className="text-xl font-black mb-6 italic text-deep_blue underline decoration-sky_blue underline-offset-4">Marketo <span className="text-sky_blue not-italic">Pay</span></h2>
 
                     <form onSubmit={submitHandler} className="space-y-6">
                         <div className="space-y-4">

@@ -23,6 +23,7 @@ import ActivityLogAdmin from './pages/admin/ActivityLogAdmin';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import UserListAdmin from './pages/admin/UserListAdmin';
 import MonitorAdmin from './pages/admin/MonitorAdmin';
+import CommentsAdmin from './pages/admin/CommentsAdmin';
 import AdminLayout from './components/AdminLayout';
 
 // Layout for customer-facing pages
@@ -66,6 +67,7 @@ function App() {
                     <Route path="products" element={<ProductListAdmin />} />
                     <Route path="orders" element={<OrderListAdmin />} />
                     <Route path="users" element={<UserListAdmin />} />
+                    <Route path="comments" element={<CommentsAdmin />} />
                     <Route path="activities" element={<ActivityLogAdmin />} />
                     <Route path="monitor" element={<MonitorAdmin />} />
                 </Route>

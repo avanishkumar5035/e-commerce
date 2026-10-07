@@ -86,7 +86,7 @@ const CustomerService = () => {
             {/* Back Link */}
             <div className="text-center pb-12">
                 <Link to="/" className="text-sky_blue font-bold hover:underline">
-                    ← Back to ShopSphere Home
+                    ← Back to Marketo Home
                 </Link>
             </div>
         </div>

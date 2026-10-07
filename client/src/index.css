@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,8 +10,8 @@
   font-weight: 400;
 
   color-scheme: light;
-  color: #1A1A1B;
-  background-color: #F4F7F9;
+  color: #1C1C1E;
+  background-color: #FFF8F0;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -23,6 +23,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #FFF8F0;
 }
 
 #root {
@@ -31,68 +32,147 @@ body {
 
 @layer base {
   body {
-    @apply text-dark_charcoal bg-bg_soft_gray font-sans dark:bg-[#0f172a] dark:text-gray-100 transition-colors duration-300;
+    @apply text-dark_charcoal bg-bg_soft_gray font-sans dark:bg-[#1a0f00] dark:text-gray-100 transition-colors duration-300;
   }
 }
 
+/* ─── Animations ─── */
 @keyframes slide-in {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
 }
-
 .animate-slide-in {
   animation: slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes shake {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  25% {
-    transform: translateX(-5px);
-  }
-
-  75% {
-    transform: translateX(5px);
-  }
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-5px); }
+  75%       { transform: translateX(5px); }
 }
-
 .animate-shake {
   animation: shake 0.2s ease-in-out 0s 2;
 }
 
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Glass Morphism ─── */
 .glass-morphism {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
-
 .dark .glass-morphism {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(26, 15, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ─── Shadows ─── */
 .premium-shadow {
-  box-shadow: 0 20px 50px rgba(30, 58, 138, 0.08);
+  box-shadow: 0 8px 32px rgba(232, 99, 10, 0.08);
 }
 
+/* ─── Gradients — Orange / Amber palette ─── */
 .premium-gradient {
-  background: linear-gradient(135deg, #1E3A8A 0%, #0EA5E9 100%);
+  background: linear-gradient(135deg, #E8630A 0%, #F59E0B 100%);
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #1E3A8A 0%, #0EA5E9 100%);
+  background: linear-gradient(135deg, #E8630A 0%, #F59E0B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── App-like bottom-safe spacing ─── */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 12px);
+}
+
+/* ─── Scrollbar hide ─── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Orange card glow on hover ─── */
+.orange-card-hover {
+  transition: all 0.3s ease;
+}
+.orange-card-hover:hover {
+  box-shadow: 0 8px 30px rgba(232, 99, 10, 0.15);
+  transform: translateY(-3px);
+}
+
+/* ─── Mobile App-like tap ripple ─── */
+.tap-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.tap-ripple:active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(232, 99, 10, 0.12);
+  border-radius: inherit;
+  animation: ripple-fade 0.3s ease-out forwards;
+}
+@keyframes ripple-fade {
+  from { opacity: 1; transform: scale(0.95); }
+  to   { opacity: 0; transform: scale(1); }
+}
+
+/* ─── Category pill active ─── */
+.cat-pill-active {
+  background: linear-gradient(135deg, #E8630A, #F59E0B);
+  color: white;
+  box-shadow: 0 4px 12px rgba(232, 99, 10, 0.3);
+}
+
+/* ─── Floating label inputs (app feel) ─── */
+.app-input {
+  border: 2px solid #F3D9C8;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.2s;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+.app-input:focus {
+  border-color: #E8630A;
+  box-shadow: 0 0 0 4px rgba(232, 99, 10, 0.1);
+}
+
+/* ─── Orange button ─── */
+.btn-orange {
+  background: linear-gradient(135deg, #E8630A 0%, #F59E0B 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 24px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(232, 99, 10, 0.35);
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-orange:hover {
+  box-shadow: 0 6px 20px rgba(232, 99, 10, 0.45);
+  transform: translateY(-1px);
+}
+.btn-orange:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(232, 99, 10, 0.3);
 }

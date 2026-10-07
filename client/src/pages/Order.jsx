@@ -232,7 +232,7 @@ const Order = () => {
                                         <Link to={`/products/${item.product}`} className="text-sm text-sky_blue font-bold hover:underline line-clamp-2">
                                             {item.name}
                                         </Link>
-                                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">Sold by: ShopSphere Direct</p>
+                                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">Sold by: Marketo Direct</p>
                                         <p className="text-xs font-bold text-sky_blue">₹{item.price?.toLocaleString('en-IN')}</p>
                                         <div className="flex gap-4 pt-4">
                                             <button className="bg-sky_blue px-4 py-1 rounded-full text-xs font-bold border border-[#a88734] hover:bg-[#f3a847]">Buy it again</button>
