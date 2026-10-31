@@ -56,7 +56,7 @@ const Footer = () => {
 
             <div className="py-8 flex flex-col items-center gap-6">
                 <Link to="/" className="flex items-center">
-                    <span className="text-3xl font-extrabold tracking-tighter text-white">Shop<span className="text-sky_blue">Sphere</span></span>
+                    <span className="text-3xl font-extrabold tracking-tighter text-white">Market<span className="text-sky_blue">o</span></span>
                 </Link>
                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-300 px-4">
                     {['Australia', 'Brazil', 'Canada', 'China', 'France', 'Germany', 'Italy', 'Japan', 'Mexico', 'Netherlands', 'Poland', 'Singapore', 'Spain', 'Turkey', 'United Arab Emirates', 'United Kingdom', 'United States'].map(country => (
