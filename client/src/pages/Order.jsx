@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
-import { ChevronRight, Package, Truck, Printer, X, RotateCcw, AlertTriangle } from 'lucide-react';
+import { ChevronRight, Package, Truck, Printer, X, RotateCcw, AlertTriangle, MapPin, ExternalLink } from 'lucide-react';
 import TrackingModal from '../components/TrackingModal.jsx';
 
 const Order = () => {
@@ -149,10 +149,24 @@ const Order = () => {
                         <div className="flex-1">
                             <h3 className="font-bold text-sm mb-2">Shipping Address</h3>
                             <div className="text-xs text-gray-800 dark:text-gray-300 space-y-1">
-                                <p className="font-bold">{user?.name}</p>
+                                <p className="font-bold">{order.shippingAddress?.fullName || user?.name}</p>
                                 <p>{order.shippingAddress?.address}</p>
-                                <p>{order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}</p>
+                                <p>{order.shippingAddress?.city}{order.shippingAddress?.state ? `, ${order.shippingAddress.state}` : ''} {order.shippingAddress?.postalCode}</p>
                                 <p>{order.shippingAddress?.country}</p>
+                                {order.shippingAddress?.latitude && (
+                                    <div className="mt-2 pt-1 border-t border-gray-100 dark:border-slate-700">
+                                        <a
+                                            href={order.shippingAddress.mapUrl || `https://www.google.com/maps?q=${order.shippingAddress.latitude},${order.shippingAddress.longitude}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-bold hover:underline"
+                                        >
+                                            <MapPin className="w-3.5 h-3.5 text-green-600" />
+                                            <span>Live Delivery Pin on Google Maps</span>
+                                            <ExternalLink className="w-3 h-3" />
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -224,8 +238,8 @@ const Order = () => {
                     <div className="space-y-6">
                         {order.orderItems?.map((item, index) => (
                             <div key={index} className="flex flex-col md:flex-row gap-6">
-                                <div className="w-24 h-24 flex-shrink-0 flex items-center justify-center p-2 border border-gray-200 dark:border-slate-700 rounded bg-white dark:bg-gray-50">
-                                    <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
+                                <div className="w-24 h-24 flex-shrink-0 flex items-center justify-center p-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white dark:bg-[#1C1924]">
+                                    <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain" />
                                 </div>
                                 <div className="flex-1 flex flex-col md:flex-row justify-between gap-4">
                                     <div className="space-y-1">

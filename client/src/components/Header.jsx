@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, Search, Menu, MapPin, User, Sun, Moon, X, Home, Heart, Package } from 'lucide-react';
+import { ShoppingCart, Search, Menu, MapPin, User, Sun, Moon, X, Home, Heart, Package, Sparkles, Navigation } from 'lucide-react';
 import { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext.jsx';
@@ -24,8 +24,103 @@ const Header = () => {
     const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
     const [locationInput, setLocationInput] = useState('');
     const [isLocationLoading, setIsLocationLoading] = useState(false);
+    const [isDetectingLive, setIsDetectingLive] = useState(false);
     const [locationError, setLocationError] = useState('');
+    const [pincodeData, setPincodeData] = useState(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const handleDetectLiveLocation = () => {
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation is not supported by your browser.');
+            return;
+        }
+
+        setIsDetectingLive(true);
+        setLocationError('');
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    const { data } = await axios.post('/api/location/reverse-geocode', { latitude, longitude });
+                    if (data && data.success) {
+                        setPincodeData(data);
+                        const newLocation = `${data.primaryLocation}, ${data.district}`;
+                        setDeliveryLocation(newLocation);
+                        localStorage.setItem('deliveryLocation', newLocation);
+                        localStorage.setItem('deliveryPincode', data.pincode || '');
+                        localStorage.setItem('deliveryPlaceName', newLocation);
+                        localStorage.setItem('deliveryCoordinates', JSON.stringify({
+                            latitude: data.latitude,
+                            longitude: data.longitude,
+                            mapUrl: data.mapUrl
+                        }));
+                        setIsLocationModalOpen(false);
+                        setLocationInput('');
+                    } else {
+                        setLocationError('Could not fetch address for live location.');
+                    }
+                } catch (err) {
+                    console.error('Reverse geocode error:', err);
+                    setLocationError('Failed to fetch address from live location.');
+                } finally {
+                    setIsDetectingLive(false);
+                }
+            },
+            (error) => {
+                setIsDetectingLive(false);
+                if (error.code === error.PERMISSION_DENIED) {
+                    setLocationError('Location permission was denied. Please allow GPS access in your browser.');
+                } else {
+                    setLocationError('Failed to detect current location.');
+                }
+            },
+            { enableHighAccuracy: true, timeout: 12000 }
+        );
+    };
+
+    const fetchPincodeDetails = async (pin) => {
+        setIsLocationLoading(true);
+        setLocationError('');
+        try {
+            const { data } = await axios.get(`/api/location/pincode/${pin}`);
+            if (data && data.success) {
+                setPincodeData(data);
+                return data;
+            } else {
+                setLocationError('Pincode details not found.');
+                return null;
+            }
+        } catch (err) {
+            setLocationError(err.response?.data?.message || 'Failed to fetch pincode details.');
+            return null;
+        } finally {
+            setIsLocationLoading(false);
+        }
+    };
+
+    const handleLocationInputChange = (e) => {
+        const val = e.target.value;
+        setLocationInput(val);
+        setLocationError('');
+        if (pincodeData && val !== pincodeData.pincode) {
+            setPincodeData(null);
+        }
+        if (/^\d{6}$/.test(val.trim())) {
+            fetchPincodeDetails(val.trim());
+        }
+    };
+
+    const selectLocality = (locality) => {
+        const loc = `${locality}, ${pincodeData?.district || ''}`;
+        setDeliveryLocation(loc);
+        localStorage.setItem('deliveryLocation', loc);
+        localStorage.setItem('deliveryPincode', pincodeData?.pincode || locationInput);
+        localStorage.setItem('deliveryPlaceName', loc);
+        setIsLocationModalOpen(false);
+        setLocationInput('');
+        setPincodeData(null);
+    };
 
     const handleLocationSubmit = async (e) => {
         e.preventDefault();
@@ -33,25 +128,19 @@ const Header = () => {
         if (!input) return;
 
         if (/^\d{6}$/.test(input)) {
-            setIsLocationLoading(true);
-            setLocationError('');
-            try {
-                const response = await axios.get(`https://api.postalpincode.in/pincode/${input}`);
-                const data = response.data[0];
-                if (data.Status === "Success" && data.PostOffice && data.PostOffice.length > 0) {
-                    const postOffice = data.PostOffice[0];
-                    const newLocation = `${postOffice.District}, ${postOffice.State}`;
-                    setDeliveryLocation(newLocation);
-                    localStorage.setItem('deliveryLocation', newLocation);
-                    setIsLocationModalOpen(false);
-                    setLocationInput('');
-                } else {
-                    setLocationError('Invalid Pincode or details not found.');
-                }
-            } catch (err) {
-                setLocationError('Failed to fetch pincode details. Please try again.');
-            } finally {
-                setIsLocationLoading(false);
+            let data = pincodeData;
+            if (!data || data.pincode !== input) {
+                data = await fetchPincodeDetails(input);
+            }
+            if (data && data.success) {
+                const newLocation = `${data.primaryLocation}, ${data.district}`;
+                setDeliveryLocation(newLocation);
+                localStorage.setItem('deliveryLocation', newLocation);
+                localStorage.setItem('deliveryPincode', data.pincode);
+                localStorage.setItem('deliveryPlaceName', newLocation);
+                setIsLocationModalOpen(false);
+                setLocationInput('');
+                setPincodeData(null);
             }
         } else {
             setDeliveryLocation(input);
@@ -59,6 +148,7 @@ const Header = () => {
             setIsLocationModalOpen(false);
             setLocationInput('');
             setLocationError('');
+            setPincodeData(null);
         }
     };
 
@@ -503,28 +593,86 @@ const Header = () => {
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
-                            <p className="text-sm text-gray-400 mb-5 leading-relaxed">
-                                Enter your 6-digit pincode or city name to get accurate delivery estimates.
+                            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+                                Use your live GPS location or enter a 6-digit pincode to get delivery addresses.
                             </p>
+
+                            {/* Live Location GPS Button */}
+                            <button
+                                type="button"
+                                onClick={handleDetectLiveLocation}
+                                disabled={isDetectingLive}
+                                className="w-full py-2.5 px-3 rounded-2xl border border-orange-200 dark:border-orange-800/80 bg-orange-50/70 dark:bg-orange-950/30 text-[#E8630A] hover:bg-[#E8630A] hover:text-white transition font-bold text-xs flex items-center justify-center gap-2 cursor-pointer mb-4 shadow-xs disabled:opacity-50"
+                            >
+                                <Navigation className={`w-4 h-4 ${isDetectingLive ? 'animate-spin' : ''}`} />
+                                {isDetectingLive ? 'Detecting Live Location...' : 'Use My Current Live Location (GPS)'}
+                            </button>
+
+                            <div className="relative flex py-1 items-center mb-4">
+                                <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+                                <span className="flex-shrink mx-2 text-[10px] text-gray-400 font-bold uppercase">or enter pincode</span>
+                                <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+                            </div>
+
                             <form onSubmit={handleLocationSubmit} className="space-y-4">
                                 <div>
                                     <input
                                         type="text"
-                                        placeholder="e.g. 110001 or New Delhi"
+                                        placeholder="e.g. 110001 or 846004"
                                         className="app-input dark:bg-[#2a1800] dark:text-white dark:border-orange-900/30"
                                         value={locationInput}
-                                        onChange={(e) => { setLocationInput(e.target.value); setLocationError(''); }}
+                                        onChange={handleLocationInputChange}
                                         autoFocus
                                     />
                                     {locationError && <p className="text-red-500 text-xs mt-2 font-bold">{locationError}</p>}
                                 </div>
+
+                                {pincodeData && (
+                                    <div className="p-3 bg-orange-50/70 dark:bg-orange-950/30 border border-orange-200/80 dark:border-orange-900/50 rounded-2xl text-left space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs font-bold text-gray-800 dark:text-gray-200">
+                                                📍 {pincodeData.primaryLocation}, {pincodeData.district}
+                                            </span>
+                                            {pincodeData.source === 'gemini' ? (
+                                                <span className="text-[10px] bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                                    <Sparkles className="w-3 h-3 text-purple-600 dark:text-purple-300" /> Gemini AI
+                                                </span>
+                                            ) : (
+                                                <span className="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 px-2 py-0.5 rounded-full font-bold">
+                                                    Postal Verified
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {pincodeData.localities && pincodeData.localities.length > 0 && (
+                                            <div>
+                                                <p className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1.5">
+                                                    Villages / small places covered (Click to choose):
+                                                </p>
+                                                <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+                                                    {pincodeData.localities.map((loc, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            type="button"
+                                                            onClick={() => selectLocality(loc)}
+                                                            className="text-xs px-2.5 py-1 rounded-lg border border-orange-200 dark:border-orange-800/60 bg-white dark:bg-[#201205] text-gray-800 dark:text-gray-200 hover:bg-[#E8630A] hover:text-white transition font-medium"
+                                                        >
+                                                            {loc}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 <button
                                     disabled={isLocationLoading}
                                     type="submit"
                                     className="btn-orange w-full disabled:opacity-50"
                                 >
                                     {isLocationLoading && <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-white border-r-2" />}
-                                    {isLocationLoading ? 'Fetching...' : 'Apply Location'}
+                                    {isLocationLoading ? 'Fetching Address...' : (pincodeData ? `Apply ${pincodeData.primaryLocation}` : 'Check Location')}
                                 </button>
                             </form>
                         </div>

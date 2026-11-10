@@ -28,7 +28,7 @@ import AdminLayout from './components/AdminLayout';
 
 // Layout for customer-facing pages
 const MainLayout = () => (
-    <div className="min-h-screen bg-bg_cool_gray font-sans flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-bg_cool_gray dark:bg-[#0E0D12] font-sans flex flex-col transition-colors duration-300">
         <Header />
         <main className="flex-1">
             <Outlet />

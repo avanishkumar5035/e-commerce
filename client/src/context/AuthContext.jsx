@@ -43,6 +43,78 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const sendOtp = async (email, mobileNumber, type = 'register') => {
+        try {
+            const { data } = await axios.post('/api/auth/send-otp', { email, mobileNumber, type });
+            return { success: true, message: data.message };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Failed to send OTP'
+            };
+        }
+    };
+
+    const verifyOtp = async (email, otp, type = 'register') => {
+        try {
+            const { data } = await axios.post('/api/auth/verify-otp', { email, otp, type });
+            return { success: true, message: data.message };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'OTP verification failed'
+            };
+        }
+    };
+
+    const registerWithOtp = async (name, email, password, mobileNumber, otp) => {
+        try {
+            const { data } = await axios.post('/api/auth/register-with-otp', {
+                name,
+                email,
+                password,
+                mobileNumber,
+                otp,
+            });
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+            return { success: true, user: data };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Registration failed'
+            };
+        }
+    };
+
+    const loginWithOtp = async (email, otp) => {
+        try {
+            const { data } = await axios.post('/api/auth/login-otp', { email, otp });
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+            return { success: true, user: data };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'OTP Login failed'
+            };
+        }
+    };
+
+    const googleAuth = async (email, name, googleId) => {
+        try {
+            const { data } = await axios.post('/api/auth/google', { email, name, googleId });
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+            return { success: true, user: data };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Google sign-in failed'
+            };
+        }
+    };
+
     const updateProfile = async (userData) => {
         try {
             const config = {
@@ -64,7 +136,6 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         const currentUser = user;
-        // Synchronously clear user
         setUser(null);
         localStorage.removeItem('user');
 
@@ -80,7 +151,21 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                loading,
+                login,
+                register,
+                sendOtp,
+                verifyOtp,
+                registerWithOtp,
+                loginWithOtp,
+                googleAuth,
+                logout,
+                updateProfile,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

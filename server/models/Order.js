@@ -21,10 +21,15 @@ const orderSchema = new mongoose.Schema(
             },
         ],
         shippingAddress: {
+            fullName: { type: String },
             address: { type: String, required: true },
             city: { type: String, required: true },
+            state: { type: String },
             postalCode: { type: String, required: true },
             country: { type: String, required: true },
+            latitude: { type: Number },
+            longitude: { type: Number },
+            mapUrl: { type: String },
         },
         paymentMethod: {
             type: String,

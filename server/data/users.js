@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 const users = [
     {
         name: 'Admin User',
-        email: 'avanish@gmail.com',
-        password: bcrypt.hashSync('avanish123', 10),
+        email: process.env.ADMIN_EMAIL || 'admin@example.com',
+        password: bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'admin123', 10),
         role: 'admin',
     },
     {

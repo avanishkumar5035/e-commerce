@@ -4,6 +4,7 @@ import CartContext from '../context/CartContext.jsx';
 import AuthContext from '../context/AuthContext.jsx';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext.jsx';
+import { MapPin, ExternalLink } from 'lucide-react';
 
 const PlaceOrder = () => {
     const { cartItems, shippingAddress, paymentMethod, clearCart } = useContext(CartContext);
@@ -90,11 +91,22 @@ const PlaceOrder = () => {
                             <div>
                                 <h3 className="font-bold text-lg">Shipping address</h3>
                                 <p className="text-sm mt-1">
-                                    {user?.name}<br />
+                                    {shippingAddress.fullName || user?.name}<br />
                                     {shippingAddress.address}<br />
-                                    {shippingAddress.city}, {shippingAddress.postalCode}<br />
+                                    {shippingAddress.city}{shippingAddress.state ? `, ${shippingAddress.state}` : ''} - {shippingAddress.postalCode}<br />
                                     {shippingAddress.country}
                                 </p>
+                                {shippingAddress.latitude && (
+                                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 text-xs font-semibold">
+                                        <MapPin className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+                                        <span>GPS Drop Pin: {shippingAddress.latitude.toFixed(4)}, {shippingAddress.longitude.toFixed(4)}</span>
+                                        {shippingAddress.mapUrl && (
+                                            <a href={shippingAddress.mapUrl} target="_blank" rel="noopener noreferrer" className="ml-1 text-sky_blue underline font-bold inline-flex items-center gap-0.5">
+                                                <span>Map</span> <ExternalLink className="w-3 h-3" />
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             <Link to="/shipping" className="text-xs text-sky_blue hover:underline h-fit font-bold">Change</Link>
                         </div>
@@ -122,8 +134,8 @@ const PlaceOrder = () => {
                                 <div className="space-y-6">
                                     {cartItems.map((item, index) => (
                                         <div key={index} className="flex gap-4">
-                                            <div className="w-20 h-20 flex-shrink-0 bg-gray-50 dark:bg-gray-50 flex items-center justify-center rounded">
-                                                <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
+                                            <div className="w-20 h-20 flex-shrink-0 bg-gray-50 dark:bg-[#1C1924] flex items-center justify-center rounded-xl p-1">
+                                                <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain" />
                                             </div>
                                             <div className="flex-1">
                                                 <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">{item.name}</h4>

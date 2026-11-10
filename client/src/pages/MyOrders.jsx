@@ -123,8 +123,8 @@ const MyOrders = () => {
                                                 <div className="space-y-4">
                                                     {order.orderItems.map((item, idx) => (
                                                         <div key={idx} className="flex gap-4">
-                                                            <div className="w-16 h-16 rounded-xl border border-gray-100 dark:border-slate-700 p-2 flex-shrink-0 bg-white dark:bg-gray-50">
-                                                                <img src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                                                            <div className="w-16 h-16 rounded-xl border border-gray-100 dark:border-white/10 p-2 flex-shrink-0 bg-white dark:bg-[#1C1924]">
+                                                                <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
                                                             </div>
                                                             <div className="flex-1 min-w-0">
                                                                 <p className="text-sm font-bold text-dark_charcoal dark:text-white truncate">{item.name}</p>

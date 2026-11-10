@@ -1,7 +1,9 @@
 const axios = require('axios');
 (async () => {
     try {
-        const login = await axios.post('http://localhost:5000/api/users/login', { email: 'avanish@gmail.com', password: 'avanish123' });
+        const email = process.env.ADMIN_EMAIL || 'admin@example.com';
+        const password = process.env.ADMIN_PASSWORD || 'password123';
+        const login = await axios.post('http://localhost:5001/api/auth/login', { email, password });
         const token = login.data.token;
         console.log('Logged in');
 

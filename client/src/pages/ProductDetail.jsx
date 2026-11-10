@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Star, MapPin, ChevronRight, ShieldCheck, Truck, RotateCcw, Heart, MessageSquare, Send, Cpu, Camera, HardDrive, Package, CheckCircle, Tag, CreditCard, X } from 'lucide-react';
+import { Star, MapPin, ChevronRight, ShieldCheck, Truck, RotateCcw, Heart, MessageSquare, Send, Cpu, Camera, HardDrive, Package, CheckCircle, Tag, CreditCard, X, Sparkles, Navigation } from 'lucide-react';
 import AuthContext from '../context/AuthContext.jsx';
 import CartContext from '../context/CartContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -34,6 +34,7 @@ const ProductDetail = () => {
     const [showPincodeInput, setShowPincodeInput] = useState(false);
     const [pincodeInput, setPincodeInput] = useState(deliveryPincode);
     const [deliveryMessage, setDeliveryMessage] = useState('Usually delivered in 3-5 days');
+    const [pincodeDetails, setPincodeDetails] = useState(null);
 
     // Bank Offer State
     const [appliedOffer, setAppliedOffer] = useState(null);
@@ -43,6 +44,63 @@ const ProductDetail = () => {
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCvv] = useState('');
     const [relatedProducts, setRelatedProducts] = useState([]);
+    const [isDetectingLive, setIsDetectingLive] = useState(false);
+
+    const handleDetectLiveLocation = () => {
+        if (!navigator.geolocation) {
+            addToast('Geolocation is not supported by your browser.', 'error');
+            return;
+        }
+        setIsDetectingLive(true);
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    const { data } = await axios.post('/api/location/reverse-geocode', { latitude, longitude });
+                    if (data && data.success) {
+                        const place = `${data.primaryLocation}, ${data.district}`;
+                        setDeliveryPincode(data.pincode || '');
+                        setDeliveryPlaceName(place);
+                        setPincodeDetails(data);
+                        localStorage.setItem('deliveryLocation', data.pincode || place);
+                        localStorage.setItem('deliveryPlaceName', place);
+                        localStorage.setItem('deliveryCoordinates', JSON.stringify({
+                            latitude: data.latitude,
+                            longitude: data.longitude,
+                            mapUrl: data.mapUrl
+                        }));
+                        setDeliveryMessage(`Delivering to ${place} in 2-4 days`);
+                        setShowPincodeInput(false);
+                        addToast(`Live delivery location detected: ${place}`, 'success');
+                    } else {
+                        addToast('Could not fetch address for live location.', 'error');
+                    }
+                } catch (err) {
+                    console.error('Reverse geocode error:', err);
+                    addToast('Failed to detect live location address.', 'error');
+                } finally {
+                    setIsDetectingLive(false);
+                }
+            },
+            (error) => {
+                setIsDetectingLive(false);
+                if (error.code === error.PERMISSION_DENIED) {
+                    addToast('Location permission denied. Please allow GPS access in your browser.', 'error');
+                } else {
+                    addToast('Failed to detect current location.', 'error');
+                }
+            },
+            { enableHighAccuracy: true, timeout: 12000 }
+        );
+    };
+
+    const selectSpecificLocality = (locality) => {
+        const place = `${locality}, ${pincodeDetails?.district || ''}`;
+        setDeliveryPlaceName(place);
+        localStorage.setItem('deliveryPlaceName', place);
+        setDeliveryMessage(`Delivering to ${place} in 2-4 days`);
+        addToast(`Selected area: ${locality}`, 'success');
+    };
 
     const handleApplyOfferClick = (offerId, offerName) => {
         if (appliedOffer === offerId) {
@@ -77,21 +135,19 @@ const ProductDetail = () => {
         }
         setIsCheckingPincode(true);
         try {
-            const response = await axios.get(`https://api.postalpincode.in/pincode/${pincodeInput}`);
-            const data = response.data[0];
-            if (data.Status === "Success" && data.PostOffice && data.PostOffice.length > 0) {
-                const po = data.PostOffice[0];
-                const place = `${po.District}, ${po.State}`;
+            const { data } = await axios.get(`/api/location/pincode/${pincodeInput}`);
+            if (data && data.success) {
+                const place = `${data.primaryLocation}, ${data.district}`;
                 setDeliveryPincode(pincodeInput);
                 setDeliveryPlaceName(place);
+                setPincodeDetails(data);
                 localStorage.setItem('deliveryLocation', pincodeInput);
                 localStorage.setItem('deliveryPlaceName', place);
-                setDeliveryMessage(`Delivering to ${place} in 3-5 days`);
+                setDeliveryMessage(`Delivering to ${place} in 2-4 days`);
                 setShowPincodeInput(false);
-                addToast(`Delivery updated to ${place}`, 'success');
+                addToast(`Delivery location set to ${place}`, 'success');
             } else {
-                addToast('Invalid Pincode. Using estimated delivery.', 'info');
-                // Fallback if API says invalid but user typed 6 digits
+                addToast('Invalid Pincode. Using standard delivery.', 'info');
                 setDeliveryPincode(pincodeInput);
                 setDeliveryPlaceName('India');
                 localStorage.setItem('deliveryLocation', pincodeInput);
@@ -100,13 +156,12 @@ const ProductDetail = () => {
                 setShowPincodeInput(false);
             }
         } catch (error) {
-            // Error handling if API fails (e.g. CORS or network)
             setDeliveryPincode(pincodeInput);
             setDeliveryPlaceName('India');
             localStorage.setItem('deliveryLocation', pincodeInput);
             setDeliveryMessage('Usually delivered in 3-5 days');
             setShowPincodeInput(false);
-            addToast('Location updated', 'success');
+            addToast('Location updated', 'info');
         } finally {
             setIsCheckingPincode(false);
         }
@@ -230,11 +285,11 @@ const ProductDetail = () => {
             <div className="max-w-[1500px] mx-auto px-6 flex flex-col lg:flex-row gap-8">
                 {/* Left: Image Section */}
                 <div className="lg:w-1/3 flex flex-col gap-4 sticky top-24 h-fit">
-                    <div className="h-[450px] border border-gray-100 dark:border-slate-800 rounded-lg p-6 flex items-center justify-center bg-white dark:bg-gray-50 overflow-hidden shadow-sm">
+                    <div className="h-[450px] border border-gray-100 dark:border-white/[0.08] rounded-2xl p-6 flex items-center justify-center bg-white dark:bg-[#1C1924] overflow-hidden shadow-sm">
                         <img
                             src={selectedImage || product.image}
                             alt={product.name}
-                            className="max-h-full max-w-full object-contain mix-blend-multiply hover:scale-110 transition-transform duration-500 cursor-zoom-in"
+                            className="max-h-full max-w-full object-contain hover:scale-110 transition-transform duration-500 cursor-zoom-in"
                         />
                     </div>
 
@@ -244,18 +299,18 @@ const ProductDetail = () => {
                             {/* Main Image Thumbnail */}
                             <div
                                 onClick={() => setSelectedImage(product.image)}
-                                className={`w-16 h-16 flex-shrink-0 border-2 rounded-lg p-1 cursor-pointer transition-all bg-white dark:bg-gray-50 ${selectedImage === product.image ? 'border-deep_blue shadow-md' : 'border-gray-200 dark:border-slate-300 hover:border-deep_blue/50'}`}
+                                className={`w-16 h-16 flex-shrink-0 border-2 rounded-xl p-1 cursor-pointer transition-all bg-white dark:bg-[#1C1924] ${selectedImage === product.image ? 'border-deep_blue shadow-md' : 'border-gray-200 dark:border-white/10 hover:border-deep_blue/50'}`}
                             >
-                                <img src={product.image} alt="Main" className="w-full h-full object-contain mix-blend-multiply rounded-md" />
+                                <img src={product.image} alt="Main" className="w-full h-full object-contain rounded-md" />
                             </div>
                             {/* Additional Images */}
                             {product.images.map((imgUrl, idx) => (
                                 <div
                                     key={idx}
                                     onClick={() => setSelectedImage(imgUrl)}
-                                    className={`w-16 h-16 flex-shrink-0 border-2 rounded-lg p-1 cursor-pointer transition-all bg-white dark:bg-gray-50 ${selectedImage === imgUrl ? 'border-deep_blue shadow-md' : 'border-gray-200 dark:border-slate-300 hover:border-deep_blue/50'}`}
+                                    className={`w-16 h-16 flex-shrink-0 border-2 rounded-xl p-1 cursor-pointer transition-all bg-white dark:bg-[#1C1924] ${selectedImage === imgUrl ? 'border-deep_blue shadow-md' : 'border-gray-200 dark:border-white/10 hover:border-deep_blue/50'}`}
                                 >
-                                    <img src={imgUrl} alt={`Gallery ${idx + 1}`} className="w-full h-full object-contain mix-blend-multiply rounded-md" />
+                                    <img src={imgUrl} alt={`Gallery ${idx + 1}`} className="w-full h-full object-contain rounded-md" />
                                 </div>
                             ))}
                         </div>
@@ -384,6 +439,15 @@ const ProductDetail = () => {
                                         >
                                             {isCheckingPincode ? '...' : 'Check'}
                                         </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleDetectLiveLocation}
+                                            disabled={isDetectingLive}
+                                            title="Use Live Location"
+                                            className="p-1.5 rounded bg-orange-50 dark:bg-orange-950/40 text-[#E8630A] border border-orange-200 dark:border-orange-800 hover:bg-[#E8630A] hover:text-white transition disabled:opacity-50 cursor-pointer"
+                                        >
+                                            <Navigation className={`w-3.5 h-3.5 ${isDetectingLive ? 'animate-spin' : ''}`} />
+                                        </button>
                                         <button onClick={() => setShowPincodeInput(false)} className="text-gray-400 hover:text-gray-600 ml-1">
                                             <RotateCcw className="w-4 h-4" />
                                         </button>
@@ -394,10 +458,41 @@ const ProductDetail = () => {
                                     </span>
                                 )}
                             </div>
-                            <div className="p-4 flex items-center gap-2.5 border-b border-gray-200 dark:border-slate-800 bg-[#fefefe] dark:bg-slate-800/80">
-                                <Truck className="w-5 h-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
-                                <span className="text-[15px] font-bold text-gray-900 dark:text-white">{deliveryMessage}</span>
+                            <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-slate-800 bg-[#fefefe] dark:bg-slate-800/80">
+                                <div className="flex items-center gap-2.5">
+                                    <Truck className="w-5 h-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+                                    <span className="text-[15px] font-bold text-gray-900 dark:text-white">{deliveryMessage}</span>
+                                </div>
+                                {pincodeDetails?.source === 'gemini' && (
+                                    <span className="text-[11px] bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                        <Sparkles className="w-3 h-3 text-purple-600 dark:text-purple-300" /> Gemini Verified
+                                    </span>
+                                )}
                             </div>
+
+                            {pincodeDetails?.localities && pincodeDetails.localities.length > 0 && (
+                                <div className="p-3.5 bg-sky-50/50 dark:bg-slate-800/60 border-b border-gray-200 dark:border-slate-800 text-xs">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="font-bold text-gray-700 dark:text-gray-300">
+                                            Villages & Small Places in this PIN code:
+                                        </span>
+                                        <span className="text-[11px] text-gray-400">Click to pick yours</span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                                        {pincodeDetails.localities.map((loc, idx) => (
+                                            <button
+                                                key={idx}
+                                                type="button"
+                                                onClick={() => selectSpecificLocality(loc)}
+                                                className="text-[11px] px-2.5 py-1 rounded-lg border border-sky-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-sky_blue hover:text-white dark:hover:bg-sky_blue dark:hover:text-white transition font-medium text-gray-700 dark:text-gray-300 shadow-xs"
+                                            >
+                                                {loc}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="p-4 flex items-start gap-2.5 bg-[#fefefe] dark:bg-slate-800/80">
                                 <Package className="w-5 h-5 text-gray-600 dark:text-gray-400 mt-0.5" />
                                 <div>
@@ -422,9 +517,9 @@ const ProductDetail = () => {
                                             setSelectedImage(color.image);
                                             setSelectedColor(color.name);
                                         }}
-                                        className={`w-16 h-16 border-2 rounded-lg p-1 cursor-pointer transition-all bg-white dark:bg-gray-50 ${selectedColor === color.name ? 'border-sky_blue shadow-[0_0_0_1px_rgba(2,132,199,1)]' : 'border-gray-200 dark:border-slate-300 hover:border-gray-400'}`}
+                                        className={`w-16 h-16 border-2 rounded-xl p-1 cursor-pointer transition-all bg-white dark:bg-[#1C1924] ${selectedColor === color.name ? 'border-[#E8630A] shadow-md' : 'border-gray-200 dark:border-white/10 hover:border-gray-400'}`}
                                     >
-                                        <img src={color.image} alt={color.name} className="w-full h-full object-contain mix-blend-multiply rounded-md" />
+                                        <img src={color.image} alt={color.name} className="w-full h-full object-contain rounded-md" />
                                     </div>
                                 ))}
                             </div>
@@ -705,8 +800,8 @@ const ProductDetail = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {relatedProducts.map(item => (
                             <Link to={`/product/${item._id}`} key={item._id} className="group bg-white dark:bg-slate-800 rounded-2xl p-4 border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-xl dark:shadow-none hover:border-sky_blue/30 transition-all duration-300">
-                                <div className="aspect-square mb-4 bg-gray-50 dark:bg-gray-50 rounded-xl overflow-hidden relative p-4 flex items-center justify-center">
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
+                                <div className="aspect-square mb-4 bg-gray-50 dark:bg-[#1C1924] rounded-xl overflow-hidden relative p-4 flex items-center justify-center">
+                                    <img src={item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
                                 </div>
                                 <h3 className="font-bold text-gray-800 dark:text-white truncate mb-1">{item.name}</h3>
                                 <div className="flex items-center gap-1 mb-2">

@@ -52,8 +52,8 @@ const Cart = () => {
                         {cartItems.map((item) => (
                             <div key={item.product} className="flex gap-6 py-4 border-b border-gray-200 dark:border-slate-700 last:border-0">
                                 {/* Image */}
-                                <div className="w-44 h-44 flex-shrink-0 flex items-center justify-center bg-gray-50 dark:bg-gray-50 rounded-lg overflow-hidden p-4">
-                                    <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
+                                <div className="w-44 h-44 flex-shrink-0 flex items-center justify-center bg-gray-50 dark:bg-[#1C1924] rounded-2xl overflow-hidden p-4">
+                                    <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain" />
                                 </div>
 
                                 {/* Details */}

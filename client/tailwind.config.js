@@ -8,11 +8,37 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                // 🟠 New Orange / Amber Primary Palette
-                deep_blue: "#E8630A",           // was #1E3A8A — now Deep Orange
-                deep_blue_dark: "#C4500A",      // was #1E3E8F — now Darker Orange
-                sky_blue: "#F59E0B",            // was #0EA5E9 — now Amber/Dark Yellow
-                sky_blue_dark: "#D97706",       // was #0284C7 — now Darker Amber
+                // 🟠 Orange / Amber Primary Palette
+                deep_blue: "#E8630A",           // Deep Orange
+                deep_blue_dark: "#C4500A",      // Darker Orange
+                sky_blue: "#F59E0B",            // Amber/Dark Yellow
+                sky_blue_dark: "#D97706",       // Darker Amber
+
+                // 🌑 Stylish Luxury Dark Theme (NO COLD BLUE!)
+                // Re-mapping slate to ultra-stylish rich obsidian & velvet charcoal
+                slate: {
+                    50: '#F9F8F6',
+                    100: '#F2EFEB',
+                    200: '#E5E1DA',
+                    300: '#C7C2BA',
+                    400: '#9C968D',
+                    500: '#6E6860',
+                    600: '#4D4740',
+                    700: '#26222B',   // sleek dark border / divider
+                    750: '#201D25',
+                    800: '#17151D',   // stylish dark card (rich velvet obsidian, ZERO blue)
+                    850: '#131117',   // stylish surface
+                    900: '#0E0D12',   // stylish dark page background (deep obsidian, ZERO blue)
+                    950: '#08070A',   // deepest dark
+                },
+
+                // Dedicated stylish dark tokens
+                dark_bg: "#0E0D12",
+                dark_surface: "#17151D",
+                dark_card: "#17151D",
+                dark_card_hover: "#221E2A",
+                dark_border: "#26222B",
+                dark_muted: "#8A8494",
 
                 // Backgrounds
                 bg_soft_gray: "#FFF8F0",        // Warm cream background
